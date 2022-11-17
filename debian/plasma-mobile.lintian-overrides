@@ -1,0 +1,4 @@
+# usr/bin/startplasmamobile is not intended to be launched by the user
+plasma-mobile: no-manual-page [usr/bin/startplasmamobile]
+# systemsettings executable required for the KCMs is installed through plasma-workspace dependency
+plasma-mobile: desktop-command-not-in-package systemsettings [usr/share/applications/kcm_*]

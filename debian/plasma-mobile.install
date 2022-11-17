@@ -1,0 +1,16 @@
+usr/bin/startplasmamobile
+usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/plasma/applets/*
+usr/lib/${DEB_HOST_MULTIARCH}/qt5/plugins/plasma/kcms/systemsettings/kcm_mobileshell.so
+usr/lib/${DEB_HOST_MULTIARCH}/qt5/qml/org/kde/plasma/mm/*
+usr/lib/${DEB_HOST_MULTIARCH}/qt5/qml/org/kde/plasma/*
+usr/share/applications/kcm_mobileshell.desktop
+usr/share/knotifications5/plasma_phone_components.notifyrc
+usr/share/kpackage/kcms/kcm_mobileshell/contents/ui/*
+usr/share/kservices5/plasma-applet-org.kde.plasma.phone.desktop
+usr/share/locale/*
+usr/share/metainfo/*
+usr/share/plasma/look-and-feel/org.kde.plasma.phone/*
+usr/share/plasma/plasmoids/*
+usr/share/plasma/quicksettings/*
+usr/share/plasma/shells/*
+usr/share/wayland-sessions/plasma-mobile.desktop

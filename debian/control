@@ -1,0 +1,83 @@
+Source: plasma-mobile
+Section: kde
+Priority: optional
+Maintainer: DebianOnMobile Maintainers <debian-on-mobile-maintainers@alioth-lists.debian.net>
+Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               extra-cmake-modules (>= 5.36.0),
+               kwin-dev,
+               libkf5declarative-dev,
+               libkf5kcmutils-dev,
+               libkf5networkmanagerqt-dev,
+               libkf5notifications-dev,
+               libkf5plasma-dev,
+               libkf5service-dev,
+               libkf5wayland-dev,
+               libphonenumber-dev,
+               libqt5svg5-dev,
+               libsystemd-dev,
+               modemmanager-qt-dev,
+               pkg-config,
+               pkg-kde-tools,
+               plasma-workspace-dev,
+               qtbase5-dev,
+               qtdeclarative5-dev
+Standards-Version: 4.6.1
+Homepage: https://invent.kde.org/plasma/plasma-mobile
+Rules-Requires-Root: no
+
+Package: plasma-mobile
+Architecture: any
+Multi-Arch: foreign
+Depends: bluedevil,
+         breeze-icon-theme,
+         fonts-mplus,
+         fonts-oxygen,
+         kpeople-vcard,
+         maliit-keyboard,
+         milou,
+         pipewire,
+         plasma-nano,
+         plasma-nm,
+         plasma-pa,
+         plasma-settings,
+         plasma-workspace,
+         plasma-workspace-wayland,
+         powerdevil,
+         qml-module-org-kde-activities,
+         qml-module-org-kde-bluezqt,
+         qml-module-org-kde-kio,
+         qml-module-org-kde-kirigami2,
+         qml-module-org-kde-kirigami-addons-labs-mobileform,
+         qml-module-org-kde-kquickcontrols,
+         qml-module-org-kde-people,
+         qml-module-org-kde-qqc2breezestyle,
+         qml-module-qtfeedback,
+         qml-module-qtquick-localstorage,
+         xdg-desktop-portal-kde,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Recommends: kde-config-mobile-networking,
+         plasma-mobile-tweaks
+Description: Open-source user interface for phones, based on Plasma technologies
+ Plasma Mobile is an open-source user interface and ecosystem targeted at
+ mobile devices, built on the KDE Plasma stack.
+ A pragmatic approach is taken that is inclusive to software regardless of
+ toolkit, giving users the power to choose whichever software they want to
+ use on their device.
+ Plasma Mobile aims to contribute to and implement open standards, and is
+ developed in a transparent process that is open for anyone to participate in.
+
+Package: plasma-mobile-tweaks
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: Phone components for KDE Plasma.
+ plasma-mobile-tweaks package contains recommended configurations for
+ distributions shipping Plasma Mobile by default.
+ Some important changes include:
+  - Locking the screen as soon as the session has been entered
+  - Setting the default look-and-feel package
+  - Set the default keyboard to maliit-keyboard
+  - Prevent some unneeded applications from showing in the app list

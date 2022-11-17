@@ -1,0 +1,2 @@
+version=3
+https://download.kde.org/stable/plasma/([\d.]+)/plasma-mobile-([\d.]+)\.(?:tar.gz|tar.bz2|tar.xz)
