@@ -69,6 +69,9 @@ PlasmaCore.ColorScope {
             opacity: opacityValue
             spacing: 0
             
+            // HACK: there are weird issues with text rendering black regardless of opacity, just set the text to be invisible once it's out
+            visible: opacity > 0.05
+            
             anchors {
                 top: mediaWidget.bottom
                 topMargin: 0
@@ -111,6 +114,9 @@ PlasmaCore.ColorScope {
             verticalAlignment: Qt.AlignVCenter
             opacity: columnLayout.opacity
             
+            // HACK: there are weird issues with text rendering black regardless of opacity, just set the text to be invisible once it's out
+            visible: opacity > 0.05
+            
             anchors {
                 left: parent.left
                 top: parent.top
@@ -129,6 +135,9 @@ PlasmaCore.ColorScope {
             verticalAlignment: Qt.AlignTop
             color: PlasmaCore.ColorScope.disabledTextColor
             opacity: columnLayout.opacity
+            
+            // HACK: there are weird issues with text rendering black regardless of opacity, just set the text to be invisible once it's out
+            visible: opacity > 0.05
 
             anchors {
                 left: parent.left
@@ -149,6 +158,9 @@ PlasmaCore.ColorScope {
             y: isOnLargeScreen ? date.y - height + date.implicitHeight : date.y + date.implicitHeight + columnLayout.anchors.margins / 2
             
             opacity: columnLayout.opacity
+            
+            // HACK: there are weird issues with text rendering black regardless of opacity, just set the text to be invisible once it's out
+            visible: opacity > 0.05
                         
             anchors {
                 right: quickSettings.left
@@ -161,7 +173,7 @@ PlasmaCore.ColorScope {
         // right sidebar
         QuickSettingsPanel {
             id: quickSettings
-            height: Math.min(root.height, Math.max(quickSettings.minimizedHeight, actionDrawer.offset))
+            height: quickSettings.contentImplicitHeight + quickSettings.topPadding + quickSettings.bottomPadding
             width: intendedWidth
             
             readonly property real intendedWidth: 360
@@ -170,11 +182,12 @@ PlasmaCore.ColorScope {
             anchors.right: parent.right
             
             actionDrawer: root.actionDrawer
-            fullHeight: root.height
+            fullScreenHeight: root.height
             
             transform: Translate {
                 id: translate
-                y: Math.min(root.actionDrawer.offset - quickSettings.minimizedHeight, 0)
+                property real offsetRatio: quickSettings.height / root.height
+                y: Math.min(root.actionDrawer.offset * offsetRatio - quickSettings.height, 0)
             }
         }
     }
