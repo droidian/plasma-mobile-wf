@@ -3,28 +3,31 @@ Section: kde
 Priority: optional
 Maintainer: DebianOnMobile Maintainers <debian-on-mobile-maintainers@alioth-lists.debian.net>
 Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>
-Build-Depends: cmake,
+Build-Depends: cmake (>= 3.16~),
                debhelper-compat (= 13),
-               extra-cmake-modules (>= 5.36.0),
+               extra-cmake-modules (>= 5.98.0~),
+               kirigami-addons-dev (> 0.3~),
                kwin-dev,
-               libkf5declarative-dev,
-               libkf5kcmutils-dev,
-               libkf5networkmanagerqt-dev,
-               libkf5notifications-dev,
-               libkf5plasma-dev,
-               libkf5service-dev,
-               libkf5wayland-dev,
-               libphonenumber-dev,
-               libqt5svg5-dev,
-               libsystemd-dev,
-               modemmanager-qt-dev,
+               libkf5declarative-dev (>= 5.98.0~),
+               libkf5i18n-dev (>= 5.98.0~),
+               libkf5kcmutils-dev (>= 5.26~),
+               libkf5kio-dev (>= 5.98.0~),
+               libkf5networkmanagerqt-dev (>= 5.98.0~),
+               libkf5notifications-dev (>= 5.98.0~),
+               libkpipewire-dev (>= 5.26~),
+               libkf5plasma-dev (>= 5.98.0~),
+               libkf5service-dev (>= 5.98.0~),
+               libkf5wayland-dev (>= 4:5.98.0~),
+               modemmanager-qt-dev (>= 5.98.0~),
                pkg-config,
                pkg-kde-tools,
                plasma-workspace-dev,
-               qtbase5-dev,
-               qtdeclarative5-dev
-Standards-Version: 4.6.1
+               qtbase5-dev (>= 5.15.2~),
+               qtdeclarative5-dev (>= 5.15.2~),
+Standards-Version: 4.6.2
 Homepage: https://invent.kde.org/plasma/plasma-mobile
+Vcs-Browser: https://salsa.debian.org/DebianOnMobile-team/plasma-mobile
+Vcs-Git: https://salsa.debian.org/DebianOnMobile-team/plasma-mobile.git
 Rules-Requires-Root: no
 
 Package: plasma-mobile
