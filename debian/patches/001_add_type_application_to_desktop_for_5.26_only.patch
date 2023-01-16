@@ -3,10 +3,6 @@ From: Marco Mattiolo <marco.mattiolo@hotmail.it>
 Date: Sat, 17 Dec 2022 15:14:56 +0000
 Subject: [PATCH] Add Type=Application in bin/plasma-mobile.desktop
 
-    Upstream patch https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/279
-    was merged to master after 5.26 was first released, i.e. it will be included in next
-    major release (5.27.0).
-
 ---
  bin/plasma-mobile.desktop.cmake | 1 +
  1 file changed, 1 insertion(+)
