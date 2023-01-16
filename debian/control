@@ -6,7 +6,7 @@ Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>
 Build-Depends: cmake (>= 3.16~),
                debhelper-compat (= 13),
                extra-cmake-modules (>= 5.98.0~),
-               kirigami-addons-dev (> 0.3~),
+               kirigami-addons-dev (>= 0.3~),
                kwin-dev,
                libkf5declarative-dev (>= 5.98.0~),
                libkf5i18n-dev (>= 5.98.0~),
@@ -14,7 +14,6 @@ Build-Depends: cmake (>= 3.16~),
                libkf5kio-dev (>= 5.98.0~),
                libkf5networkmanagerqt-dev (>= 5.98.0~),
                libkf5notifications-dev (>= 5.98.0~),
-               libkpipewire-dev (>= 5.26~),
                libkf5plasma-dev (>= 5.98.0~),
                libkf5service-dev (>= 5.98.0~),
                libkf5wayland-dev (>= 4:5.98.0~),
@@ -22,6 +21,7 @@ Build-Depends: cmake (>= 3.16~),
                pkg-config,
                pkg-kde-tools,
                plasma-workspace-dev,
+               qml-module-org-kde-pipewire (>= 5.26~),
                qtbase5-dev (>= 5.15.2~),
                qtdeclarative5-dev (>= 5.15.2~),
 Standards-Version: 4.6.2
@@ -55,6 +55,7 @@ Depends: bluedevil,
          qml-module-org-kde-kirigami-addons-labs-mobileform,
          qml-module-org-kde-kquickcontrols,
          qml-module-org-kde-people,
+         qml-module-org-kde-pipewire,
          qml-module-org-kde-qqc2breezestyle,
          qml-module-qtfeedback,
          qml-module-qtquick-localstorage,
@@ -66,9 +67,11 @@ Recommends: kde-config-mobile-networking,
 Description: Open-source user interface for phones, based on Plasma technologies
  Plasma Mobile is an open-source user interface and ecosystem targeted at
  mobile devices, built on the KDE Plasma stack.
+ .
  A pragmatic approach is taken that is inclusive to software regardless of
  toolkit, giving users the power to choose whichever software they want to
  use on their device.
+ .
  Plasma Mobile aims to contribute to and implement open standards, and is
  developed in a transparent process that is open for anyone to participate in.
 
@@ -79,6 +82,7 @@ Depends: ${misc:Depends}
 Description: Phone components for KDE Plasma.
  plasma-mobile-tweaks package contains recommended configurations for
  distributions shipping Plasma Mobile by default.
+ .
  Some important changes include:
   - Locking the screen as soon as the session has been entered
   - Setting the default look-and-feel package
