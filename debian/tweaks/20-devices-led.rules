@@ -1,0 +1,11 @@
+#  SPDX-License-Identifier: LGPL-2.1+
+
+ACTION=="remove", GOTO="pinephone_led_end"
+
+# Setup the flash LED for use by flashlight
+# white:flash for PinePhone(Pro)
+SUBSYSTEM=="leds", KERNEL=="white:flash", RUN+="/bin/chmod g+w /sys%p/brightness /sys%p/flash_strobe", RUN+="/bin/chown :video /sys%p/brightness /sys%p/flash_strobe"
+# white:torch for Librem 5
+SUBSYSTEM=="leds", KERNEL=="white:torch", RUN+="/bin/chmod g+w /sys%p/brightness /sys%p/flash_strobe", RUN+="/bin/chown :video /sys%p/brightness /sys%p/flash_strobe"
+
+LABEL="pinephone_led_end"

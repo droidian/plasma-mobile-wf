@@ -3,3 +3,4 @@ debian/tweaks/kdeglobals /etc/xdg/
 debian/tweaks/kscreenlockerrc /etc/xdg/
 debian/tweaks/kwinrc /etc/xdg/
 debian/tweaks/plasmamobile.json /usr/share/maliit/keyboard2/devices/
+debian/tweaks/20-devices-led.rules etc/udev/rules.d

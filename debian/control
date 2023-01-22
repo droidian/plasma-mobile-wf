@@ -79,7 +79,7 @@ Package: plasma-mobile-tweaks
 Architecture: any
 Multi-Arch: foreign
 Depends: ${misc:Depends}
-Description: Phone components for KDE Plasma.
+Description: Components to improve the Plasma mobile UX on touch devices
  plasma-mobile-tweaks package contains recommended configurations for
  distributions shipping Plasma Mobile by default.
  .
