@@ -11,6 +11,7 @@
 #include <QQuickItem>
 
 #include <KConfigWatcher>
+#include <KIO/ApplicationLauncherJob>
 #include <KSharedConfig>
 
 /**
@@ -21,7 +22,8 @@
 class ShellUtil : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool isSystem24HourFormat READ isSystem24HourFormat NOTIFY isSystem24HourFormatChanged);
+    Q_PROPERTY(bool isSystem24HourFormat READ isSystem24HourFormat NOTIFY isSystem24HourFormatChanged)
+    Q_PROPERTY(bool isLaunchingApp READ isLaunchingApp NOTIFY isLaunchingAppChanged)
 
 public:
     ShellUtil(QObject *parent = nullptr);
@@ -51,11 +53,11 @@ public:
     Q_INVOKABLE void executeCommand(const QString &command);
 
     /**
-     * Launch an application by name.
+     * Launch an application by name. Sets the internal "launched app" state.
      *
-     * @param app The name of the application to launch.
+     * @param storageId The storage id of the application to launch.
      */
-    Q_INVOKABLE void launchApp(const QString &app);
+    Q_INVOKABLE void launchApp(const QString &storageId);
 
     /**
      * Whether the system is using 24 hour format.
@@ -63,22 +65,32 @@ public:
     Q_INVOKABLE bool isSystem24HourFormat();
 
     /**
-     * Allows us to get a filename in the standard videos directory (~/Videos by default)
-     * with a name that starts with @p name
-     *
-     * @returns a non-existing path that can be written into
-     *
-     * @see QStandardPaths::writableLocation()
-     * @see KFileUtil::suggestName()
+     * Whether an application is being launched.
      */
-    Q_INVOKABLE QString videoLocation(const QString &name);
+    Q_INVOKABLE bool isLaunchingApp();
 
-    Q_INVOKABLE void showNotification(const QString &title, const QString &text, const QString &filePath);
+    /**
+     * Cancels an application launch by running `kill pid` for every associated pid of the launching app.
+     */
+    Q_INVOKABLE void cancelLaunchingApp();
+
+    /**
+     * Clears the currently stored launching app.
+     *
+     * This should be called if the application window finally shows.
+     */
+    Q_INVOKABLE void clearLaunchingApp();
 
 Q_SIGNALS:
     void isSystem24HourFormatChanged();
+    void isLaunchingAppChanged();
 
 private:
+    void setLaunchingApp(KIO::ApplicationLauncherJob *launcherJob);
+
     KConfigWatcher::Ptr m_localeConfigWatcher;
     KSharedConfig::Ptr m_localeConfig;
+
+    KIO::ApplicationLauncherJob *m_launchingApp;
+    QVector<qint64> m_launchingAppPids;
 };

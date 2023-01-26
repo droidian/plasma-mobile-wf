@@ -8,7 +8,6 @@
 #include <QDebug>
 #include <QModelIndex>
 #include <QProcess>
-#include <QQuickItem>
 #include <QQuickWindow>
 
 #include <KApplicationTrader>
@@ -180,31 +179,6 @@ int ApplicationListModel::rowCount(const QModelIndex &parent) const
     }
 
     return m_applicationList.count();
-}
-
-void ApplicationListModel::runApplication(const QString &storageId)
-{
-    if (storageId.isEmpty()) {
-        return;
-    }
-
-    for (auto i = m_applicationList.begin(); i != m_applicationList.end(); i++) {
-        if ((*i).window && (*i).storageId == storageId) {
-            (*i).window->requestActivate();
-            return;
-        }
-    }
-
-    KService::Ptr service = KService::serviceByStorageId(storageId);
-    KIO::ApplicationLauncherJob *job = new KIO::ApplicationLauncherJob(service);
-    job->setUiDelegate(new KNotificationJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled));
-    job->start();
-    connect(job, &KJob::finished, this, [this, job] {
-        if (job->error()) {
-            qWarning() << "error launching" << job->error() << job->errorString();
-            Q_EMIT launchError(job->errorString());
-        }
-    });
 }
 
 void ApplicationListModel::setMinimizedDelegate(int row, QQuickItem *delegate)

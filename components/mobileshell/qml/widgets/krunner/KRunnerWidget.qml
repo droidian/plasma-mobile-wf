@@ -11,11 +11,11 @@ import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.15
 
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 
 import org.kde.milou 0.1 as Milou
 import org.kde.kirigami 2.19 as Kirigami
@@ -28,7 +28,13 @@ import "../../components" as Components
  */
 Item {
     id: root
-    
+
+    // content margins (background ignores this)
+    property real topMargin: 0
+    property real bottomMargin: 0
+    property real leftMargin: 0
+    property real rightMargin: 0
+
     function startGesture() {
         queryField.text = "";
         flickable.contentY = closedContentY;
@@ -76,10 +82,10 @@ Item {
         id: flickable
         
         anchors.fill: parent
-        anchors.topMargin: MobileShell.Shell.topMargin
-        anchors.bottomMargin: MobileShell.Shell.bottomMargin
-        anchors.leftMargin: MobileShell.Shell.leftMargin
-        anchors.rightMargin: MobileShell.Shell.rightMargin
+        anchors.topMargin: root.topMargin
+        anchors.bottomMargin: root.bottomMargin
+        anchors.leftMargin: root.leftMargin
+        anchors.rightMargin: root.rightMargin
         
         contentHeight: flickable.height + root.closedContentY + 999999
         contentY: root.closedContentY

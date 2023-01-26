@@ -12,6 +12,7 @@ import org.kde.kirigami 2.13 as Kirigami
 
 import org.kde.plasma.private.nanoshell 2.0 as NanoShell
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 
 /**
  * Component that animates an app opening from a location.
@@ -22,10 +23,6 @@ MouseArea { // use mousearea to ensure clicks don't go behind
     visible: false
 
     property alias backgroundColor: background.color
-    Kirigami.ImageColors {
-        id: colorGenerator
-        source: icon.source
-    }
 
     function open(splashIcon, title, x, y, sourceIconSize, color) {
         iconParent.scale = sourceIconSize/iconParent.width;
@@ -44,7 +41,7 @@ MouseArea { // use mousearea to ensure clicks don't go behind
 
         background.state = "open";
         
-        MobileShell.HomeScreenControls.taskSwitcher.minimizeAll();
+        MobileShellState.HomeScreenControls.taskSwitcher.minimizeAll();
     }
     
     function close() {
@@ -59,7 +56,7 @@ MouseArea { // use mousearea to ensure clicks don't go behind
     
     // close when homescreen requested
     Connections {
-        target: MobileShell.HomeScreenControls
+        target: MobileShellState.HomeScreenControls
         function onOpenHomeScreen() {
             background.state = "closed";
         }
@@ -82,6 +79,11 @@ MouseArea { // use mousearea to ensure clicks don't go behind
         if (!visible) {
             background.state = "closed";
         }
+    }
+    
+    Kirigami.ImageColors {
+        id: colorGenerator
+        source: icon.source
     }
 
     Item {
@@ -167,7 +169,7 @@ MouseArea { // use mousearea to ensure clicks don't go behind
                         ScriptAction {
                             script: {
                                 // close the app drawer after it isn't visible
-                                MobileShell.HomeScreenControls.resetHomeScreenPosition();
+                                MobileShellState.HomeScreenControls.resetHomeScreenPosition();
                             }
                         }
                     }
@@ -223,7 +225,7 @@ MouseArea { // use mousearea to ensure clicks don't go behind
                         ScriptAction {
                             script: {
                                 // close the app drawer after it isn't visible
-                                MobileShell.HomeScreenControls.resetHomeScreenPosition();
+                                MobileShellState.HomeScreenControls.resetHomeScreenPosition();
                             }
                         }
                     }

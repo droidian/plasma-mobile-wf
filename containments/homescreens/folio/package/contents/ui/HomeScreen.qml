@@ -20,10 +20,16 @@ import "appdrawer"
 import org.kde.plasma.private.containmentlayoutmanager 1.0 as ContainmentLayoutManager 
 
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 import org.kde.phone.homescreen.default 1.0 as HomeScreenLib
 
 Item {
     id: root
+
+    required property real topMargin
+    required property real bottomMargin
+    required property real leftMargin
+    required property real rightMargin
     
     property bool interactive: true
 
@@ -34,8 +40,8 @@ Item {
         
         appDrawerFlickable: appDrawer.flickable
         
-        availableScreenHeight: height - MobileShell.Shell.bottomMargin
-        availableScreenWidth: width - MobileShell.Shell.leftMargin - MobileShell.Shell.rightMargin
+        availableScreenHeight: height - root.topMargin - root.bottomMargin
+        availableScreenWidth: width - root.leftMargin - root.rightMargin
         
         appDrawerBottomOffset: favoriteStrip.height
     }
@@ -74,10 +80,10 @@ Item {
 
                 // account for panels
                 anchors.fill: parent
-                anchors.topMargin: MobileShell.Shell.topMargin
-                anchors.bottomMargin: MobileShell.Shell.bottomMargin
-                anchors.leftMargin: MobileShell.Shell.leftMargin
-                anchors.rightMargin: MobileShell.Shell.rightMargin
+                anchors.topMargin: root.topMargin
+                anchors.bottomMargin: root.bottomMargin
+                anchors.leftMargin: root.leftMargin
+                anchors.rightMargin: root.rightMargin
                 
                 // animation when app drawer is being shown
                 opacity: root.appDrawer ? 1 - root.appDrawer.openFactor : 1
@@ -132,10 +138,10 @@ Item {
                 homeScreenState: root.homeScreenState
                 
                 // account for panels
-                topPadding: MobileShell.Shell.topMargin
-                bottomPadding: MobileShell.Shell.bottomMargin
-                leftPadding: MobileShell.Shell.leftMargin
-                rightPadding: MobileShell.Shell.rightMargin
+                topPadding: root.topMargin
+                bottomPadding: root.bottomMargin
+                leftPadding: root.leftMargin
+                rightPadding: root.rightMargin
             }
         }
     }

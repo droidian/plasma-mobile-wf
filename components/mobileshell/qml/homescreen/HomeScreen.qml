@@ -11,6 +11,7 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.taskmanager 0.1 as TaskManager
 
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 
 /**
  * The base homescreen component, implementing features that simplify
@@ -43,18 +44,44 @@ Item {
      * Whether a component is being shown on top of the homescreen within the same
      * window.
      */
-    property bool overlayShown: taskSwitcher.visible || startupFeedback.visible
+    readonly property bool overlayShown: taskSwitcher.visible || startupFeedback.visible
     
-    //BEGIN API implementation
+    /**
+     * Margins for the homescreen, taking panels into account.
+     */
+    property real topMargin
+    property real bottomMargin
+    property real leftMargin
+    property real rightMargin
+
+    function evaluateMargins() {
+        topMargin = plasmoid.availableScreenRect.y
+        // add a specific check for the nav panel for now, since the gesture mode still technically has height
+        bottomMargin = MobileShell.MobileShellSettings.navigationPanelEnabled ? root.height - (plasmoid.availableScreenRect.y + plasmoid.availableScreenRect.height) : 0;
+        leftMargin = plasmoid.availableScreenRect.x
+        rightMargin = root.width - (plasmoid.availableScreenRect.x + plasmoid.availableScreenRect.width)
+    }
+
     Connections {
-        target: MobileShell.HomeScreenControls
+        target: plasmoid
+
+        // avoid binding loops with root.height and root.width changing along with the availableScreenRect
+        function onAvailableScreenRectChanged() {
+            Qt.callLater(() => root.evaluateMargins());
+        }
+    }
+
+    //BEGIN API implementation
+
+    Connections {
+        target: MobileShellState.HomeScreenControls
         
         function onOpenHomeScreen() {
             if (!MobileShell.WindowUtil.allWindowsMinimized) {
                 itemContainer.zoomIn();
             }
             
-            MobileShell.HomeScreenControls.resetHomeScreenPosition();
+            MobileShellState.HomeScreenControls.resetHomeScreenPosition();
             taskSwitcher.visible = false; // will trigger homescreen open
             taskSwitcher.minimizeAll();
             
@@ -82,23 +109,26 @@ Item {
     
     Plasmoid.onScreenChanged: {
         if (plasmoid.screen == 0) {
-            MobileShell.HomeScreenControls.taskSwitcher = taskSwitcher;
-            MobileShell.HomeScreenControls.homeScreenWindow = root.Window.window;
+            MobileShellState.HomeScreenControls.taskSwitcher = taskSwitcher;
+            MobileShellState.HomeScreenControls.homeScreenWindow = root.Window.window;
         }
     }
     Window.onWindowChanged: {
         if (plasmoid.screen == 0) {
-            MobileShell.HomeScreenControls.homeScreenWindow = root.Window.window;
+            MobileShellState.HomeScreenControls.homeScreenWindow = root.Window.window;
         }
     }
 
 //END API implementation
-    
+
     Component.onCompleted: {
+        // determine the margins used
+        evaluateMargins();
+
         // set API variables
         if (plasmoid.screen == 0) {
-            MobileShell.HomeScreenControls.taskSwitcher = taskSwitcher;
-            MobileShell.HomeScreenControls.homeScreenWindow = root.Window.window;
+            MobileShellState.HomeScreenControls.taskSwitcher = taskSwitcher;
+            MobileShellState.HomeScreenControls.homeScreenWindow = root.Window.window;
         }
     }
     
@@ -209,6 +239,11 @@ Item {
         id: taskSwitcher
         z: 999999
         
+        topMargin: root.topMargin
+        bottomMargin: root.bottomMargin
+        leftMargin: root.leftMargin
+        rightMargin: root.rightMargin
+
         tasksModel: TaskManager.TasksModel {
             groupMode: TaskManager.TasksModel.GroupDisabled
 
@@ -243,5 +278,12 @@ Item {
         id: startupFeedback
         z: 999999
         anchors.fill: parent
+        
+        // if the startup feedback closes, clear the shell's stored launching app
+        onVisibleChanged: {
+            if (!visible) {
+                MobileShell.ShellUtil.clearLaunchingApp();
+            }
+        }
     }
 }

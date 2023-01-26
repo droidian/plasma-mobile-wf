@@ -2,6 +2,7 @@
  *   SPDX-FileCopyrightText: 2014 Aleix Pol Gonzalez <aleixpol@blue-systems.com>
  *   SPDX-FileCopyrightText: 2020 Linus Jahn <lnj@kaidan.im>
  *   SPDX-FileCopyrightText: 2020 Marco Martin <mart@kde.org
+ *   SPDX-FileCopyrightText: 2022 Seshan Ravikumar <seshan10@me.com>
  *
  *   SPDX-License-Identifier: GPL-2.0-or-later
  */
@@ -31,6 +32,14 @@ PlasmaCore.ColorScope {
         onTriggered: root.cancelRequested()
         shortcut: "Escape"
     }
+    
+    Rectangle {
+        id: blackOverlay
+        anchors.fill: parent
+        color: "black"
+        opacity: 0
+        z: opacity > 0 ? 1 : 0
+    }
 
     Rectangle {
         id: background
@@ -56,15 +65,8 @@ PlasmaCore.ColorScope {
     ParallelAnimation {
         id: openAnim
         running: true
-        ScaleAnimator {
-            target: lay
-            from: 10
-            to: 1
-            duration: PlasmaCore.Units.longDuration
-            easing.type: Easing.InOutQuad
-        }
         OpacityAnimator {
-            target: lay
+            target: buttons
             from: 0
             to: 1
             duration: PlasmaCore.Units.longDuration
@@ -82,22 +84,16 @@ PlasmaCore.ColorScope {
     SequentialAnimation {
         id: closeAnim
         running: false
-        
+
+        property bool closeToBlack: false
         property var callback
         function execute(call) {
             callback = call;
             closeAnim.restart();
         }
         ParallelAnimation {
-            ScaleAnimator {
-                target: lay
-                from: 1
-                to: 10
-                duration: PlasmaCore.Units.longDuration
-                easing.type: Easing.InOutQuad
-            }
             OpacityAnimator {
-                target: lay
+                target: buttons
                 from: 1
                 to: 0
                 duration: PlasmaCore.Units.longDuration
@@ -110,49 +106,72 @@ PlasmaCore.ColorScope {
                 duration: PlasmaCore.Units.longDuration
                 easing.type: Easing.InOutQuad
             }
+            OpacityAnimator {
+                target: blackOverlay
+                from: 0
+                to: closeAnim.closeToBlack ? 1 : 0
+                duration: PlasmaCore.Units.longDuration
+                easing.type: Easing.InOutQuad
+            }
         }
         ScriptAction {
             script: {
                 if (closeAnim.callback) {
                     closeAnim.callback();
                 }
-                lay.opacity = 1;
-                lay.scale = 1;
+                buttons.opacity = 1;
                 background.opacity = 0.6;
             }
         }
     }
-    GridLayout {
-        id: lay
-        anchors.centerIn: parent
-        columns: 2
-        rowSpacing: PlasmaCore.Units.gridUnit * 2
-        columnSpacing: PlasmaCore.Units.gridUnit * 2
-        scale: 2
+    
+    Item {
+        id: buttons
+        anchors.fill: parent
         opacity: 0
-        ActionButton {
-            iconSource: "system-reboot"
-            text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Restart")
-            onClicked: {
-                closeAnim.execute(root.rebootRequested);
+        
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: PlasmaCore.Units.gridUnit
+
+            ActionButton {
+                iconSource: "system-reboot"
+                text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Restart")
+                onClicked: {
+                    closeAnim.closeToBlack = true;
+                    closeAnim.execute(root.rebootRequested);
+                }
+            }
+
+            ActionButton {
+                iconSource: "system-shutdown"
+                text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Shut Down")
+                onClicked: {
+                    closeAnim.closeToBlack = true;
+                    closeAnim.execute(root.haltRequested);
+                }
+            }
+
+            ActionButton {
+                iconSource: "system-log-out"
+                text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Log Out")
+                onClicked: {
+                    closeAnim.closeToBlack = true;
+                    closeAnim.execute(root.logoutRequested);
+                }
             }
         }
-
+        
         ActionButton {
-            iconSource: "system-shutdown"
-            text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Shut Down")
-            onClicked: {
-                closeAnim.execute(root.haltRequested);
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: PlasmaCore.Units.largeSpacing
+                horizontalCenter: parent.horizontalCenter
             }
-        }
-
-        ActionButton {
-            //Remove this when we have more buttons
-            Layout.columnSpan: 2
-            Layout.alignment: Qt.AlignCenter
             iconSource: "dialog-cancel"
             text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Cancel")
             onClicked: {
+                closeAnim.closeToBlack = false;
                 closeAnim.execute(root.cancelRequested);
             }
         }

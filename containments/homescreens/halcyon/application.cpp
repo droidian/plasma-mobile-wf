@@ -6,9 +6,7 @@
 
 #include <QQuickWindow>
 
-#include <KIO/ApplicationLauncherJob>
 #include <KNotificationJobUiDelegate>
-#include <KService>
 
 Application::Application(QObject *parent, KService::Ptr service)
     : QObject{parent}
@@ -100,19 +98,6 @@ void Application::setWindow(KWayland::Client::PlasmaWindow *window)
 {
     m_window = window;
     Q_EMIT windowChanged();
-}
-
-void Application::runApplication()
-{
-    if (m_window) {
-        m_window->requestActivate();
-        return;
-    }
-
-    KService::Ptr service = KService::serviceByStorageId(m_storageId);
-    KIO::ApplicationLauncherJob *job = new KIO::ApplicationLauncherJob(service);
-    job->setUiDelegate(new KNotificationJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled));
-    job->start();
 }
 
 void Application::setMinimizedDelegate(QQuickItem *delegate)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-19 02:31+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2022-06-24 20:51+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -70,3 +70,12 @@ msgstr "Canvia el fons de pantalla"
 #: contents/configuration/ContainmentConfiguration.qml:113
 msgid "Configure"
 msgstr "Configura"
+
+#~ msgid "Layout:"
+#~ msgstr "Disposició:"
+
+#~ msgid "Wallpaper Type:"
+#~ msgstr "Tipus de fons de pantalla:"
+
+#~ msgid "Customize..."
+#~ msgstr "Personalitza..."
