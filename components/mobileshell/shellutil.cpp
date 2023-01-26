@@ -7,12 +7,14 @@
  */
 
 #include "shellutil.h"
+#include "mobileshellsettings.h"
+#include "windowutil.h"
 
 #include <KConfigGroup>
 #include <KFileUtils>
-#include <KIO/ApplicationLauncherJob>
 #include <KLocalizedString>
 #include <KNotification>
+#include <KNotificationJobUiDelegate>
 
 #include <QDBusPendingReply>
 #include <QDateTime>
@@ -24,8 +26,9 @@
 
 ShellUtil::ShellUtil(QObject *parent)
     : QObject{parent}
+    , m_localeConfig{KSharedConfig::openConfig(QStringLiteral("kdeglobals"), KConfig::SimpleConfig)}
+    , m_launchingApp{nullptr}
 {
-    m_localeConfig = KSharedConfig::openConfig(QStringLiteral("kdeglobals"), KConfig::SimpleConfig);
     m_localeConfigWatcher = KConfigWatcher::create(m_localeConfig);
 
     // watch for changes to locale config, to update 12/24 hour time
@@ -77,33 +80,55 @@ bool ShellUtil::isSystem24HourFormat()
     return timeFormat == QStringLiteral(FORMAT24H);
 }
 
-void ShellUtil::launchApp(const QString &app)
+void ShellUtil::launchApp(const QString &storageId)
 {
-    const KService::Ptr appService = KService::serviceByDesktopName(app);
-    if (!appService) {
-        qWarning() << "Could not find" << app;
+    // try to activate a running window first
+    auto windows = WindowUtil::instance()->windowsFromStorageId(storageId);
+
+    if (!windows.empty()) {
+        windows[0]->requestActivate();
         return;
     }
-    auto job = new KIO::ApplicationLauncherJob(appService, this);
-    job->start();
-}
 
-QString ShellUtil::videoLocation(const QString &name)
-{
-    QString path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
-    QString newPath(path + '/' + name);
-    if (QFile::exists(newPath)) {
-        newPath = path + '/' + KFileUtils::suggestName(QUrl::fromLocalFile(newPath), name);
+    // now try launching the window
+    KService::Ptr service = KService::serviceByStorageId(storageId);
+    if (!service) {
+        qWarning() << "Could not find" << storageId;
+        return;
     }
-    return newPath;
+
+    auto job = new KIO::ApplicationLauncherJob(service, this);
+    job->setUiDelegate(new KNotificationJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled));
+    job->start();
+
+    setLaunchingApp(job);
 }
 
-void ShellUtil::showNotification(const QString &title, const QString &text, const QString &filePath)
+bool ShellUtil::isLaunchingApp()
 {
-    KNotification *notif = new KNotification("captured");
-    notif->setComponentName(QStringLiteral("plasma_phone_components"));
-    notif->setTitle(title);
-    notif->setUrls({QUrl::fromLocalFile(filePath)});
-    notif->setText(text);
-    notif->sendEvent();
+    return m_launchingApp != nullptr;
+}
+
+void ShellUtil::setLaunchingApp(KIO::ApplicationLauncherJob *launcherJob)
+{
+    m_launchingAppPids = {};
+    m_launchingApp = launcherJob; // do not assume that the pointer is valid, KJobs destroy themselves
+    connect(launcherJob, &KIO::ApplicationLauncherJob::result, this, [this](auto *job) {
+        m_launchingAppPids = m_launchingApp->pids();
+    });
+    Q_EMIT isLaunchingAppChanged();
+}
+
+void ShellUtil::cancelLaunchingApp()
+{
+    for (auto pid : m_launchingAppPids) {
+        QProcess::execute("kill", {QString::number(pid)});
+    }
+    clearLaunchingApp();
+}
+
+void ShellUtil::clearLaunchingApp()
+{
+    m_launchingApp = nullptr;
+    Q_EMIT isLaunchingAppChanged();
 }

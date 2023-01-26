@@ -15,6 +15,7 @@ import org.kde.plasma.core 2.1 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.private.nanoshell 2.0 as NanoShell
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 
 import "../components" as Components
 
@@ -25,6 +26,14 @@ Item {
     id: root
     visible: false
     opacity: 0
+
+    /**
+     * Margins for the content (taking shell panels into account).
+     */
+    required property real topMargin
+    required property real bottomMargin
+    required property real leftMargin
+    required property real rightMargin
 
     // state object
     property var taskSwitcherState: TaskSwitcherState {
@@ -58,7 +67,7 @@ Item {
     }
     
     // update API property
-    onVisibleChanged: MobileShell.HomeScreenControls.taskSwitcherVisible = visible;
+    onVisibleChanged: MobileShellState.HomeScreenControls.taskSwitcherVisible = visible;
     
     // keep track of task list events
     property int oldTasksCount: tasksCount
@@ -200,10 +209,10 @@ Item {
         
         // provide shell margins
         anchors.fill: parent
-        anchors.leftMargin: MobileShell.Shell.leftMargin
-        anchors.rightMargin: MobileShell.Shell.rightMargin
-        anchors.bottomMargin: MobileShell.Shell.bottomMargin
-        anchors.topMargin: MobileShell.Shell.topMargin
+        anchors.leftMargin: root.leftMargin
+        anchors.rightMargin: root.rightMargin
+        anchors.bottomMargin: root.bottomMargin
+        anchors.topMargin: root.topMargin
         
         FlickContainer {
             id: flickable
@@ -215,6 +224,8 @@ Item {
             // the item is effectively anchored to the flickable bounds
             TaskList {
                 id: taskList
+                shellTopMargin: root.topMargin
+                shellBottomMargin: root.bottomMargin
                 
                 taskSwitcher: root
                 

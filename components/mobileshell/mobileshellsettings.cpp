@@ -20,8 +20,8 @@ MobileShellSettings *MobileShellSettings::self()
 
 MobileShellSettings::MobileShellSettings(QObject *parent)
     : QObject{parent}
+    , m_config{KSharedConfig::openConfig(CONFIG_FILE, KConfig::SimpleConfig)}
 {
-    m_config = KSharedConfig::openConfig(CONFIG_FILE, KConfig::SimpleConfig);
     m_configWatcher = KConfigWatcher::create(m_config);
 
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) -> void {
@@ -161,14 +161,13 @@ QList<QString> MobileShellSettings::enabledQuickSettings() const
                                           QStringLiteral("org.kde.plasma.quicksetting.airplanemode"),
                                           QStringLiteral("org.kde.plasma.quicksetting.audio"),
                                           QStringLiteral("org.kde.plasma.quicksetting.battery"),
-                                          QStringLiteral("org.kde.plasma.quicksetting.location"),
+                                          QStringLiteral("org.kde.plasma.quicksetting.record"),
                                           QStringLiteral("org.kde.plasma.quicksetting.nightcolor"),
                                           QStringLiteral("org.kde.plasma.quicksetting.screenshot"),
                                           QStringLiteral("org.kde.plasma.quicksetting.powermenu"),
                                           QStringLiteral("org.kde.plasma.quicksetting.donotdisturb"),
                                           QStringLiteral("org.kde.plasma.quicksetting.caffeine"),
-                                          QStringLiteral("org.kde.plasma.quicksetting.keyboardtoggle"),
-                                          QStringLiteral("org.kde.plasma.quicksetting.record")});
+                                          QStringLiteral("org.kde.plasma.quicksetting.keyboardtoggle")});
 }
 
 void MobileShellSettings::setEnabledQuickSettings(QList<QString> &list)

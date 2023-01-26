@@ -16,6 +16,7 @@ import org.kde.kquickcontrolsaddons 2.0
 
 import org.kde.plasma.private.nanoshell 2.0 as NanoShell
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 
 Item {
     id: root
@@ -60,12 +61,16 @@ Item {
         
         property NavigationPanelButton activeButton
 
+        MobileShell.HapticsEffectLoader {
+            id: haptics
+        }
+        
         onPressed: {
             startMouseX = oldMouseX = mouse.y;
             startMouseY = oldMouseY = mouse.y;
             activeButton = icons.childAt(mouse.x, mouse.y);
             if (activeButton && activeButton.enabled) {
-                MobileShell.Haptics.buttonVibrate();
+                haptics.buttonVibrate();
             }
         }
         
@@ -96,7 +101,7 @@ Item {
                     activeButton = null;
                     root.taskSwitcher.show(false);
                 } else if (taskSwitcher.tasksCount === 0) { // no tasks, let's scroll up the homescreen instead
-                    MobileShell.HomeScreenControls.requestRelativeScroll(Qt.point(mouse.x - oldMouseX, mouse.y - oldMouseY));
+                    MobileShellState.HomeScreenControls.requestRelativeScroll(Qt.point(mouse.x - oldMouseX, mouse.y - oldMouseY));
                 }
                 
                 oldMouseY = mouse.y;

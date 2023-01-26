@@ -11,7 +11,6 @@
 #include <QIcon>
 #include <QMenu>
 #include <QMimeData>
-#include <QQuickItem>
 #include <QQuickWindow>
 #include <QTimer>
 
@@ -25,10 +24,7 @@
 #include <KStandardAction>
 #include <KUrlMimeData>
 
-#include <KIO/CopyJob> // for KIO::trash
-#include <KIO/DeleteJob>
-#include <KIO/FileUndoManager>
-#include <KIO/JobUiDelegate>
+#include <KIO/DeleteOrTrashJob>
 #include <KIO/OpenFileManagerWindowJob>
 
 NotificationFileMenu::NotificationFileMenu(QObject *parent)
@@ -148,12 +144,8 @@ void NotificationFileMenu::open(int x, int y)
         auto moveToTrashLambda = [this] {
             const QList<QUrl> urls{m_url};
 
-            KIO::JobUiDelegate uiDelegate;
-            if (uiDelegate.askDeleteConfirmation(urls, KIO::JobUiDelegate::Trash, KIO::JobUiDelegate::DefaultConfirmation)) {
-                auto *job = KIO::trash(urls);
-                job->uiDelegate()->setAutoErrorHandlingEnabled(true);
-                KIO::FileUndoManager::self()->recordJob(KIO::FileUndoManager::Trash, urls, QUrl(QStringLiteral("trash:/")), job);
-            }
+            auto *job = new KIO::DeleteOrTrashJob(urls, KIO::AskUserActionInterface::Trash, KIO::AskUserActionInterface::DefaultConfirmation, this);
+            job->start();
         };
         auto moveToTrashAction = KStandardAction::moveToTrash(this, moveToTrashLambda, menu);
         moveToTrashAction->setShortcut({}); // Can't focus notification to press Delete
@@ -167,11 +159,8 @@ void NotificationFileMenu::open(int x, int y)
         auto deleteLambda = [this] {
             const QList<QUrl> urls{m_url};
 
-            KIO::JobUiDelegate uiDelegate;
-            if (uiDelegate.askDeleteConfirmation(urls, KIO::JobUiDelegate::Delete, KIO::JobUiDelegate::DefaultConfirmation)) {
-                auto *job = KIO::del(urls);
-                job->uiDelegate()->setAutoErrorHandlingEnabled(true);
-            }
+            auto *job = new KIO::DeleteOrTrashJob(urls, KIO::AskUserActionInterface::Delete, KIO::AskUserActionInterface::DefaultConfirmation, this);
+            job->start();
         };
         auto deleteAction = KStandardAction::deleteFile(this, deleteLambda, menu);
         deleteAction->setShortcut({});

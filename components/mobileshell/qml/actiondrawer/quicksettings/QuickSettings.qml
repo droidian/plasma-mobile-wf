@@ -13,6 +13,7 @@ import QtQuick.Window 2.2
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 
 import "../../components" as Components
 import "../../components/util.js" as Util
@@ -25,7 +26,13 @@ Item {
     clip: true
     
     required property var actionDrawer
-    
+    required property int mode
+
+    enum Mode {
+        Pages,
+        ScrollView
+    }
+
     readonly property real columns: Math.round(Util.applyMinMaxRange(3, 6, width / intendedColumnWidth))
     readonly property real columnWidth: Math.floor(width / columns)
     readonly property int minimizedColumns: Math.round(Util.applyMinMaxRange(5, 8, width / intendedMinimizedColumnWidth))
@@ -46,15 +53,14 @@ Item {
     readonly property int columnCount: Math.floor(width/columnWidth)
     readonly property int rowCount: {
         let totalRows = Math.ceil(quickSettingsCount / columnCount);
-        let isPortrait = MobileShell.Shell.orientation === MobileShell.Shell.Portrait;
-        
-        if (isPortrait) {
+
+        if (root.mode === QuickSettings.Pages) {
             // portrait orientation
             let maxRows = 5; // more than 5 is just disorienting
             let targetRows = Math.floor(Window.height * 0.65 / rowHeight);
             return Math.min(maxRows, Math.min(totalRows, targetRows));
             
-        } else { 
+        } else if (root.mode === QuickSettings.ScrollView) {
             // horizontal orientation
             let targetRows = Math.floor(Window.height * 0.8 / rowHeight);
             return Math.min(totalRows, targetRows);
@@ -65,7 +71,7 @@ Item {
     readonly property int quickSettingsCount: quickSettingsModel.count
         
     function resetSwipeView() {
-        if (MobileShell.Shell.orientation === MobileShell.Shell.Portrait) {
+        if (root.mode === QuickSettings.Pages) {
             pageLoader.item.view.currentIndex = 0;
         }
     }
@@ -100,7 +106,7 @@ Item {
             Layout.minimumHeight: rowCount * rowHeight
 
             asynchronous: true
-            sourceComponent: MobileShell.Shell.orientation === MobileShell.Shell.Portrait ? swipeViewComponent : scrollViewComponent
+            sourceComponent: root.mode === QuickSettings.Pages ? swipeViewComponent : scrollViewComponent
         }
         
         BrightnessItem {

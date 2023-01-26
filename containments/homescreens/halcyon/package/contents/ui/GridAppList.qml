@@ -7,7 +7,6 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.15 as Controls
 
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
@@ -15,6 +14,7 @@ import org.kde.kirigami 2.10 as Kirigami
 
 import org.kde.plasma.private.nanoshell 2.0 as NanoShell
 import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
 import org.kde.phone.homescreen.halcyon 1.0 as Halcyon
 
 MobileShell.GridView {
@@ -80,7 +80,7 @@ MobileShell.GridView {
 
         onLaunch: (x, y, icon, title, storageId) => {
             if (icon !== "") {
-                MobileShell.HomeScreenControls.openAppLaunchAnimation(
+                MobileShellState.Shell.openAppLaunchAnimation(
                         icon,
                         title,
                         delegate.iconItem.Kirigami.ScenePosition.x + delegate.iconItem.width/2,
@@ -89,7 +89,7 @@ MobileShell.GridView {
             }
 
             application.setMinimizedDelegate(delegate);
-            application.runApplication();
+            MobileShell.ShellUtil.launchApp(application.storageId);
         }
     }
 }
