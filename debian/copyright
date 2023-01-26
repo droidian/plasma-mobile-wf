@@ -87,7 +87,23 @@ License: GPL-2+
 Files: components/mobileshell/notifications/*
 Copyright: 2016, 2019 Kai Uwe Broulik <kde@privat.broulik.de>
 License: LGPL-2.1+
- 
+
+Files: look-and-feel/*
+Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
+           2014 Pier Luigi Fiorini
+           2016 Marco Martin <mart@kde.org>
+           2021 Aleix Pol <apol@kde.org>
+License: GPL-2+
+
+Files: shell/*
+Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
+           2014 Pier Luigi Fiorini
+           2014-2020 Marco Martin <mart@kde.org>
+           2015-2021 Bhushan Shah <bshah@kde.org>
+           2021 Aleix Pol <apol@kde.org>
+           2021 Devin Lin <devin@kde.org>
+License: GPL-2+
+
 Files: components/mobileshell/qml/actiondrawer/*
        components/mobileshell/qml/homescreen/*
        components/mobileshell/qml/taskswitcher/*
@@ -243,13 +259,6 @@ Copyright: 2015 Marco Martin <mart@kde.org>
            2018-2019 Bhushan Shah <bshah@kde.org>
 License: GPL-2+
 
-Files: look-and-feel/*
-Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
-           2014 Pier Luigi Fiorini
-           2016 Marco Martin <mart@kde.org>
-           2021 Aleix Pol <apol@kde.org>
-License: GPL-2+
-
 Files: look-and-feel/contents/lockscreen/Clock.qml
        look-and-feel/contents/lockscreen/LockScreen.qml
 Copyright: 2019 Nicolas Fella <nicolas.fella@gmx.de>
@@ -364,15 +373,6 @@ License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
 Files: quicksettings/airplanemode/metadata.json
        shell/Messages.sh
 Copyright: 2019 Bhushan Shah <bshah@kde.org>
-License: GPL-2+
-
-Files: shell/*
-Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
-           2014 Pier Luigi Fiorini
-           2014-2020 Marco Martin <mart@kde.org>
-           2015-2021 Bhushan Shah <bshah@kde.org>
-           2021 Aleix Pol <apol@kde.org>
-           2021 Devin Lin <devin@kde.org>
 License: GPL-2+
 
 Files: shell/contents/configuration/ConfigurationAppletPage.qml
