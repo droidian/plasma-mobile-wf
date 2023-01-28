@@ -48,7 +48,7 @@ License: GPL-2+
 Files: bin/plasma-mobile.desktop.cmake
        bin/startplasmamobile-dev.sh.cmake
        quicksettings/nightcolor/package/metadata.json
-       quicksettings/record/metadata.json
+       quicksettings/record/package/metadata.json
 Copyright: 2019 Aleix Pol <apol@kde.org>
            2019-2021 Aleix Pol i Gonzalez <aleixpol@kde.org>
 License: GPL-2+
@@ -124,7 +124,7 @@ Files: components/mobileshell/qml/actiondrawer/*
        quicksettings/flashlight/package/contents/*
        quicksettings/mobiledata/contents/*
        quicksettings/powermenu/package/contents/*
-       quicksettings/record/contents/*
+       quicksettings/record/package/contents/*
        quicksettings/screenrotation/package/contents/*
        quicksettings/screenshot/package/contents/*
        quicksettings/settingsapp/contents/*

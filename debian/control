@@ -6,7 +6,7 @@ Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>
 Build-Depends: cmake (>= 3.16~),
                debhelper-compat (= 13),
                extra-cmake-modules (>= 5.98.0~),
-               kirigami-addons-dev (>= 0.3~),
+               kirigami-addons-dev (>= 0.6~),
                kwin-dev,
                libkf5declarative-dev (>= 5.98.0~),
                libkf5i18n-dev (>= 5.98.0~),
