@@ -151,7 +151,7 @@ Copyright: 2013 Canonical Ltd. <legal@canonical.com>
            2021 Devin Lin <devin@kde.org>
 License: GPL-3
  
-Files: components/mobileshell/qml/dataproviders/BluetoothProvider.qml
+Files: components/mobileshell/qml/dataproviders/BluetoothInfo.qml
        components/mobileshell/qml/statusbar/indicators/BluetoothIndicator.qml
        components/mobileshell/qml/statusbar/indicators/InternetIndicator.qml
 Copyright: 2013-2017 Jan Grulich <jgrulich@redhat.com>
@@ -160,13 +160,13 @@ Copyright: 2013-2017 Jan Grulich <jgrulich@redhat.com>
            2021 Devin Lin <devin@kde.org>
 License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
     
-Files: components/mobileshell/qml/dataproviders/SignalStrengthProvider.qml
+Files: components/mobileshell/qml/dataproviders/SignalStrengthInfo.qml
 Copyright: 2015 Marco Martin <mart@kde.org>
            2021 Devin Lin <devin@kde.org>
            2021 Tobias Fella <fella@posteo.de>
 License: GPL-2+
  
-Files: components/mobileshell/qml/dataproviders/VolumeProvider.qml
+Files: components/mobileshell/qml/dataproviders/AudioProvider.qml
        components/mobileshell/qml/statusbar/indicators/VolumeIndicator.qml
 Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
            2019 Aditya Mehra <Aix.m@outlook.com>
