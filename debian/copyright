@@ -5,24 +5,74 @@ Source: https://invent.kde.org/plasma/plasma-mobile
 
 Files: *
 Copyright: 2012-2021 Marco Martin <mart@kde.org>
-           2015 Marco Martin <notmart@gmail.com>
-           2020-2022 Devin Lin <espidev@gmail.com>
-           2021-2022 Devin Lin <devin@kde.org>
+           2014-2021 Aleix Pol Gonzalez <apol@kde.org>
+           2020-2022 Devin Lin <devin@kde.org>
 License: GPL-2+
+
+Files: components/mobileshell/qml/widgets/mediacontrols/*
+Copyright: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
+           2021 Devin Lin <devin@kde.org>
+License: LGPL-2+
+
+Files: components/mobileshell/qml/actiondrawer/*
+       components/mobileshell/qml/components/StartupFeedback.qml
+       components/mobileshell/qml/homescreen/*
+       components/mobileshell/qml/statusbar/StatusBar.qml
+       components/mobileshell/qml/statusbar/TaskWidget.qml
+       components/mobileshell/qml/taskswitcher/FlickContainer.qml
+       components/mobileshell/qml/taskswitcher/TaskIcon.qml
+       components/mobileshell/qml/taskswitcher/Thumbnail.qml
+       components/mobileshell/qml/widgets/mediacontrols/BlurredBackground.qml
+       components/mobileshell/quicksettings/*
+       containments/homescreens/folio/package/contents/ui/FlickContainer.qml
+       containments/homescreens/folio/package/contents/ui/HomeScreen.qml
+       containments/homescreens/folio/package/contents/ui/HomeScreenContents.qml
+       containments/homescreens/folio/package/contents/ui/HomeScreenPages.qml
+       containments/homescreens/folio/package/contents/ui/LauncherDragManager.qml
+       containments/homescreens/folio/package/contents/ui/main.qml
+       containments/homescreens/folio/package/contents/ui/MobileAppletContainer.qml
+       containments/homescreens/folio/package/contents/ui/appdrawer/AppDrawer*.qml
+       containments/homescreens/folio/package/contents/ui/private/ConfigOverlay.qml
+       containments/homescreens/folio/package/contents/ui/private/OpenDrawerButton.qml
+       containments/homescreens/halcyon/package/contents/ui/FavoritesGrid.qml
+       containments/homescreens/halcyon/package/contents/ui/FavoritesView.qml
+       containments/homescreens/halcyon/package/contents/ui/FolderGrid.qml
+       containments/homescreens/halcyon/package/contents/ui/HomeScreen.qml
+       containments/homescreens/halcyon/package/contents/ui/main.qml
+       kcms/mobileshell/package/*
+       look-and-feel/contents/lockscreen/FlickContainer.qml
+       look-and-feel/contents/systemdialog/*
+       quicksettings/audio/contents/*
+       quicksettings/battery/contents/*
+       quicksettings/bluetooth/contents/*
+       quicksettings/caffeine/contents/*
+       quicksettings/donotdisturb/contents/*
+       quicksettings/flashlight/package/contents/*
+       quicksettings/mobiledata/contents/*
+       quicksettings/nightcolor/package/contents/*
+       quicksettings/powermenu/package/contents/*
+       quicksettings/record/package/contents/*
+       quicksettings/screenrotation/package/contents/*
+       quicksettings/screenshot/package/contents/*
+       quicksettings/settingsapp/contents/*
+       quicksettings/wifi/contents/*
+       tests/*.qml
+Copyright: 2011-2019 Marco Martin <mart@kde.org>
+           2014-2021 Aleix Pol Gonzalez <apol@kde.org>
+           2021-2022 Devin Lin <devin@kde.org>
+License: LGPL-2+
 
 Files: debian/*
 Copyright: 2023 Marco Mattiolo <marco.mattiolo@hotmail.it>
+           2023 Arnaud Ferraris <aferraris@debian.org>
 License: GPL-2+
 
 Files: debian/tweaks/*
 Copyright: Plasma Mobile contributors
 License: CC0-1.0
 
-Files: debian/tweaks/20-devices-led.rules
-Copyright: 2020 Arnaud Ferraris <arnaud.ferraris@gmail.com>
-License: LGPL-2.1+
-
-Files: logo.png
+Files: .git*
+       logo.png
        README.md
        screenshots/*
        tests/README.md
@@ -35,33 +85,23 @@ Copyright: 2020 Han Young <hanyoung@protonmail.com>
 License: GPL-2+
 
 Files: bin/CMakeLists.txt
-Copyright: 2019 Aleix Pol <apol@kde.org>
+Copyright: 2019 Aleix Pol Gonzalez <apol@kde.org>
            2020 Jonah Brüchert <jbb@kaidan.im>
 License: GPL-2+
 
 Files: bin/install-sessions.sh.cmake
-Copyright: 2019 Aleix Pol Gonzalez <aleixpol@kde.org>
+Copyright: 2019 Aleix Pol Gonzalez <apol@kde.org>
            2021 Nate Graham <nate@kde.org>
            2022 Devin Lin <devin@kde.org>
 License: GPL-2+
 
-Files: bin/plasma-mobile.desktop.cmake
-       bin/startplasmamobile-dev.sh.cmake
-       quicksettings/nightcolor/package/metadata.json
-       quicksettings/record/package/contents/metadata.json
-Copyright: 2019 Aleix Pol <apol@kde.org>
-           2019-2021 Aleix Pol i Gonzalez <aleixpol@kde.org>
-License: GPL-2+
-
 Files: bin/startplasmamobile.in
 Copyright: 2019-2020 Jonah Brüchert <jbb@kaidan.im>
-           2019-2021 Aleix Pol <apol@kde.org>
+           2019-2021 Aleix Pol Gonzalez <apol@kde.org>
            2019-2021 Bhushan Shah <bshah@kde.org>
 License: GPL-2+
 
-Files: components/mmplugin/CMakeLists.txt
-       components/mmplugin/mmqmlplugin.*
-       components/mmplugin/qmldir
+Files: components/mmplugin/*
 Copyright: 2021 Tobias Fella <fella@posteo.de>
 License: GPL-2+
 
@@ -88,54 +128,6 @@ Files: components/mobileshell/notifications/*
 Copyright: 2016, 2019 Kai Uwe Broulik <kde@privat.broulik.de>
 License: LGPL-2.1+
 
-Files: look-and-feel/*
-Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
-           2014 Pier Luigi Fiorini
-           2016 Marco Martin <mart@kde.org>
-           2021 Aleix Pol <apol@kde.org>
-License: GPL-2+
-
-Files: shell/*
-Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
-           2014 Pier Luigi Fiorini
-           2014-2020 Marco Martin <mart@kde.org>
-           2015-2021 Bhushan Shah <bshah@kde.org>
-           2021 Aleix Pol <apol@kde.org>
-           2021 Devin Lin <devin@kde.org>
-License: GPL-2+
-
-Files: components/mobileshell/qml/actiondrawer/*
-       components/mobileshell/qml/homescreen/*
-       components/mobileshell/qml/taskswitcher/*
-       components/mobileshell/qml/widgets/mediacontrols/*
-       components/mobileshell/quicksettings/*
-       components/mobileshell/qml/components/*
-       components/mobileshell/qml/statusbar/*
-       containments/homescreens/folio/package/contents/ui/*
-       containments/homescreens/halcyon/package/contents/ui/*
-       kcms/mobileshell/package/*
-       look-and-feel/contents/lockscreen/FlickContainer.qml
-       look-and-feel/contents/systemdialog/*
-       quicksettings/audio/contents/*
-       quicksettings/battery/contents/*
-       quicksettings/bluetooth/contents/*
-       quicksettings/caffeine/contents/*
-       quicksettings/donotdisturb/contents/*
-       quicksettings/flashlight/package/contents/*
-       quicksettings/mobiledata/contents/*
-       quicksettings/powermenu/package/contents/*
-       quicksettings/record/package/contents/*
-       quicksettings/screenrotation/package/contents/*
-       quicksettings/screenshot/package/contents/*
-       quicksettings/settingsapp/contents/*
-       quicksettings/wifi/contents/*
-       tests/LockScreenTest.qml
-Copyright: 2014-2015 Marco Martin <notmart@gmail.com>
-           2011-2019 Marco Martin <mart@kde.org>
-           2021-2022 Devin Lin <devin@kde.org>
-           2021 Devin Lin <espidev@gmail.com>
-License: LGPL-2+
-
 Files: components/mobileshell/qml/actiondrawer/quicksettings/BrightnessItem.qml
 Copyright: 2012-2013 Daniel Nicoletti <dantti12@gmail.com>
            2013, 2015 Kai Uwe Broulik <kde@privat.broulik.de>
@@ -151,12 +143,18 @@ Copyright: 2013 Canonical Ltd. <legal@canonical.com>
            2021 Devin Lin <devin@kde.org>
 License: GPL-3
  
+Files: components/mobileshell/qml/dataproviders/AudioProvider.qml
+       components/mobileshell/qml/statusbar/indicators/VolumeIndicator.qml
+Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
+           2019 Aditya Mehra <Aix.m@outlook.com>
+           2021 Devin Lin <devin@kde.org>
+License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
+
 Files: components/mobileshell/qml/dataproviders/BluetoothInfo.qml
        components/mobileshell/qml/statusbar/indicators/BluetoothIndicator.qml
        components/mobileshell/qml/statusbar/indicators/InternetIndicator.qml
 Copyright: 2013-2017 Jan Grulich <jgrulich@redhat.com>
            2019 Marco Martin <mart@kde.org>
-           2021 Devin Lin <espidev@gmail.com>
            2021 Devin Lin <devin@kde.org>
 License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
     
@@ -166,23 +164,15 @@ Copyright: 2015 Marco Martin <mart@kde.org>
            2021 Tobias Fella <fella@posteo.de>
 License: GPL-2+
  
-Files: components/mobileshell/qml/dataproviders/AudioProvider.qml
-       components/mobileshell/qml/statusbar/indicators/VolumeIndicator.qml
-Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
-           2019 Aditya Mehra <Aix.m@outlook.com>
-           2021 Devin Lin <espidev@gmail.com>
-           2021 Devin Lin <devin@kde.org>
-License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
-
 Files: components/mobileshell/qml/osd/volume/AudioApplet.qml
 Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
-           2021 Devin Lin <espidev@gmail.com>
+           2021 Devin Lin <devin@kde.org>
 License: GPL-2+
  
 Files: components/mobileshell/qml/osd/volume/DeviceListItem.qml
        components/mobileshell/qml/osd/volume/StreamListItem.qml
 Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
-           2021 Devin Lin <espidev@gmail.com>
+           2021 Devin Lin <devin@kde.org>
 License: GPL-2 OR GPL-3 OR LicenseRef-KDE-Accepted-GPL
     
 Files: components/mobileshell/qml/osd/volume/icon.js
@@ -192,31 +182,24 @@ License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
 Files: components/mobileshell/qml/osd/volume/ListItemBase.qml
 Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
            2019 Sefa Eyeoglu <contact@scrumplex.net>
-           2021 Devin Lin <espidev@gmail.com>
+           2021 Devin Lin <devin@kde.org>
 License: GPL-2+
     
 Files: components/mobileshell/qml/osd/volume/VolumeOSD.qml
 Copyright: 2014 Martin Klapetek <mklapetek@kde.org>
            2019 Kai Uwe Broulik <kde@broulik.de>
-           2021 Devin Lin <espidev@gmail.com>
+           2021 Devin Lin <devin@kde.org>
 License: GPL-2+
  
 Files: components/mobileshell/qml/widgets/krunner/KRunnerWidget.qml
 Copyright: 2014 Aaron Seigo <aseigo@kde.org>
-           2015 Marco Martin <notmart@gmail.com>
+           2015 Marco Martin <mart@kde.org>
            2021 Devin Lin <devin@kde.org>
 License: LGPL-2+
  
-Files: components/mobileshell/qml/widgets/mediacontrols/MediaControlsSource.qml
-       components/mobileshell/qml/widgets/mediacontrols/MediaControlsWidget.qml
-Copyright: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
-           2021 Devin Lin <devin@kde.org>
-License: LGPL-2+
- 
-Files: components/mobileshell/qml/widgets/notifications/*
-Copyright: 2011 Marco Martin <notmart@gmail.com>
+Files: components/mobileshell/qml/widgets/notifications/*.qml
+Copyright: 2011 Marco Martin <mart@kde.org>
            2014, 2018-2019 Kai Uwe Broulik <kde@privat.broulik.de>
-           2019 Kai Uwe Broulik <kde@broulik.de>
            2021-2022 Devin Lin <devin@kde.org>
 License: GPL-2 OR GPL-3 OR LicenseRef-KDE-Accepted-GPL
     
@@ -224,33 +207,20 @@ Files: components/mobileshell/qml/widgets/notifications/ThumbnailStrip.qml
 Copyright: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
 License: LGPL-2+
 
-Files: components/mobileshell/quicksettings/paginatemodel.*
-       components/mobileshell/quicksettings/quicksetting.*
-Copyright: 2014 Aleix Pol Gonzalez <aleixpol@blue-systems.com>
-           2021 Aleix Pol Gonzalez <aleixpol@kde.org>
-License: LGPL-2+
- 
-Files: components/mobileshell/quicksettings/quicksettingsmodel.*
-       tests/ActionDrawerTest.qml
-Copyright: 2021-2022 Aleix Pol Gonzalez <aleixpol@kde.org>
-           2022 Devin Lin <devin@kde.org>
-License: LGPL-2+
- 
-Files: components/mobileshell/taskswitcher/displaysmodel.*
-Copyright: 2021 Aleix Pol <apol@kde.org>
-           2021 Devin Lin <devin@kde.org>
-License: GPL-2+
-
 Files: containments/homescreens/folio/package/contents/ui/private/ActionButton.qml
 Copyright: 2011 Marco Martin <mart@kde.org>
            2013 Sebastian Kügler <sebas@kde.org>
 License: LGPL-2+
 
+Files: containments/homescreens/halcyon/package/contents/ui/Clock.qml
+Copyright: 2022 Devin Lin <devin@kde.org>
+License: LGPL-2.1+
+
 Files: containments/panel/CMakeLists.txt
        containments/taskpanel/CMakeLists.txt
 Copyright: 2015-2017 Marco Martin <mart@kde.org>
            2020-2021 Nicolas Fella <nicolas.fella@kde.org>
-           2021 Aleix Pol <apol@kde.org>
+           2021 Aleix Pol Gonzalez <apol@kde.org>
 License: GPL-2+
 
 Files: containments/panel/Messages.sh
@@ -259,21 +229,39 @@ Copyright: 2015 Marco Martin <mart@kde.org>
            2018-2019 Bhushan Shah <bshah@kde.org>
 License: GPL-2+
 
+Files: kcms/mobileshell/.clang-format
+Copyright: 2019 Christoph Cullmann <cullmann@kde.org>
+           2019 Gernot Gebhard <gebhard@absint.com>
+License: MIT
+
+Files: look-and-feel/metadata.desktop
+Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
+License: GPL-2+
+
+Files: look-and-feel/contents/defaults
+       shell/contents/defaults
+Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
+           2014 Pier Luigi Fiorini
+           2014-2019 Marco Martin <mart@kde.org>
+           2021 Aleix Pol Gonzalez <apol@kde.org>
+License: GPL-2+
+
 Files: look-and-feel/contents/lockscreen/Clock.qml
        look-and-feel/contents/lockscreen/LockScreen.qml
 Copyright: 2019 Nicolas Fella <nicolas.fella@gmx.de>
            2020-2022 Devin Lin <devin@kde.org>
-           2021-2022 Devin Lin <espidev@gmail.com>
 License: GPL-2+
 
 Files: look-and-feel/contents/logout/ActionButton.qml
 Copyright: 2016 David Edmundson <davidedmundson@kde.org>
+           2022 Seshan Ravikumar <seshan10@me.com>
 License: LGPL-2+
  
 Files: look-and-feel/contents/logout/Logout.qml
-Copyright: 2014 Aleix Pol Gonzalez <aleixpol@blue-systems.com>
+Copyright: 2014 Aleix Pol Gonzalez <apol@kde.org>
            2020 Linus Jahn <lnj@kaidan.im>
-           2020 Marco Martin <mart@kde.org
+           2020 Marco Martin <mart@kde.org>
+           2022 Seshan Ravikumar <seshan10@me.com>
 License: GPL-2+
 
 Files: po/*
@@ -322,6 +310,11 @@ Copyright: 2022 Josep M. Ferrer <txemaq@gmail.com>
            2022 Antoni Bella Pérez <antonibella5@yahoo.com>
 License: LGPL-2.1+
 
+Files: quicksettings/airplanemode/metadata.json
+       shell/Messages.sh
+Copyright: 2019 Bhushan Shah <bshah@kde.org>
+License: GPL-2+
+
 Files: quicksettings/airplanemode/contents/*
 Copyright: 2021 Bhushan Shah <bshah@kde.org>
            2021 Nicolas Fella <nicolas.fella@gmx.de>
@@ -332,25 +325,13 @@ Copyright: 2020 Han Young <hanyoung@protonmail.com>
            2022 Devin Lin <devin@kde.org>
 License: GPL-2+
 
-Files: quicksettings/keyboardtoggle/contents/*
-Copyright: 2021 Aleix Pol Gonzalez <aleixpol@kde.org>
-           2022 Devin Lin <devin@kde.org>
-License: GPL-2+
-
 Files: quicksettings/nightcolor/enum.h
 Copyright: 2021 Benjamin Port <benjamin.port@enioka.com>
 License: GPL-2+
 
-Files: quicksettings/nightcolor/nightcolorsettings.kcfg
-       quicksettings/nightcolor/nightcolorsettings.kcfgc
+Files: quicksettings/nightcolor/nightcolorsettings.*
 Copyright: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 License: GPL-2+
-
-Files: quicksettings/nightcolor/package/contents/*
-Copyright: 2015 Marco Martin <notmart@gmail.com>
-           2021 Aleix Pol Gonzalez <aleixpol@kde.org>
-           2021 Devin Lin <espidev@gmail.com>
-License: LGPL-2+
 
 Files: quicksettings/screenrotation/dbus/*
 Copyright: 2013-2014 Daniel Vrátil <dvratil@kde.org>
@@ -370,9 +351,17 @@ Files: quicksettings/screenshot/dbus/*
 Copyright: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 License: LGPL-2.1 OR LGPL-3 OR LicenseRef-KDE-Accepted-LGPL
 
-Files: quicksettings/airplanemode/metadata.json
-       shell/Messages.sh
-Copyright: 2019 Bhushan Shah <bshah@kde.org>
+Files: shell/metadata.json
+Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
+           2019-2020 Marco Martin <mart@kde.org>
+License: GPL-2+
+
+Files: shell/contents/layout.js
+Copyright: 2014 Aaron J. Seigo <aseigo@kde.org>
+           2014-2019 Marco Martin <mart@kde.org>
+           2015-2021 Bhushan Shah <bshah@kde.org>
+           2021 Aleix Pol Gonzalez <apol@kde.org>
+           2021 Devin Lin <devin@kde.org>
 License: GPL-2+
 
 Files: shell/contents/configuration/ConfigurationAppletPage.qml
@@ -386,7 +375,7 @@ Copyright: 2015 Marco Martin <mart@kde.org>
 License: GPL-2+
 
 Files: shell/contents/views/Desktop.qml
-Copyright: 2012 Marco Martin <notmart@gmail.com>
+Copyright: 2012 Marco Martin <mart@kde.org>
            2014 Aaron Seigo <aseigo@kde.org>
 License: LGPL-2+
 
@@ -553,3 +542,23 @@ License: LicenseRef-KDE-Accepted-LGPL
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU General Public License for more details.
+
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
