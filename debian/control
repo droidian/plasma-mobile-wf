@@ -64,7 +64,7 @@ Depends: bluedevil,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: kde-config-mobile-networking,
-         plasma-mobile-tweaks
+            plasma-mobile-tweaks,
 Description: Open-source user interface for phones, based on Plasma technologies
  Plasma Mobile is an open-source user interface and ecosystem targeted at
  mobile devices, built on the KDE Plasma stack.
@@ -85,7 +85,6 @@ Description: Components to improve the Plasma mobile UX on touch devices
  distributions shipping Plasma Mobile by default.
  .
  Some important changes include:
-  - Locking the screen as soon as the session has been entered
   - Setting the default look-and-feel package
   - Set the default keyboard to maliit-keyboard
   - Prevent some unneeded applications from showing in the app list

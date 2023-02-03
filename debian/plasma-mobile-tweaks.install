@@ -1,6 +1,2 @@
-debian/tweaks/applications-blacklistrc /etc/xdg/
-debian/tweaks/kdeglobals /etc/xdg/
-debian/tweaks/kscreenlockerrc /etc/xdg/
-debian/tweaks/kwinrc /etc/xdg/
-debian/tweaks/plasmamobile.json /usr/share/maliit/keyboard2/devices/
-debian/tweaks/20-devices-led.rules lib/udev/rules.d
+debian/tweaks/xdg etc
+debian/tweaks/plasmamobile.json usr/share/maliit/keyboard2/devices/
