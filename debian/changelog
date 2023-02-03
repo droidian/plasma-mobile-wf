@@ -1,5 +1,6 @@
-plasma-mobile (5.26.90-1) UNRELEASED; urgency=medium
+plasma-mobile (5.26.90-1) unstable; urgency=medium
 
+  [ Marco Mattiolo ]
   * Initial release. Closes: #1023236
 
- -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Thu, 26 Jan 2023 22:19:45 +0100
+ -- Arnaud Ferraris <aferraris@debian.org>  Fri, 03 Feb 2023 12:59:56 +0100
