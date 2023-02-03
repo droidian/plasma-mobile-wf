@@ -77,8 +77,7 @@ Description: Open-source user interface for phones, based on Plasma technologies
  developed in a transparent process that is open for anyone to participate in.
 
 Package: plasma-mobile-tweaks
-Architecture: any
-Multi-Arch: foreign
+Architecture: all
 Depends: ${misc:Depends}
 Description: Components to improve the Plasma mobile UX on touch devices
  plasma-mobile-tweaks package contains recommended configurations for
