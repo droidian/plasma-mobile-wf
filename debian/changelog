@@ -1,3 +1,9 @@
+plasma-mobile (5.26.90-2) unstable; urgency=medium
+
+  * Source-only upload
+
+ -- Arnaud Ferraris <aferraris@debian.org>  Sat, 04 Feb 2023 03:11:08 +0100
+
 plasma-mobile (5.26.90-1) unstable; urgency=medium
 
   [ Marco Mattiolo ]
