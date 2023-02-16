@@ -280,18 +280,15 @@ Copyright: 2014-2020 Marco Martin <mart@kde.org>
            2020, 2022 Sergiu Bivol <sergiu@cip.md>
            2021-2022 Xavier Besnard <xavier.besnard@neuf.fr>
            2022 A S Alam <aalam@satluj.org>
-           2022 Alexander Yavorsky <kekcuha@gmail.com>
            2022 Devin Lin <devin@kde.org>
            2022 Eloy Cuadra <ecuadra@eloihr.net>
            2022 Emir SARI <emir_sari@icloud.com>
            2022 Frederik Schwarzer <schwarzer@kde.org>
            2022 Freek de Kruijf <freekdekruijf@kde.nl>
-           2022 giovanni <g.sora@tiscali.it>
            2022 José Nuno Coelho Pires <zepires@gmail.com>
            2022 Kheyyam Gojayev <xxmn77@gmail.com>
            2022 Kisaragi Hiu <mail@kisaragi-hiu.com>
            2022 Luiz Fernando Ranghetti <elchevive@opensuse.org>
-           2022 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
            2022 Matjaž Jeran <matjaz.jeran@amis.net>
            2022 Olesya Gerasimenko <translation-team@basealt.ru>
            2022 Roman Paholik <wizzardsk@gmail.com>
@@ -302,7 +299,10 @@ Copyright: 2014-2020 Marco Martin <mart@kde.org>
            2022 Vincenzo Reale <smart2128vr@gmail.com>
            2022 Vit Pelcak <vpelcak@suse.cz>
            2022 Yuri Chornoivan <yurchor@ukr.net>
+           2022-2023 Alexander Yavorsky <kekcuha@gmail.com>
+           2022-2023 giovanni <g.sora@tiscali.it>
            2022-2023 Iñigo Salvador Azurmendi <xalba@ni.eus>
+           2022-2023 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 License: GPL-2+
 
 Files: po/ca*
