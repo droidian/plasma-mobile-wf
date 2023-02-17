@@ -2,3 +2,4 @@
 plasma-mobile: no-manual-page [usr/bin/startplasmamobile]
 # systemsettings executable required for the KCMs is installed through plasma-workspace dependency
 plasma-mobile: desktop-command-not-in-package systemsettings [usr/share/applications/kcm_*]
+plasma-mobile [s390x]: library-not-linked-against-libc [usr/lib/*/qt5/plugins/plasma/applets/*]
