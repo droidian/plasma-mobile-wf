@@ -1,0 +1,790 @@
+From e08f8f4a843b2cd7d69b053627408387aabfe214 Mon Sep 17 00:00:00 2001
+From: Devin Lin <espidev@gmail.com>
+Date: Thu, 16 Feb 2023 23:10:00 -0800
+Subject: [PATCH] Revert "lockscreen: Refactor and lazy load notifications"
+Origin:https://invent.kde.org/plasma/plasma-mobile/-/commit/e08f8f4a843b2cd7d69b053627408387aabfe214
+Applied-Upstream:5.27.1
+
+This reverts commit 2a779900f35360e974420552fae0c10ecab961f5.
+
+Conflicts:
+	look-and-feel/contents/lockscreen/LockScreen.qml
+---
+ .../contents/lockscreen/HeaderComponent.qml   | 129 +++----
+ .../contents/lockscreen/LockScreen.qml        | 334 +++++++++---------
+ .../lockscreen/LockScreenNarrowContent.qml    |  38 +-
+ .../LockScreenWideScreenContent.qml           |   2 +-
+ .../lockscreen/NotificationsComponent.qml     |  83 ++---
+ 5 files changed, 285 insertions(+), 301 deletions(-)
+
+diff --git a/look-and-feel/contents/lockscreen/HeaderComponent.qml b/look-and-feel/contents/lockscreen/HeaderComponent.qml
+index 64dbe01fb..22857356e 100644
+--- a/look-and-feel/contents/lockscreen/HeaderComponent.qml
++++ b/look-and-feel/contents/lockscreen/HeaderComponent.qml
+@@ -12,75 +12,80 @@ import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+ 
+ import org.kde.notificationmanager 1.0 as NotificationManager
+ 
+-Item {
++Loader {
+     id: root
++    
+     required property real openFactor
+-    required property real statusBarHeight
+-
++    
++    readonly property real statusBarHeight: PlasmaCore.Units.gridUnit * 1.25
++    
+     property var notificationsModel: []
+-
++    
+     signal passwordRequested()
+-
+-    // top status bar
+-    MobileShell.StatusBar {
+-        id: statusBar
+-
+-        anchors.top: parent.top
+-        anchors.left: parent.left
+-        anchors.right: parent.right
+-
+-        height: root.statusBarHeight
+-
+-        colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+-        backgroundColor: "transparent"
+-
+-        showSecondRow: false
+-        showDropShadow: true
+-        showTime: false
+-        disableSystemTray: true // prevent SIGABRT, since loading the system tray on the lockscreen leads to bad... things
+-    }
+-
+-    // drag down gesture to open action drawer
+-    MobileShell.ActionDrawerOpenSurface {
+-        id: swipeArea
+-        actionDrawer: drawer
+-        anchors.fill: statusBar
+-    }
+-
+-    // action drawer component
+-    MobileShell.ActionDrawer {
+-        id: drawer
+-        anchors.fill: parent
+-
+-        visible: offset !== 0
+-        restrictedPermissions: true
+-
+-        notificationSettings: NotificationManager.Settings {}
+-        notificationModel: root.notificationsModel
+-        notificationModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
+-
+-        property bool requestNotificationAction: false
+-
+-        // notification button clicked, requesting auth
+-        onPermissionsRequested: {
+-            requestNotificationAction = true;
+-            drawer.close();
+-            root.passwordRequested();
++    
++    asynchronous: true
++    
++    sourceComponent: Item {
++        // top status bar
++        MobileShell.StatusBar {
++            id: statusBar
++            
++            anchors.top: parent.top
++            anchors.left: parent.left
++            anchors.right: parent.right
++            
++            height: root.statusBarHeight
++            
++            colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
++            backgroundColor: "transparent"
++            
++            showSecondRow: false
++            showDropShadow: true
++            showTime: false
++            disableSystemTray: true // prevent SIGABRT, since loading the system tray on the lockscreen leads to bad... things
+         }
+-    }
+-
+-    // listen to authentication events
+-    Connections {
+-        target: authenticator
+-        function onSucceeded() {
+-            // run pending action if successfully unlocked
+-            if (drawer.requestNotificationAction) {
+-                drawer.runPendingAction();
+-                drawer.requestNotificationAction = false;
++        
++        // drag down gesture to open action drawer
++        MobileShell.ActionDrawerOpenSurface {
++            id: swipeArea
++            actionDrawer: drawer
++            anchors.fill: statusBar
++        }
++        
++        // action drawer component
++        MobileShell.ActionDrawer {
++            id: drawer
++            anchors.fill: parent
++            
++            restrictedPermissions: true
++            
++            notificationSettings: NotificationManager.Settings {}
++            notificationModel: root.notificationsModel
++            notificationModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
++            
++            property bool requestNotificationAction: false
++            
++            // notification button clicked, requesting auth
++            onPermissionsRequested: {
++                requestNotificationAction = true;
++                drawer.close();
++                root.passwordRequested();
+             }
+         }
+-        function onFailed() {
+-            drawer.requestNotificationAction = false;
++        
++        // listen to authentication events
++        Connections {
++            target: authenticator
++            function onSucceeded() {
++                // run pending action if successfully unlocked
++                if (drawer.requestNotificationAction) {
++                    drawer.runPendingAction();
++                    drawer.requestNotificationAction = false;
++                }
++            }
++            function onFailed() {
++                drawer.requestNotificationAction = false;
++            }
+         }
+     }
+ }
+diff --git a/look-and-feel/contents/lockscreen/LockScreen.qml b/look-and-feel/contents/lockscreen/LockScreen.qml
+index 2719d03ae..61fd04a7f 100644
+--- a/look-and-feel/contents/lockscreen/LockScreen.qml
++++ b/look-and-feel/contents/lockscreen/LockScreen.qml
+@@ -1,7 +1,7 @@
+ /*
+  * SPDX-FileCopyrightText: 2019 Nicolas Fella <nicolas.fella@gmx.de>
+  * SPDX-FileCopyrightText: 2021-2022 Devin Lin <espidev@gmail.com>
+- *
++ * 
+  * SPDX-License-Identifier: GPL-2.0-or-later
+  */
+ 
+@@ -17,22 +17,25 @@ import org.kde.kirigami 2.12 as Kirigami
+ 
+ /**
+  * Lockscreen component that is loaded after the device is locked.
+- *
++ * 
+  * Special attention must be paid to ensuring the GUI loads as fast as possible.
+  */
+-Item {
++PlasmaCore.ColorScope {
+     id: root
+ 
+     property var lockScreenState: LockScreenState {}
+     property var notifModel: Notifications.WatchedNotificationsModel {}
+-
++    
+     // only show widescreen mode for short height devices (ex. phone landscape)
+     property bool isWidescreen: root.height < 720 && (root.height < root.width * 0.75)
+     property bool notificationsShown: false
+-
++    
+     readonly property bool drawerOpen: flickable.openFactor >= 1
+     property var passwordBar: keypadLoader.item.passwordBar
+-
++    
++    colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
++    anchors.fill: parent
++    
+     // listen for keyboard events, and focus on input area
+     Component.onCompleted: forceActiveFocus();
+     Keys.onPressed: {
+@@ -50,192 +53,181 @@ Item {
+             blur: root.notificationsShown || root.drawerOpen // only blur once animation finished for performance
+         }
+     }
+-
++    
++    // header bar and action drawer
++    HeaderComponent {
++        id: headerBar
++        z: 1 // on top of flick area
++        anchors.fill: parent
++        
++        openFactor: flickable.openFactor
++        notificationsModel: root.notifModel
++        onPasswordRequested: root.askPassword()
++    }
++    
+     Connections {
+         target: root.lockScreenState
+-
++        
+         // ensure keypad is opened when password is updated (ex. keyboard)
+         function onPasswordChanged() {
+             flickable.goToOpenPosition()
+         }
+     }
+ 
+-    PlasmaCore.ColorScope {
++    FlickContainer {
++        id: flickable
+         anchors.fill: parent
+-        colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+-
+-        // header bar and action drawer
+-        Loader {
+-            id: headerBarLoader
+-            z: 1 // on top of flick area
+-            readonly property real statusBarHeight: PlasmaCore.Units.gridUnit * 1.25
+-
+-            anchors.fill: parent
+-            asynchronous: true
+-
+-            sourceComponent: HeaderComponent {
+-                statusBarHeight: headerBarLoader.statusBarHeight
+-                openFactor: flickable.openFactor
+-                notificationsModel: root.notifModel
+-                onPasswordRequested: root.askPassword()
++        
++        property real openFactor: position / keypadHeight
++        
++        onOpened: {
++            if (root.lockScreenState.passwordless) {
++                // try unlocking if flicked to the top, and we have passwordless login
++                root.lockScreenState.tryPassword();
+             }
+         }
+-
+-        FlickContainer {
+-            id: flickable
+-            anchors.fill: parent
+-
+-            property real openFactor: position / keypadHeight
+-
+-            onOpened: {
+-                if (root.lockScreenState.passwordless) {
+-                    // try unlocking if flicked to the top, and we have passwordless login
+-                    root.lockScreenState.tryPassword();
+-                }
++        
++        keypadHeight: PlasmaCore.Units.gridUnit * 20
++        
++        // go to closed position when loaded
++        Component.onCompleted: {
++            flickable.position = 0;
++            flickable.goToClosePosition();
++        }
++        
++        // update position, and cap it at the keypad height
++        onPositionChanged: {
++            if (position > keypadHeight) {
++                position = keypadHeight;
++            } else if (position < 0) {
++                position = 0;
+             }
+-
+-            keypadHeight: PlasmaCore.Units.gridUnit * 20
+-
+-            // go to closed position when loaded
+-            Component.onCompleted: {
+-                flickable.position = 0;
+-                flickable.goToClosePosition();
++        }
++        
++        Item {
++            width: flickable.width
++            height: flickable.height
++            y: flickable.contentY // effectively anchored to the screen
++            
++            LockScreenNarrowContent {
++                id: phoneComponent
++                
++                visible: !isWidescreen
++                active: visible
++                opacity: 1 - flickable.openFactor
++                
++                fullHeight: root.height
++                
++                lockScreenState: root.lockScreenState
++                notificationsModel: root.notifModel
++                onNotificationsShownChanged: root.notificationsShown = notificationsShown
++                
++                onPasswordRequested: flickable.goToOpenPosition()
++                
++                anchors.top: parent.top
++                anchors.bottom: scrollUpIconLoader.top
++                anchors.left: parent.left
++                anchors.right: parent.right
++                
++                // move while swiping up
++                transform: Translate { y: Math.round((1 - phoneComponent.opacity) * (-root.height / 6)) }
+             }
+-
+-            // update position, and cap it at the keypad height
+-            onPositionChanged: {
+-                if (position > keypadHeight) {
+-                    position = keypadHeight;
+-                } else if (position < 0) {
+-                    position = 0;
+-                }
++            
++            LockScreenWideScreenContent {
++                id: tabletComponent
++                
++                visible: isWidescreen
++                active: visible
++                opacity: 1 - flickable.openFactor
++                
++                lockScreenState: root.lockScreenState
++                notificationsModel: root.notifModel
++                onNotificationsShownChanged: root.notificationsShown = notificationsShown
++                
++                onPasswordRequested: flickable.goToOpenPosition()
++                
++                anchors.topMargin: headerBar.statusBarHeight
++                anchors.top: parent.top
++                anchors.bottom: scrollUpIconLoader.top
++                anchors.left: parent.left
++                anchors.right: parent.right
++                
++                // move while swiping up
++                transform: Translate { y: Math.round((1 - phoneComponent.opacity) * (-root.height / 6)) }
+             }
+-
+-            Item {
+-                width: flickable.width
+-                height: flickable.height
+-                y: flickable.contentY // effectively anchored to the screen
+-
+-                LockScreenNarrowContent {
+-                    id: phoneComponent
+-
+-                    visible: !isWidescreen
+-                    active: visible
++            
++            // scroll up icon
++            Loader {
++                id: scrollUpIconLoader
++                asynchronous: true
++                
++                anchors.bottom: parent.bottom
++                anchors.bottomMargin: PlasmaCore.Units.gridUnit + flickable.position * 0.5
++                anchors.horizontalCenter: parent.horizontalCenter
++                
++                sourceComponent: PlasmaCore.IconItem {
++                    id: scrollUpIcon
++                    implicitWidth: PlasmaCore.Units.iconSizes.smallMedium
++                    implicitHeight: PlasmaCore.Units.iconSizes.smallMedium 
+                     opacity: 1 - flickable.openFactor
+-
+-                    fullHeight: root.height
+-
+-                    lockScreenState: root.lockScreenState
+-                    notificationsModel: root.notifModel
+-                    onNotificationsShownChanged: root.notificationsShown = notificationsShown
+-
+-                    onPasswordRequested: flickable.goToOpenPosition()
+-
+-                    anchors.top: parent.top
+-                    anchors.bottom: scrollUpIconLoader.top
+-                    anchors.left: parent.left
+-                    anchors.right: parent.right
+-
+-                    // move while swiping up
+-                    transform: Translate { y: Math.round((1 - phoneComponent.opacity) * (-root.height / 6)) }
++                    
++                    colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
++                    source: "arrow-up"
+                 }
+-
+-                LockScreenWideScreenContent {
+-                    id: tabletComponent
+-
+-                    visible: isWidescreen
+-                    active: visible
+-                    opacity: 1 - flickable.openFactor
+-
+-                    lockScreenState: root.lockScreenState
+-                    notificationsModel: root.notifModel
+-                    onNotificationsShownChanged: root.notificationsShown = notificationsShown
+-
+-                    onPasswordRequested: flickable.goToOpenPosition()
+-
+-                    anchors.topMargin: headerBarLoader.statusBarHeight
+-                    anchors.top: parent.top
+-                    anchors.bottom: scrollUpIconLoader.top
+-                    anchors.left: parent.left
+-                    anchors.right: parent.right
+-
+-                    // move while swiping up
+-                    transform: Translate { y: Math.round((1 - phoneComponent.opacity) * (-root.height / 6)) }
+-                }
+-
+-                // scroll up icon
+-                Loader {
+-                    id: scrollUpIconLoader
+-                    asynchronous: true
+-
+-                    anchors.bottom: parent.bottom
+-                    anchors.bottomMargin: PlasmaCore.Units.gridUnit + flickable.position * 0.5
+-                    anchors.horizontalCenter: parent.horizontalCenter
+-
+-                    sourceComponent: PlasmaCore.IconItem {
+-                        id: scrollUpIcon
++            }
++            
++            // password keypad
++            Loader {
++                id: keypadLoader
++                width: parent.width
++                asynchronous: true
++                active: !root.lockScreenState.passwordless // only load keypad if not passwordless
++                
++                anchors.bottom: parent.bottom
++                
++                sourceComponent: ColumnLayout {
++                    property alias passwordBar: keypad.passwordBar
++                    
++                    transform: Translate { y: flickable.keypadHeight - flickable.position }
++                    spacing: 0
++                    
++                    // info notification text
++                    Label {
++                        Layout.fillWidth: true
++                        Layout.rightMargin: Kirigami.Units.largeSpacing
++                        Layout.leftMargin: Kirigami.Units.largeSpacing
++                        Layout.bottomMargin: PlasmaCore.Units.smallSpacing * 2
++                        font.pointSize: 9
++                        
++                        elide: Text.ElideRight
++                        horizontalAlignment: Text.AlignHCenter
++                        text: root.lockScreenState.info
++                        opacity: (root.lockScreenState.info.length === 0 || flickable.openFactor < 1) ? 0 : 1
++                        color: 'white'
++                        
++                        Behavior on opacity {
++                            NumberAnimation { duration: 200 }
++                        }
++                    }
++                    
++                    // scroll down icon
++                    PlasmaCore.IconItem {
++                        Layout.alignment: Qt.AlignHCenter
++                        Layout.bottomMargin: PlasmaCore.Units.gridUnit
+                         implicitWidth: PlasmaCore.Units.iconSizes.smallMedium
+                         implicitHeight: PlasmaCore.Units.iconSizes.smallMedium
+-                        opacity: 1 - flickable.openFactor
+-
+                         colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+-                        source: "arrow-up"
++                        source: "arrow-down"
++                        opacity: Math.sin((Math.PI / 2) * flickable.openFactor + 1.5 * Math.PI) + 1
+                     }
+-                }
+-
+-                // password keypad
+-                Loader {
+-                    id: keypadLoader
+-                    width: parent.width
+-                    asynchronous: true
+-                    active: !root.lockScreenState.passwordless // only load keypad if not passwordless
+-
+-                    anchors.bottom: parent.bottom
+-
+-                    sourceComponent: ColumnLayout {
+-                        property alias passwordBar: keypad.passwordBar
+-
+-                        transform: Translate { y: flickable.keypadHeight - flickable.position }
+-                        spacing: 0
+-
+-                        // info notification text
+-                        Label {
+-                            Layout.fillWidth: true
+-                            Layout.rightMargin: Kirigami.Units.largeSpacing
+-                            Layout.leftMargin: Kirigami.Units.largeSpacing
+-                            Layout.bottomMargin: PlasmaCore.Units.smallSpacing * 2
+-                            font.pointSize: 9
+ 
+-                            elide: Text.ElideRight
+-                            horizontalAlignment: Text.AlignHCenter
+-                            text: root.lockScreenState.info
+-                            opacity: (root.lockScreenState.info.length === 0 || flickable.openFactor < 1) ? 0 : 1
+-                            color: 'white'
+-
+-                            Behavior on opacity {
+-                                NumberAnimation { duration: 200 }
+-                            }
+-                        }
+-
+-                        // scroll down icon
+-                        PlasmaCore.IconItem {
+-                            Layout.alignment: Qt.AlignHCenter
+-                            Layout.bottomMargin: PlasmaCore.Units.gridUnit
+-                            implicitWidth: PlasmaCore.Units.iconSizes.smallMedium
+-                            implicitHeight: PlasmaCore.Units.iconSizes.smallMedium
+-                            colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+-                            source: "arrow-down"
+-                            opacity: Math.sin((Math.PI / 2) * flickable.openFactor + 1.5 * Math.PI) + 1
+-                        }
+-
+-                        Keypad {
+-                            id: keypad
+-                            Layout.fillWidth: true
+-                            focus: true
+-
+-                            lockScreenState: root.lockScreenState
+-                            swipeProgress: flickable.openFactor
+-                        }
++                    Keypad {
++                        id: keypad
++                        Layout.fillWidth: true
++                        focus: true
++                        
++                        lockScreenState: root.lockScreenState
++                        swipeProgress: flickable.openFactor
+                     }
+                 }
+             }
+diff --git a/look-and-feel/contents/lockscreen/LockScreenNarrowContent.qml b/look-and-feel/contents/lockscreen/LockScreenNarrowContent.qml
+index 51eafe308..dc79a6a03 100644
+--- a/look-and-feel/contents/lockscreen/LockScreenNarrowContent.qml
++++ b/look-and-feel/contents/lockscreen/LockScreenNarrowContent.qml
+@@ -13,51 +13,51 @@ import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+ 
+ Loader {
+     id: root
+-
++    
+     required property var lockScreenState
+-
+     property var notificationsModel: []
+-    property bool notificationsShown: false
+ 
++    property bool notificationsShown: false
++    
+     property real fullHeight
+-
++    
+     signal passwordRequested()
+-
++    
+     // avoid topMargin animation when item is being loaded
+     onLoaded: loadTimer.restart();
+     Timer {
+         id: loadTimer
+-        interval: 200
++        interval: PlasmaCore.Units.longDuration
+     }
+-
++    
+     // move while swiping up
+-    transform: Translate { y: Math.round((1 - root.opacity) * (-root.height / 6)) }
+-
++    transform: Translate { y: Math.round((1 - phoneComponent.opacity) * (-root.height / 6)) }
++    
+     asynchronous: true
+     sourceComponent: Item {
+         ColumnLayout {
+             id: column
+             spacing: 0
+-
++            
+             // center clock when no notifications are shown, otherwise move the clock upward
+             anchors.topMargin: !root.notificationsShown ? Math.round(root.fullHeight / 2 - (column.implicitHeight / 2)) : PlasmaCore.Units.gridUnit * 5
+             anchors.bottomMargin: PlasmaCore.Units.gridUnit
+             anchors.fill: parent
+-
++            
+             // animate
+             Behavior on anchors.topMargin {
+                 NumberAnimation {
+-                    duration: loadTimer.running ? 0 : PlasmaCore.Units.veryLongDuration
+-                    easing.type: Easing.InOutExpo
++                    duration: loadTimer.running ? 0 : PlasmaCore.Units.longDuration
++                    easing.type: Easing.InOutQuad
+                 }
+             }
+-
++            
+             Clock {
+                 layoutAlignment: Qt.AlignHCenter
+                 Layout.alignment: Qt.AlignHCenter
+                 Layout.bottomMargin: PlasmaCore.Units.gridUnit * 2 // keep spacing even if media controls are gone
+             }
+-
++            
+             MobileShell.MediaControlsWidget {
+                 Layout.alignment: Qt.AlignHCenter
+                 Layout.fillWidth: true
+@@ -65,18 +65,18 @@ Loader {
+                 Layout.leftMargin: PlasmaCore.Units.gridUnit
+                 Layout.rightMargin: PlasmaCore.Units.gridUnit
+             }
+-
++            
+             NotificationsComponent {
+                 id: notificationComponent
+                 lockScreenState: root.lockScreenState
+                 notificationsModel: root.notificationsModel
+-
++                
+                 Layout.alignment: Qt.AlignHCenter
+                 Layout.fillHeight: true
+                 Layout.fillWidth: true
+-                Layout.maximumWidth: PlasmaCore.Units.gridUnit * (25 + 2) // clip margins
++                Layout.maximumWidth: PlasmaCore.Units.gridUnit * (25 + 2) // clip margins 
+                 topMargin: PlasmaCore.Units.gridUnit
+-
++                
+                 onPasswordRequested: root.passwordRequested()
+                 onNotificationsShownChanged: root.notificationsShown = notificationsShown
+             }
+diff --git a/look-and-feel/contents/lockscreen/LockScreenWideScreenContent.qml b/look-and-feel/contents/lockscreen/LockScreenWideScreenContent.qml
+index bbc1acf9d..f2eb4a1cd 100644
+--- a/look-and-feel/contents/lockscreen/LockScreenWideScreenContent.qml
++++ b/look-and-feel/contents/lockscreen/LockScreenWideScreenContent.qml
+@@ -15,8 +15,8 @@ Loader {
+     id: root
+     
+     required property var lockScreenState
+-    
+     property var notificationsModel: []
++    
+     property bool notificationsShown: false
+     
+     signal passwordRequested()
+diff --git a/look-and-feel/contents/lockscreen/NotificationsComponent.qml b/look-and-feel/contents/lockscreen/NotificationsComponent.qml
+index cc5da8cbb..a3a543fbc 100644
+--- a/look-and-feel/contents/lockscreen/NotificationsComponent.qml
++++ b/look-and-feel/contents/lockscreen/NotificationsComponent.qml
+@@ -1,6 +1,6 @@
+ /*
+  * SPDX-FileCopyrightText: 2022 Devin Lin <espidev@gmail.com>
+- *
++ * 
+  * SPDX-License-Identifier: GPL-2.0-or-later
+  */
+ 
+@@ -14,34 +14,27 @@ import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+ 
+ import org.kde.notificationmanager 1.0 as NotificationManager
+ 
+-Loader {
++Rectangle {
+     id: root
+     required property var lockScreenState
+-
+     property var notificationsModel: []
+     property var notificationSettings: NotificationManager.Settings {}
+-
++    
++    readonly property bool notificationsShown: notificationsList.hasNotifications
++    
++    signal passwordRequested()
++    
+     property real leftMargin: 0
+     property real rightMargin: 0
+     property real topMargin: 0
+     property real bottomMargin: 0
+-    readonly property bool notificationsShown: item && item.notificationsList.hasNotifications
+-
+-    property var notificationsList: item ? item.notificationsList : null
+-
+-    signal passwordRequested()
+-
+-    // perform delayed loading of notifications
+-    active: false
+-    Timer {
+-        interval: 500
+-        running: true
+-        onTriggered: root.active = true
+-    }
+-
++    
++    color: "transparent"
++    clip: true
++    
+     Connections {
+         target: lockScreenState
+-
++        
+         function onUnlockSucceeded() {
+             // run pending action if successfully unlocked
+             if (notificationsList.requestNotificationAction) {
+@@ -49,40 +42,34 @@ Loader {
+                 notificationsList.requestNotificationAction = false;
+             }
+         }
+-
++        
+         function onUnlockFailed() {
+             notificationsList.requestNotificationAction = false;
+         }
+     }
+-
+-    sourceComponent: Item {
+-        clip: true
+-
+-        property alias notificationsList: notificationsList
+-
+-        PlasmaCore.ColorScope {
++    
++    PlasmaCore.ColorScope {
++        anchors.fill: parent
++        anchors.topMargin: root.topMargin
++        anchors.bottomMargin: root.bottomMargin
++        anchors.leftMargin: root.leftMargin
++        anchors.rightMargin: root.rightMargin
++        colorGroup: PlasmaCore.Theme.NormalColorGroup
++        
++        MobileShell.NotificationsWidget {
++            id: notificationsList
+             anchors.fill: parent
+-            anchors.topMargin: root.topMargin
+-            anchors.bottomMargin: root.bottomMargin
+-            anchors.leftMargin: root.leftMargin
+-            anchors.rightMargin: root.rightMargin
+-            colorGroup: PlasmaCore.Theme.NormalColorGroup
+-
+-            MobileShell.NotificationsWidget {
+-                id: notificationsList
+-                anchors.fill: parent
+-
+-                historyModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
+-                actionsRequireUnlock: true
+-                historyModel: root.notificationsModel
+-                notificationSettings: root.notificationSettings
+-
+-                property bool requestNotificationAction: false
+-
+-                onUnlockRequested: {
+-                    requestNotificationAction = true;
+-                    root.passwordRequested();
+-                }
++            
++            historyModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
++            actionsRequireUnlock: true
++            historyModel: root.notificationsModel
++            notificationSettings: root.notificationSettings
++        
++            property bool requestNotificationAction: false
++            
++            onUnlockRequested: {
++                requestNotificationAction = true;
++                root.passwordRequested();
+             }
+         }
+     }
+-- 
+GitLab
+
