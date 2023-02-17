@@ -1,3 +1,14 @@
+plasma-mobile (5.27.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update d/control after upstream CMakeLists.txt
+  * Update d/copyright after upstream changes
+  * Cherry-pick upstream commit for fixing crash on unlocking
+  * Plasma-mobile-tweaks set as multi-arch:foreign
+  * Lintian-override on library-not-linked-against-libc for s390x arch
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Fri, 17 Feb 2023 12:44:20 +0100
+
 plasma-mobile (5.26.90-2) unstable; urgency=medium
 
   * Source-only upload
