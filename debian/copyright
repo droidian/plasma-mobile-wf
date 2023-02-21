@@ -268,7 +268,7 @@ Files: po/*
 Copyright: 2014-2020 Marco Martin <mart@kde.org>
            2016, 2022-2023 Vít Pelčák <vit@pelcak.org>
            2016, 2018 Burkhard Lück <lueck@hube-lueck.de>
-           2016, 2018, 2021-2022 Karl Ove Hufthammer <karl@huftis.org>
+           2016, 2018, 2021-2023 Karl Ove Hufthammer <karl@huftis.org>
            2017 Vincent Pinon <vpinon@kde.org>
            2017-2018 Adrián Chaves <adrian@chaves.io>
            2017-2021 Bhushan Shah <bshah@kde.org>
@@ -303,6 +303,7 @@ Copyright: 2014-2020 Marco Martin <mart@kde.org>
            2022-2023 giovanni <g.sora@tiscali.it>
            2022-2023 Iñigo Salvador Azurmendi <xalba@ni.eus>
            2022-2023 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
+           2023 Japanese KDE translation team <kde-jp@kde.org>
 License: GPL-2+
 
 Files: po/ca*
@@ -337,7 +338,7 @@ Files: quicksettings/screenrotation/dbus/*
 Copyright: 2013-2014 Daniel Vrátil <dvratil@kde.org>
            2018 Kai Uwe Broulik <kde@privat.broulik.de>
            2020 Bhushan Shah <bshah@kde.org>
-           2020 Luca Weiss <luca@z3ntu.xyz>
+           2020-2022 Luca Weiss <luca@z3ntu.xyz>
 License: GPL-2+
 
 Files: quicksettings/screenshot/screenshotutil.cpp
