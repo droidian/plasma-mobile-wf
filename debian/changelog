@@ -1,3 +1,11 @@
+plasma-mobile (5.27.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update d/copyright after upstream changes
+  * Drop no more needed patch
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Tue, 28 Feb 2023 19:37:29 +0100
+
 plasma-mobile (5.27.0-1) unstable; urgency=medium
 
   * New upstream release
