@@ -66,8 +66,8 @@ Depends: bluedevil,
 Recommends: kde-config-mobile-networking,
             plasma-mobile-tweaks,
 Description: User interface for phones, based on Plasma technologies
- Plasma Mobile is a graphical user interface and ecosystem targeted at
- mobile devices, built on the KDE Plasma stack.
+ Plasma Mobile is a graphical user interface and ecosystem targeted at mobile
+ devices, built on the KDE Plasma stack.
  .
  A pragmatic approach is taken that is inclusive to software regardless of
  toolkit, giving users the power to choose whichever software they want to
