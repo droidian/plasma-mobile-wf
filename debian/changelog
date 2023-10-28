@@ -1,3 +1,12 @@
+plasma-mobile (5.27.9-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update d/copyright after upstream changes
+  * Drop open-source from short description in d/control (Closes: #1052401)
+  * Assign flashes' control to users in the plugdev group
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Sat, 28 Oct 2023 23:28:10 +0200
+
 plasma-mobile (5.27.8-1) unstable; urgency=medium
 
   * New upstream release
