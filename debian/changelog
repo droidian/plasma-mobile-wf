@@ -1,3 +1,9 @@
+plasma-mobile (5.27.10-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #1060264)
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Tue, 09 Jan 2024 21:16:34 +0100
+
 plasma-mobile (5.27.9-1) unstable; urgency=medium
 
   * New upstream release
