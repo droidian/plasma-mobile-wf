@@ -1,11 +1,5 @@
-#  SPDX-License-Identifier: LGPL-2.1+
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
 
-ACTION=="remove", GOTO="pinephone_led_end"
-
-# Setup the flash LED for use by flashlight
-# white:flash for PinePhone(Pro)
-SUBSYSTEM=="leds", KERNEL=="white:flash", RUN+="/bin/chmod g+w /sys%p/brightness /sys%p/flash_strobe", RUN+="/bin/chown :plugdev /sys%p/brightness /sys%p/flash_strobe"
-# white:torch for Librem 5
-SUBSYSTEM=="leds", KERNEL=="white:torch", RUN+="/bin/chmod g+w /sys%p/brightness /sys%p/flash_strobe", RUN+="/bin/chown :plugdev /sys%p/brightness /sys%p/flash_strobe"
-
-LABEL="pinephone_led_end"
+# Allow everyone to set brightness of flashlight (Required for plasma-mobile flashlightplugin)
+SUBSYSTEMS=="leds", KERNEL=="*:flash|*:torch", RUN+="/bin/chmod 666 %S%p/brightness"
