@@ -1,3 +1,16 @@
+plasma-mobile (6.2.3-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #1035655)
+  * Update d/control after upstream (Closes: #1079477, #1079559, #1079662)
+  * Std-ver 4.7.0 (no changes needed)
+  * Update d/rules for building based on KF6 instead of KF5
+  * Update plasma-mobile-tweaks after upstream changes
+  * Update d/plasma-mobile.install after upstream changes
+  * Add qt6-declarative-private-dev to build-deps as workaround to #1087385
+  * Remove plasma-mobile-tweaks conffiles dropped upstream
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Tue, 26 Nov 2024 20:40:10 +0100
+
 plasma-mobile (5.27.10-1) unstable; urgency=medium
 
   * New upstream release (Closes: #1060264)
