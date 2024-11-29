@@ -37,6 +37,7 @@ Build-Depends: cmake (>= 3.16~),
                qml6-module-org-kde-pipewire,
                qt6-base-dev (>= 6.7.0~),
                qt6-declarative-dev (>= 6.7.0~),
+               qt6-declarative-private-dev,
                qt6-sensors-dev (>= 6.7.0~),
 Standards-Version: 4.7.0
 Homepage: https://invent.kde.org/plasma/plasma-mobile
