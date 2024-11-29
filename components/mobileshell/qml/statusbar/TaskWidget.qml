@@ -4,8 +4,8 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-import QtQuick 2.1
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import org.kde.kirigami as Kirigami
 
 Item {
     id: taskIcon
@@ -22,13 +22,12 @@ Item {
         }
     }
 
-    PlasmaCore.IconItem {
+    Kirigami.Icon {
         id: icon
         source: IconName ? IconName : Icon
         width: Math.min(parent.width, parent.height)
         height: width
         anchors.centerIn: parent
-        colorGroup: PlasmaCore.ColorScope.colorGroup
     }
 
     MouseArea {

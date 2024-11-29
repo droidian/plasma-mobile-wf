@@ -1,31 +1,25 @@
 # SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-qt_add_dbus_interfaces(DBUS_SRCS dbus/org.kde.KScreen.xml)
-
 set(screenrotationplugin_SRCS
     screenrotationplugin.cpp
     screenrotationutil.cpp
-    ${DBUS_SRCS}
 )
 
 add_library(screenrotationplugin ${screenrotationplugin_SRCS})
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS 
-    Declarative
-)
-
 target_link_libraries(screenrotationplugin
-    PUBLIC
-        Qt::Core
-    PRIVATE
-        Qt::DBus
-        KF5::CoreAddons
-        KF5::QuickAddons
-        KF5::ConfigCore
-        KF5::ConfigGui
-        KF5::I18n
-        KF5::Notifications
+    Qt::Core
+    Qt::Qml
+    Qt::Quick
+    Qt::DBus
+    Qt::Sensors
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui
+    KF6::I18n
+    KF6::Notifications
+    KF6::Screen
 )
 
 set_property(TARGET screenrotationplugin PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/quicksetting/screenrotation)

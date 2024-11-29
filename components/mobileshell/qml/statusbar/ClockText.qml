@@ -8,26 +8,37 @@
 import QtQuick 2.12
 import QtQuick.Layouts 1.15
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasma5support 2.0 as P5Support
 import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 
-import "indicators" as Indicators
+import org.kde.kirigami as Kirigami
 
-PlasmaComponents.Label {
-    id: clock
-    
-    required property PlasmaCore.DataSource source
-    
-    property bool is24HourTime: MobileShell.ShellUtil.isSystem24HourFormat
-    
-    text: Qt.formatTime(source.data.Local.DateTime, is24HourTime ? "h:mm" : "h:mm ap")
-    color: PlasmaCore.ColorScope.textColor
-    verticalAlignment: Qt.AlignVCenter
+RowLayout {
+    id: clockText
 
-    TapHandler {
-        onTapped: {
-            MobileShell.ShellUtil.launchApp("org.kde.kclock.desktop");
-        }
+    required property int fontPixelSize
+    required property P5Support.DataSource source
+
+    PlasmaComponents.Label {
+        id: clock
+
+        property bool is24HourTime: MobileShell.ShellUtil.isSystem24HourFormat
+
+        text: Qt.formatTime(source.data.Local.DateTime, is24HourTime ? "h:mm" : "h:mm ap")
+        color: Kirigami.Theme.textColor
+        verticalAlignment: Qt.AlignVCenter
+        font.pixelSize: fontPixelSize
+     }
+
+    PlasmaComponents.Label {
+        id: date
+        visible: ShellSettings.Settings.dateInStatusBar && !root.showSecondRow
+
+        text: Qt.formatDate(source.data.Local.DateTime, "ddd. MMMM d")
+        color: Kirigami.Theme.textColor
+        verticalAlignment: Qt.AlignVCenter
+        font.pixelSize: fontPixelSize
     }
 }

@@ -7,6 +7,7 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 
+import org.kde.plasma.plasmoid
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.plasma.configuration 2.0
 import org.kde.kitemmodels 1.0 as KItemModels
@@ -19,13 +20,13 @@ Rectangle {
     color: "transparent"
 
 //BEGIN properties
-    
+
     property bool isContainment: false
     property alias app: appLoader.item
     property bool loadApp: true
-    
+
     signal appLoaded()
-    
+
 //END properties
 
 //BEGIN model
@@ -43,7 +44,7 @@ Rectangle {
             return sourceModel.data(sourceModel.index(row, 0), ConfigModel.VisibleRole);
         }
     }
-    
+
 //END model
 
 //BEGIN functions
@@ -52,25 +53,25 @@ Rectangle {
         if (app.pageStack.currentItem.saveConfig) {
             app.pageStack.currentItem.saveConfig()
         }
-        for (var key in plasmoid.configuration) {
+        for (var key in Plasmoid.configuration) {
             if (app.pageStack.currentItem["cfg_"+key] !== undefined) {
-                plasmoid.configuration[key] = app.pageStack.currentItem["cfg_"+key]
+                Plasmoid.configuration[key] = app.pageStack.currentItem["cfg_"+key]
             }
         }
     }
 
     function configurationHasChanged() {
-        for (var key in plasmoid.configuration) {
+        for (var key in Plasmoid.configuration) {
             if (app.pageStack.currentItem["cfg_"+key] !== undefined) {
                 //for objects == doesn't work
-                if (typeof plasmoid.configuration[key] == 'object') {
-                    for (var i in plasmoid.configuration[key]) {
-                        if (plasmoid.configuration[key][i] != app.pageStack.currentItem["cfg_"+key][i]) {
+                if (typeof Plasmoid.configuration[key] == 'object') {
+                    for (var i in Plasmoid.configuration[key]) {
+                        if (Plasmoid.configuration[key][i] != app.pageStack.currentItem["cfg_"+key][i]) {
                             return true;
                         }
                     }
                     return false;
-                } else if (app.pageStack.currentItem["cfg_"+key] != plasmoid.configuration[key]) {
+                } else if (app.pageStack.currentItem["cfg_"+key] != Plasmoid.configuration[key]) {
                     return true;
                 }
             }
@@ -86,7 +87,7 @@ Rectangle {
             root.saveConfig();
         }
     }
-    
+
     function pushReplace(item, config) {
         let page;
         if (app.pageStack.depth === 0) {
@@ -96,7 +97,7 @@ Rectangle {
         }
         app.currentConfigPage = page;
     }
-    
+
     function open(item) {
         app.isAboutPage = false;
         if (item.source) {
@@ -108,7 +109,7 @@ Rectangle {
             app.pageStack.pop();
         }
     }
-    
+
 //END functions
 
 
@@ -122,7 +123,7 @@ Rectangle {
             }
         }
     }
-    
+
 //END connections
 
 //BEGIN UI components
@@ -131,7 +132,7 @@ Rectangle {
         id: configurationKcmPageComponent
         ConfigurationKcmPage {}
     }
-    
+
     Loader {
         id: appLoader
         anchors.fill: parent
@@ -145,14 +146,14 @@ Rectangle {
             } else {
                 root.open(configDialog.configModel.get(0))
             }
-            
+
             root.appLoaded();
         }
-        
+
         sourceComponent: Kirigami.ApplicationItem {
             id: app
             anchors.fill: parent
-            
+
             // animation on show
             opacity: 0
             NumberAnimation on opacity {
@@ -161,14 +162,14 @@ Rectangle {
                 duration: Kirigami.Units.longDuration
                 easing.type: Easing.InOutQuad
             }
-            
+
             pageStack.globalToolBar.canContainHandles: true
             pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
             pageStack.globalToolBar.showNavigationButtons: Kirigami.ApplicationHeaderStyle.ShowBackButton;
-            
+
             property var currentConfigPage: null
             property bool isAboutPage: false
-            
+
             // pop pages when not in use
             Connections {
                 target: app.pageStack
@@ -177,7 +178,7 @@ Rectangle {
                     timer.restart();
                 }
             }
-            
+
             Timer {
                 id: timer
                 interval: 300
@@ -206,22 +207,21 @@ Rectangle {
                     delegate: configCategoryDelegate
                 }
             }
-            
+
             Component {
                 id: configCategoryDelegate
                 Kirigami.NavigationTabButton {
                     icon.name: model.icon
                     text: model.name
                     width: footerBar.buttonWidth
-                    recolorIcon: false
                     QQC2.ButtonGroup.group: footerBar.tabGroup
-                    
+
                     onClicked: {
                         if (checked) {
                             root.open(model);
                         }
                     }
-                    
+
                     checked: {
                         if (app.pageStack.currentItem) {
                             if (model.kcm && app.pageStack.currentItem.kcm) {

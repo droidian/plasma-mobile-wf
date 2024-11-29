@@ -5,38 +5,43 @@
  *  SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.12
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as Controls
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 import org.kde.kquickcontrolsaddons 2.0
 
-Item {
+import org.kde.plasma.private.mobileshell as MobileShell
+
+Controls.AbstractButton {
     id: button
     width: Math.min(parent.width, parent.height)
     height: width
 
-    property MouseArea mouseArea
-    readonly property bool pressed: mouseArea.pressed && mouseArea.activeButton == button
     property double iconSizeFactor: 1
     property alias iconSource: icon.source
-    property alias colorGroup: icon.colorGroup
-    
-    signal clicked()
+
+    MobileShell.HapticsEffect {
+        id: haptics
+    }
+
+    onPressed: haptics.buttonVibrate()
 
     Rectangle {
         id: rect
         radius: height/2
         anchors.fill: parent
         opacity: 0
-        color: PlasmaCore.ColorScope.textColor
-        
+        color: Kirigami.Theme.textColor
+
         // this way of calculating animations lets the animation fully complete before switching back (tap runs the full animation)
         property bool buttonHeld: button.pressed && button.enabled
-        
+
         onButtonHeldChanged: showBackground(buttonHeld)
         Component.onCompleted: showBackground(buttonHeld)
-        
+
         function showBackground(show) {
             if (show) {
                 if (!opacityAnimator.running && opacityAnimator.to !== 0.1) {
@@ -50,9 +55,10 @@ Item {
                 }
             }
         }
+
         NumberAnimation on opacity {
             id: opacityAnimator
-            duration: PlasmaCore.Units.shortDuration
+            duration: Kirigami.Units.shortDuration
             easing.type: Easing.InOutQuad
             onFinished: {
                 // animate the state back
@@ -64,14 +70,18 @@ Item {
             }
         }
     }
-    PlasmaCore.IconItem {
+
+    Kirigami.Icon {
         id: icon
+
+        // Workaround for icon colors being grey when button is disabled
+        Kirigami.Theme.inherit: false
+        Kirigami.Theme.colorSet: button.Kirigami.Theme.colorSet
+
         readonly property real side: Math.min(button.width, button.height)
         anchors {
             fill: parent
             margins: Math.round((side - side * iconSizeFactor * 0.6) / 2)
         }
-        colorGroup: PlasmaCore.ColorScope.colorGroup
-        //enabled: button.enabled && button.clickable
     }
 }

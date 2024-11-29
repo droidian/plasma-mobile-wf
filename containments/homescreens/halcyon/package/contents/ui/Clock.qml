@@ -1,21 +1,21 @@
 // SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
 // SPDX-License-Identifier: LGPL-2.1-or-later
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.15
-import QtGraphicalEffects 1.12
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasma5support 2.0 as P5Support
+import org.kde.kirigami 2.20 as Kirigami
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell as MobileShell
 
 ColumnLayout {
     id: root
 
     readonly property bool softwareRendering: GraphicsInfo.api === GraphicsInfo.Software
     readonly property bool is24HourTime: MobileShell.ShellUtil.isSystem24HourFormat
-    
+
     spacing: 0
 
     Label {
@@ -23,46 +23,40 @@ ColumnLayout {
         color: "white"
         style: softwareRendering ? Text.Outline : Text.Normal
         styleColor: softwareRendering ? ColorScope.backgroundColor : "transparent" // no outline, doesn't matter
-        
+
         Layout.fillWidth: true
-        
+
         horizontalAlignment: Text.AlignLeft
+
         font.weight: Font.Bold // this font weight may switch to regular on distros that don't have a light variant
         font.pointSize: 28
+
         layer.enabled: true
-        layer.effect: DropShadow {
-            verticalOffset: 1
-            radius: 4
-            samples: 6
-            color: Qt.rgba(0, 0, 0, 0.5)
-        }
+        layer.effect: MobileShell.TextDropShadow {}
     }
-    
+
     Label {
-        Layout.topMargin: PlasmaCore.Units.smallSpacing
+        Layout.topMargin: Kirigami.Units.smallSpacing
         Layout.fillWidth: true
-        
+
         horizontalAlignment: Text.AlignLeft
         text: Qt.formatDate(timeSource.data["Local"]["DateTime"], "ddd, MMM d")
         color: "white"
         style: softwareRendering ? Text.Outline : Text.Normal
         styleColor: softwareRendering ? ColorScope.backgroundColor : "transparent" // no outline, doesn't matter
-        
+
         font.pointSize: 12
+
         layer.enabled: true
-        layer.effect: DropShadow {
-            verticalOffset: 1
-            radius: 4
-            samples: 6
-            color: Qt.rgba(0, 0, 0, 0.5)
-        }
+        layer.effect: MobileShell.TextDropShadow {}
     }
-    
-    PlasmaCore.DataSource {
+
+    P5Support.DataSource {
         id: timeSource
         engine: "time"
         connectedSources: ["Local"]
-        interval: 1000
+        interval: 60000
+        intervalAlignment: P5Support.Types.AlignToMinute
     }
 
 }

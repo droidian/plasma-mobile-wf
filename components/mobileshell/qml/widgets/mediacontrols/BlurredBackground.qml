@@ -1,63 +1,59 @@
-/*
- *  SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
- *
- *  SPDX-License-Identifier: LGPL-2.0-or-later
- */
+// SPDX-FileCopyrightText: 2021-2023 Devin Lin <devin@kde.org>
+// SPDX-License-Identifier: LGPL-2.0-or-later
 
-import QtQuick 2.15
-import QtGraphicalEffects 1.12
+import QtQuick
+import QtQuick.Effects
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
 
 Item {
     id: root
-    
+
     property string imageSource
     property bool darken: false
-    
+    property bool inActionDrawer: false
+
     // clip corners so that the image has rounded corners
     layer.enabled: true
     layer.effect: OpacityMask {
         maskSource: Item {
             width: img.width
             height: img.height
+
             Rectangle {
                 anchors.centerIn: parent
                 width: img.width
                 height: img.height
-                radius: PlasmaCore.Units.smallSpacing
+                radius: Kirigami.Units.cornerRadius
             }
         }
     }
-    
+
     Image {
         id: img
         source: root.imageSource
         asynchronous: true
-        
+
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
-        
+
         // ensure text is readable
         Rectangle {
             anchors.fill: parent
-            color: Qt.rgba(0, 0, 0, root.darken ? 0.8 : 0.6)
+            color: Qt.rgba(Kirigami.Theme.backgroundColor.r * (inActionDrawer ? 0.85 : 0.95), Kirigami.Theme.backgroundColor.g * (inActionDrawer ? 0.85 : 0.95), Kirigami.Theme.backgroundColor.b * (inActionDrawer ? 0.85 : 0.95), root.darken ? 0.95 : 0.85)
         }
-        
+
         // apply lighten, saturate and blur effect
         layer.enabled: true
-        layer.effect: HueSaturation {
-            cached: true
+        layer.effect: MultiEffect {
+            brightness: 0.075
 
-            lightness: 0.2
-            saturation: 1.5
-
-            layer.enabled: true
-            layer.effect: FastBlur {
-                cached: true
-                radius: 64
-                transparentBorder: false
-            }
+            blurEnabled: true
+            blurMax: 32
+            blur: 1.0
+            blurMultiplier: 2
+            autoPaddingEnabled: false
         }
     }
 }

@@ -1,13 +1,14 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the plasma-mobile package.
 #
-# Sveinn í Felli <sv1@fellsnet.is>, 2022.
+# SPDX-FileCopyrightText: 2022, 2024 Sveinn í Felli <sv1@fellsnet.is>
+# SPDX-FileCopyrightText: 2023, 2024 Guðmundur Erlingsson <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-19 00:47+0000\n"
-"PO-Revision-Date: 2022-10-14 16:57+0000\n"
+"POT-Creation-Date: 2024-08-01 00:42+0000\n"
+"PO-Revision-Date: 2024-10-17 11:58+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -15,58 +16,80 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.08.5\n"
+
+#: contents/applet/AppletError.qml:168
+msgid "Copy to Clipboard"
+msgstr "Afrita á klippispjald"
+
+#: contents/applet/AppletError.qml:191
+msgid "View Error Details…"
+msgstr "Skoða nánar um villu…"
+
+#: contents/applet/CompactApplet.qml:77
+msgid "Open %1"
+msgstr "Opna %1"
 
 #: contents/configuration/ConfigurationContainmentAppearance.qml:44
 msgid "Layout changes have been restricted by the system administrator"
 msgstr "Kerfisstjórinn hefur takmarkað breytingar á framsetningu"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:65
+#: contents/configuration/ConfigurationContainmentAppearance.qml:59
 msgid "General"
 msgstr "Almennt"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:71
+#: contents/configuration/ConfigurationContainmentAppearance.qml:66
 msgid "Homescreen Layout"
-msgstr "Framsetning upphafsskjás"
+msgstr "Framsetning heimaskjás"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:72
+#: contents/configuration/ConfigurationContainmentAppearance.qml:67
 msgid "The homescreen layout to use."
-msgstr "Framsetning sem á að nota fyrir upphafsskjáinn."
+msgstr "Framsetning sem á að nota fyrir heimaskjáinn."
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:98
+#: contents/configuration/ConfigurationContainmentAppearance.qml:93
 msgid "Wallpaper Plugin"
 msgstr "Bakgrunnsmyndaviðbót"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:99
+#: contents/configuration/ConfigurationContainmentAppearance.qml:94
 msgid "The wallpaper plugin to use."
 msgstr "Bakgrunnsmyndaviðbót sem á að nota."
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:134
+#: contents/configuration/ConfigurationContainmentAppearance.qml:129
 msgid "Wallpaper Plugins"
-msgstr "Íforrit fyrir bakgrunnsmyndir"
+msgstr "Bakgrunnsmyndaviðbætur"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:139
+#: contents/configuration/ConfigurationContainmentAppearance.qml:134
 msgid "Get New Plugins…"
-msgstr "Ná í nýjar forritsviðbætur…"
+msgstr "Sækja nýjar viðbætur…"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:154
+#: contents/configuration/ConfigurationContainmentAppearance.qml:148
 msgid "Layout changes must be applied before other changes can be made"
 msgstr ""
 "Breytingar á framsetningu verður að virkja áður en hægt er að gera aðrar "
 "breytingar"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:160
+#: contents/configuration/ConfigurationContainmentAppearance.qml:154
 msgid "Apply now"
-msgstr "Sæktu um núna"
+msgstr "Sækja um núna"
 
-#: contents/configuration/ContainmentConfiguration.qml:32
+#: contents/configuration/ContainmentConfiguration.qml:34
 msgid "Wallpaper"
 msgstr "Bakgrunnsmynd"
 
-#: contents/configuration/ContainmentConfiguration.qml:95
-msgid "Change Wallpaper"
-msgstr "Skipta um bakgrunnsmynd"
+#: contents/lockscreen/LockScreenState.qml:31
+msgid "Enter PIN"
+msgstr "Sláðu inn PIN-númer"
 
-#: contents/configuration/ContainmentConfiguration.qml:113
-msgid "Configure"
-msgstr "Stilla"
+#: contents/lockscreen/LockScreenState.qml:32
+msgid "Wrong PIN"
+msgstr "Rangt PIN-númer"
+
+#: contents/views/Panel.qml:321
+msgid "Panel Focus Indicator"
+msgstr "Vísir um virkni spjalds"
+
+#~ msgid "Change Wallpaper"
+#~ msgstr "Skipta um veggfóður"
+
+#~ msgid "Configure"
+#~ msgstr "Grunnstilla"

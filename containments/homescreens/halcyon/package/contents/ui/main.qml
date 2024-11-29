@@ -1,106 +1,122 @@
-// SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
+// SPDX-FileCopyrightText: 2022-2023 Devin Lin <devin@kde.org>
 // SPDX-License-Identifier: LGPL-2.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
 import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.kirigami 2.20 as Kirigami
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
-import org.kde.phone.homescreen.halcyon 1.0 as Halcyon
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.state as MobileShellState
+import org.kde.private.mobile.homescreen.halcyon as Halcyon
+import org.kde.plasma.private.mobileshell.windowplugin as WindowPlugin
 
-MobileShell.HomeScreen {
+ContainmentItem {
     id: root
 
-    onResetHomeScreenPosition: {
-        homescreen.triggerHomescreen();
-    }
-    
-    onHomeTriggered: {
-        search.close();
-    }
-    
     Component.onCompleted: {
         Halcyon.ApplicationListModel.loadApplications();
-        Halcyon.PinnedModel.load();
+        Halcyon.PinnedModel.applet = root.plasmoid;
         forceActiveFocus();
     }
-    
-    Rectangle {
-        id: darkenBackground
-        color: root.overlayShown ? 'transparent' : (homescreen.page == 1 ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(0, 0, 0, 0.2))
-        anchors.fill: parent
-        z: -1
-        Behavior on color { 
-            ColorAnimation { duration: PlasmaCore.Units.longDuration } 
-        }
-    }
-    
-    Plasmoid.onActivated: {       
+
+    Plasmoid.onActivated: {
         // there's a couple of steps:
         // - minimize windows (only if we are in an app)
         // - open app drawer
         // - close app drawer and, if necessary, restore windows
-        if (!plasmoid.nativeInterface.showingDesktop && !MobileShellState.Shell.homeScreenVisible
-            || MobileShellState.Shell.actionDrawerVisible 
-            || search.isOpen
-        ) {
-            // Always close action drawer
-            if (MobileShellState.Shell.actionDrawerVisible) {
-                MobileShellState.Shell.closeActionDrawer();
-            }
-            
+
+        // Always close action drawer
+        if (MobileShellState.ShellDBusClient.isActionDrawerOpen) {
+            MobileShellState.ShellDBusClient.closeActionDrawer();
+        }
+
+        if (!WindowPlugin.WindowUtil.isShowingDesktop && windowMaximizedTracker.showingWindow || search.isOpen) {
             // Always close the search widget as well
             if (search.isOpen) {
                 search.close();
             }
-            
-            plasmoid.nativeInterface.showingDesktop = true;
-        } else if (homescreen.page == 0) {
-            homescreen.page = 1;
+
+            halcyonHomeScreen.page = 0;
+
+            WindowPlugin.WindowUtil.isShowingDesktop = true;
+        } else if (halcyonHomeScreen.page == 0) {
+            halcyonHomeScreen.page = 1;
         } else {
-            plasmoid.nativeInterface.showingDesktop = false;
-            homescreen.page = 0;
+            WindowPlugin.WindowUtil.isShowingDesktop = false;
+            halcyonHomeScreen.page = 0;
         }
     }
-    
-    // homescreen component
-    contentItem: Item {
-        HomeScreen {
-            id: homescreen
-            anchors.fill: parent
-            
-            topMargin: root.topMargin
-            bottomMargin: root.bottomMargin
-            leftMargin: root.leftMargin
-            rightMargin: root.rightMargin
 
-            // make the homescreen not interactable when task switcher or startup feedback is on
-            interactive: !root.overlayShown
-            searchWidget: search
+    WindowPlugin.WindowMaximizedTracker {
+        id: windowMaximizedTracker
+        screenGeometry: Plasmoid.containment.screenGeometry
+    }
+
+    Rectangle {
+        id: darkenBackground
+        color: (halcyonHomeScreen.page == 1 ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(0, 0, 0, 0.2))
+        anchors.fill: parent
+        z: -1
+        Behavior on color {
+            ColorAnimation { duration: Kirigami.Units.longDuration }
         }
-        
-        // search component
-        MobileShell.KRunnerWidget {
-            id: search
-            anchors.fill: parent
-            visible: openFactor > 0
-            
-            topMargin: root.topMargin
-            bottomMargin: root.bottomMargin
-            leftMargin: root.leftMargin
-            rightMargin: root.rightMargin
+    }
 
-             // close search component when task switcher is shown or hidden
-            Connections {
-                target: MobileShellState.HomeScreenControls.taskSwitcher
-                function onVisibleChanged() {
-                    search.close();
-                }
+    Rectangle {
+        id: darkenSettingsBackground
+        color: Qt.rgba(0, 0, 0, 0.7)
+        opacity: halcyonHomeScreen.settingsOpenFactor
+        anchors.fill: parent
+        z: -1
+        Behavior on color {
+            ColorAnimation { duration: Kirigami.Units.longDuration }
+        }
+    }
+
+    MobileShell.HomeScreen {
+        id: homeScreen
+        anchors.fill: parent
+        plasmoidItem: root
+
+        onResetHomeScreenPosition: {
+            halcyonHomeScreen.triggerHomescreen();
+        }
+
+        onHomeTriggered: {
+            search.close();
+        }
+
+        // homescreen component
+        contentItem: Item {
+            HomeScreen {
+                id: halcyonHomeScreen
+                anchors.fill: parent
+
+                topMargin: homeScreen.topMargin
+                bottomMargin: homeScreen.bottomMargin
+                leftMargin: homeScreen.leftMargin
+                rightMargin: homeScreen.rightMargin
+
+                searchWidget: search
+                interactive: true
+            }
+
+            // search component
+            MobileShell.KRunnerWidget {
+                id: search
+                anchors.fill: parent
+                visible: openFactor > 0
+
+                onActionTriggered: search.close()
+
+                topMargin: homeScreen.topMargin
+                bottomMargin: homeScreen.bottomMargin
+                leftMargin: homeScreen.leftMargin
+                rightMargin: homeScreen.rightMargin
             }
         }
     }

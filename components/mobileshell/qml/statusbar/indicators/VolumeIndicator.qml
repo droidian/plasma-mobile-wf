@@ -6,21 +6,18 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-import QtQuick 2.2
-import QtQuick.Layouts 1.4
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Layouts
+
 import org.kde.plasma.private.volume 0.1
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.kirigami as Kirigami
 
-PlasmaCore.IconItem {
+import org.kde.plasma.private.mobileshell as MobileShell
+
+Kirigami.Icon {
     id: paIcon
-    readonly property var provider: MobileShell.AudioProvider
-    
-    Layout.fillHeight: true
-    Layout.preferredWidth: height
-    source: provider.icon
 
-    colorGroup: PlasmaCore.ColorScope.colorGroup
+    source: MobileShell.AudioInfo.icon
 
-    visible: provider.isVisible
+    visible: MobileShell.AudioInfo.isVisible
 }

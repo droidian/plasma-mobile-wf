@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-set_source_files_properties(${KWIN_COLORCORRECT_INTERFACE} PROPERTIES NO_NAMESPACE TRUE)
-qt_add_dbus_interfaces(DBUS_SRCS ${KWIN_COLORCORRECT_INTERFACE})
+set_source_files_properties(${KWIN_NIGHTLIGHT_INTERFACE} PROPERTIES NO_NAMESPACE TRUE)
+qt_add_dbus_interfaces(DBUS_SRCS ${KWIN_NIGHTLIGHT_INTERFACE})
 
 set(nightcolorplugin_SRCS
     nightcolorplugin.cpp
@@ -15,21 +15,15 @@ kconfig_add_kcfg_files(nightcolorplugin_SRCS nightcolorsettings.kcfgc GENERATE_M
 
 add_library(nightcolorplugin ${nightcolorplugin_SRCS})
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS 
-    Config
-    Declarative
-)
-
 target_link_libraries(nightcolorplugin
-        PUBLIC
-            Qt::Core
-        PRIVATE
-            Qt::DBus
-            KF5::CoreAddons
-            KF5::QuickAddons
-            KF5::ConfigCore
-            KF5::ConfigGui
-    )
+    Qt::Core
+    Qt::DBus
+    Qt::Qml
+    Qt::Quick
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui
+)
 
 set_property(TARGET nightcolorplugin PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/quicksetting/nightcolor)
 file(COPY qmldir DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/quicksetting/nightcolor)

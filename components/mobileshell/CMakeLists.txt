@@ -1,36 +1,39 @@
 # SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/..)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-                                 
+ecm_add_qml_module(mobileshellplugin URI org.kde.plasma.private.mobileshell GENERATE_PLUGIN_SOURCE DEPENDENCIES QtQuick)
+
 set(mobileshellplugin_SRCS
-    mobileshellplugin.cpp
-    mobileshellsettings.cpp
     shellutil.cpp
-    windowutil.cpp
     components/direction.cpp
-    quicksettings/quicksetting.cpp
-    quicksettings/paginatemodel.cpp
-    quicksettings/quicksettingsmodel.cpp
-    quicksettings/savedquicksettings.cpp
-    quicksettings/savedquicksettingsmodel.cpp
+    components/direction.h
+    components/swipearea.cpp
     notifications/notificationthumbnailer.cpp
     notifications/notificationfilemenu.cpp
-    taskswitcher/displaysmodel.cpp
+    notifications/notificationfileinfo.cpp
 )
-if (QT_MAJOR_VERSION STREQUAL "5")
-    if(QUICK_COMPILER)
-        qtquick_compiler_add_resources(RESOURCES resources.qrc)
-    else()
-        qt5_add_resources(RESOURCES resources.qrc)
-    endif()
-else()
-    qt_add_resources(RESOURCES resources.qrc)
-endif()
-add_library(mobileshellplugin SHARED ${mobileshellplugin_SRCS} ${RESOURCES})
+target_include_directories(mobileshellplugin PRIVATE components)
+target_include_directories(mobileshellplugin PRIVATE notifications)
+target_sources(mobileshellplugin PRIVATE ${mobileshellplugin_SRCS})
 
-target_link_libraries(mobileshellplugin 
+# Singleton declarations
+set_source_files_properties(qml/components/AppLaunch.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(qml/components/Constants.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(qml/dataproviders/AudioInfo.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(qml/dataproviders/BatteryInfo.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(qml/dataproviders/BluetoothInfo.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(qml/dataproviders/SignalStrengthInfo.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(qml/volumeosd/VolumeOSDProviderLoader.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
+# Include qml and js files within ./qml/
+file(GLOB_RECURSE _qml_sources
+    "qml/*.qml"
+    "qml/*.js"
+)
+ecm_target_qml_sources(mobileshellplugin SOURCES ${_qml_sources})
+
+
+target_link_libraries(mobileshellplugin
     PUBLIC
         Qt::Core
     PRIVATE
@@ -38,21 +41,17 @@ target_link_libraries(mobileshellplugin
         Qt::Qml
         Qt::Gui
         Qt::Quick
-        KF5::ConfigWidgets # for KStandardAction
-        KF5::KIOGui
-        KF5::Plasma
-        KF5::I18n
-        KF5::Notifications
-        KF5::PlasmaQuick
-        KF5::KIOGui
-        KF5::KIOWidgets # for PreviewJob
-        KF5::WaylandClient
-        KF5::Service
-        KF5::Package
+        KF6::ConfigWidgets # for KStandardAction
+        KF6::KIOGui
+        Plasma::Plasma
+        KF6::I18n
+        KF6::Notifications
+        Plasma::PlasmaQuick
+        KF6::KIOGui
+        KF6::KIOWidgets # for PreviewJob
+        Plasma::KWaylandClient
+        KF6::Service
+        KF6::Package
 )
 
-# we compiled the qml files, just install qmldir
-install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/private/mobileshell)
-
-ecm_generate_qmltypes(org.kde.plasma.private.mobileshell 1.0 DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/private/mobileshell)
-install(TARGETS mobileshellplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/private/mobileshell)
+ecm_finalize_qml_module(mobileshellplugin)

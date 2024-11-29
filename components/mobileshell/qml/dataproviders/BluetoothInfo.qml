@@ -6,18 +6,19 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
+pragma Singleton
+
 import QtQuick 2.2
 import QtQuick.Layouts 1.4
-import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.bluezqt 1.0 as BluezQt
 
 QtObject {
     id: root
     readonly property bool isVisible: BluezQt.Manager.bluetoothOperational
-    readonly property string icon: deviceConnected ? "preferences-system-bluetooth-activated" : "preferences-system-bluetooth"
-    
+    readonly property string icon: deviceConnected ? "network-bluetooth-activated" : "network-bluetooth"
+
     property bool deviceConnected: false
-    
+
     function updateStatus() {
         let connectedDevices = [];
 
@@ -27,13 +28,13 @@ QtObject {
                 connectedDevices.push(device);
             }
         }
-        
+
         root.deviceConnected = connectedDevices.length > 0;
     }
-    
+
     property var connections: Connections {
         target: BluezQt.Manager
-        
+
         function onDeviceAdded() {
             root.updateStatus();
         }
@@ -50,7 +51,7 @@ QtObject {
             root.updateStatus();
         }
     }
-    
+
     Component.onCompleted: {
         updateStatus();
     }

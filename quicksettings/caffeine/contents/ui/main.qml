@@ -4,31 +4,31 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later
  */
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.private.mobileshell.quicksettingsplugin as QS
+import org.kde.plasma.plasma5support 2.0 as P5Support
 
-MobileShell.QuickSetting {
+QS.QuickSetting {
     text: i18n("Caffeine")
     icon: "system-suspend-hibernate"
     status: enabled ? i18n("Tap to disable sleep suspension") : i18n("Tap to suspend sleep")
     enabled: false
 
-    PlasmaCore.DataSource {
+    P5Support.DataSource {
         id: pmSource
         engine: "powermanagement"
         connectedSources: sources
-        onSourceAdded: {
+        onSourceAdded: source => {
             disconnectSource(source);
             connectSource(source);
         }
-        onSourceRemoved: {
+        onSourceRemoved: source => {
             disconnectSource(source);
         }
     }
 
     property int cookie1: -1
     property int cookie2: -1
-    
+
     function toggle() {
         let inhibit = !enabled;
         const service = pmSource.serviceForSource("PowerDevil");

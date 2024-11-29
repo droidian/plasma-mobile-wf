@@ -8,24 +8,24 @@
 import QtQuick 2.6
 import QtQuick.Layouts 1.4
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
+
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.workspace.components 2.0 as PW
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell as MobileShell
 
 RowLayout {
-    readonly property var provider: MobileShell.BatteryInfo {}
-    property real textPixelSize: PlasmaCore.Units.gridUnit * 0.6
-    
-    visible: provider.isVisible
+    property real textPixelSize: Kirigami.Units.gridUnit * 0.6
+
+    visible: MobileShell.BatteryInfo.isVisible
 
     PW.BatteryIcon {
         id: battery
         Layout.preferredWidth: height
         Layout.fillHeight: true
         hasBattery: true
-        percent: provider.percent
-        pluggedIn: provider.pluggedIn
+        percent: MobileShell.BatteryInfo.percent
+        pluggedIn: MobileShell.BatteryInfo.pluggedIn
 
         height: batteryLabel.height
         width: batteryLabel.height
@@ -33,10 +33,10 @@ RowLayout {
 
     PlasmaComponents.Label {
         id: batteryLabel
-        text: i18n("%1%", provider.percent)
+        text: i18n("%1%", MobileShell.BatteryInfo.percent)
         Layout.alignment: Qt.AlignVCenter
 
-        color: PlasmaCore.ColorScope.textColor
+        color: Kirigami.Theme.textColor
         font.pixelSize: textPixelSize
     }
 }

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2023-11-25 02:33\n"
+"POT-Creation-Date: 2024-06-29 00:40+0000\n"
+"PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,176 +14,179 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-stable/messages/plasma-mobile/kcm_mobileshell.pot\n"
-"X-Crowdin-File-ID: 41661\n"
+"X-Crowdin-File: /kf6-stable/messages/plasma-mobile/kcm_mobileshell.pot\n"
+"X-Crowdin-File-ID: 50966\n"
 
-#: package/contents/ui/main.qml:18
+#: ui/main.qml:18
 #, kde-format
 msgid "Shell"
 msgstr "外壳程序"
 
-#: package/contents/ui/main.qml:36
+#: ui/main.qml:27
 #, kde-format
 msgid "General"
 msgstr "常规"
 
-#: package/contents/ui/main.qml:41 package/contents/ui/VibrationForm.qml:17
-#: package/contents/ui/VibrationForm.qml:35
+#: ui/main.qml:33 ui/VibrationForm.qml:18 ui/VibrationForm.qml:25
 #, kde-format
 msgid "Shell Vibrations"
 msgstr "外壳程序振动"
 
-#: package/contents/ui/main.qml:49
+#: ui/main.qml:41
 #, kde-format
 msgid "Animations"
 msgstr "动效"
 
-#: package/contents/ui/main.qml:50
+#: ui/main.qml:42
 #, kde-format
 msgid "If this is off, animations will be reduced as much as possible."
 msgstr "如果此选项被关闭，动效将被减少到最低程度。"
 
-#: package/contents/ui/main.qml:69
+#: ui/main.qml:53
+#, kde-format
+msgid "Status bar"
+msgstr "状态栏"
+
+#: ui/main.qml:59
+#, kde-format
+msgid "Date in status bar"
+msgstr "在状态栏中显示日期"
+
+#: ui/main.qml:60
+#, kde-format
+msgid "If on, date will be shown next to the clock in the status bar."
+msgstr "如果开启，将在状态栏中的时钟旁边显示日期。"
+
+#: ui/main.qml:71
 #, kde-format
 msgid "Navigation Panel"
 msgstr "导航面板"
 
-#: package/contents/ui/main.qml:74
+#: ui/main.qml:77
 #, kde-format
 msgid "Gesture-only Mode"
 msgstr "仅手势模式"
 
-#: package/contents/ui/main.qml:75
+#: ui/main.qml:78
 #, kde-format
 msgid "Whether to hide the navigation panel."
 msgstr "是否隐藏导航面板。"
 
-#: package/contents/ui/main.qml:94
+#: ui/main.qml:92
 #, kde-format
-msgid "Task Switcher"
-msgstr "任务切换器"
+msgid "Always show keyboard toggle"
+msgstr "总是显示键盘开关"
 
-#: package/contents/ui/main.qml:98
+#: ui/main.qml:93
 #, kde-format
-msgid "Show Application Previews"
-msgstr "显示应用程序预览"
+msgid ""
+"Whether to always show the keyboard toggle button on the navigation panel."
+msgstr "是否总是在导航面板上显示键盘切换按钮。"
 
-#: package/contents/ui/main.qml:99
-#, kde-format
-msgid "Turning this off may help improve performance."
-msgstr "关闭此功能可能有助于提高性能。"
-
-#: package/contents/ui/main.qml:119
+#: ui/main.qml:104
 #, kde-format
 msgid "Action Drawer"
 msgstr "操作抽屉"
 
-#: package/contents/ui/main.qml:124
-#: package/contents/ui/QuickSettingsForm.qml:17
-#: package/contents/ui/QuickSettingsForm.qml:34
-#, kde-format
-msgid "Quick Settings"
-msgstr "快速设置"
-
-#: package/contents/ui/main.qml:130
+#: ui/main.qml:110
 #, kde-format
 msgctxt "Pinned action drawer mode"
 msgid "Pinned Mode"
 msgstr "固定模式"
 
-#: package/contents/ui/main.qml:131
+#: ui/main.qml:111
 #, kde-format
 msgctxt "Expanded action drawer mode"
 msgid "Expanded Mode"
 msgstr "扩展模式"
 
-#: package/contents/ui/main.qml:135
+#: ui/main.qml:115 ui/QuickSettingsForm.qml:18 ui/QuickSettingsForm.qml:71
+#, kde-format
+msgid "Quick Settings"
+msgstr "快速设置"
+
+#: ui/main.qml:123
 #, kde-format
 msgid "Top Left Drawer Mode"
 msgstr "左上角抽屉模式"
 
-#: package/contents/ui/main.qml:136
+#: ui/main.qml:124
 #, kde-format
 msgid "Mode when opening from the top left."
 msgstr "从左上角打开的模式。"
 
-#: package/contents/ui/main.qml:161
+#: ui/main.qml:149
 #, kde-format
 msgid "Top Right Drawer Mode"
 msgstr "右上角抽屉模式"
 
-#: package/contents/ui/main.qml:162
+#: ui/main.qml:150
 #, kde-format
 msgid "Mode when opening from the top right."
 msgstr "从右上角打开的模式。"
 
-#: package/contents/ui/QuickSettingsForm.qml:35
+#: ui/QuickSettingsForm.qml:55
 #, kde-format
-msgid "Customize the order of quick settings in the pull-down panel."
-msgstr "自定义下拉面板中快速设置的排序。"
+msgctxt "@action:button"
+msgid "Hide"
+msgstr "隐藏"
 
-#: package/contents/ui/VibrationForm.qml:36
+#: ui/QuickSettingsForm.qml:55
+#, kde-format
+msgctxt "@action:button"
+msgid "Show"
+msgstr "显示"
+
+#: ui/QuickSettingsForm.qml:76
+#, kde-format
+msgid ""
+"Customize the order of quick settings in the pull-down panel and hide them."
+msgstr "自定义下拉面板中快速设置的排序，还能隐藏快速设置项。"
+
+#: ui/QuickSettingsForm.qml:99
+#, kde-format
+msgid "Disabled Quick Settings"
+msgstr "已禁用的快速设置"
+
+#: ui/QuickSettingsForm.qml:104
+#, kde-format
+msgid "Re-enable previously disabled quick settings."
+msgstr "重新启用已禁用的快速设置。"
+
+#: ui/VibrationForm.qml:26
 #, kde-format
 msgid "Whether to have vibrations enabled in the shell."
 msgstr "是否在外壳程序中启用振动。"
 
-#: package/contents/ui/VibrationForm.qml:49
-#, kde-format
-msgid "Vibration Intensity"
-msgstr "振动强度"
-
-#: package/contents/ui/VibrationForm.qml:50
-#, kde-format
-msgid "How intense shell vibrations should be."
-msgstr "设置振动的强度。"
-
-#: package/contents/ui/VibrationForm.qml:52
-#, kde-format
-msgctxt "Low intensity"
-msgid "Low"
-msgstr "低"
-
-#: package/contents/ui/VibrationForm.qml:53
-#, kde-format
-msgctxt "Medium intensity"
-msgid "Medium"
-msgstr "中"
-
-#: package/contents/ui/VibrationForm.qml:54
-#, kde-format
-msgctxt "High intensity"
-msgid "High"
-msgstr "高"
-
-#: package/contents/ui/VibrationForm.qml:80
+#: ui/VibrationForm.qml:39
 #, kde-format
 msgid "Vibration Duration"
 msgstr "振动持续时间"
 
-#: package/contents/ui/VibrationForm.qml:81
+#: ui/VibrationForm.qml:40
 #, kde-format
 msgid "How long shell vibrations should be."
 msgstr "设置外壳程序的振动持续时间。"
 
-#: package/contents/ui/VibrationForm.qml:83
+#: ui/VibrationForm.qml:42
 #, kde-format
 msgctxt "Long duration"
 msgid "Long"
 msgstr "长"
 
-#: package/contents/ui/VibrationForm.qml:84
+#: ui/VibrationForm.qml:43
 #, kde-format
 msgctxt "Medium duration"
 msgid "Medium"
 msgstr "中"
 
-#: package/contents/ui/VibrationForm.qml:85
+#: ui/VibrationForm.qml:44
 #, kde-format
 msgctxt "Short duration"
 msgid "Short"
 msgstr "短"
 
-#: package/contents/ui/VibrationForm.qml:110
+#: ui/VibrationForm.qml:68
 #, kde-format
 msgid ""
 "Keyboard vibrations are controlled separately in the keyboard settings "

@@ -5,51 +5,49 @@
  *  SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.private.mobileshell as MobileShell
 
 Item {
-    required property InternetIndicator internetIndicator
-    
-    readonly property var provider: MobileShell.SignalStrengthInfo {}
-    
+    property InternetIndicator internetIndicator
+
     // check if the internet indicator icon is a mobile data related one
     readonly property bool isInternetIndicatorMobileData: internetIndicator && internetIndicator.icon && internetIndicator.icon.startsWith('network-mobile-')
-    
+
     property bool showLabel: true
-    property real textPixelSize: PlasmaCore.Units.gridUnit * 0.6
-    
+    property real textPixelSize: Kirigami.Units.gridUnit * 0.6
+
     width: strengthIcon.width + label.width
     Layout.minimumWidth: strengthIcon.width + label.width
 
-    PlasmaCore.IconItem {
+    Kirigami.Icon {
         id: strengthIcon
-        colorGroup: PlasmaCore.ColorScope.colorGroup
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
         width: height
         height: parent.height
 
-        source: provider.icon
-        
+        source: MobileShell.SignalStrengthInfo.icon
+
         // don't show mobile indicator icon if the networkmanager one is already showing
-        visible: !isInternetIndicatorMobileData && provider.showIndicator
+        visible: (!isInternetIndicatorMobileData || wirelessStatus.hotspotSSID.length !== 0) && MobileShell.SignalStrengthInfo.showIndicator
     }
-    
+
     PlasmaComponents.Label {
         id: label
         visible: showLabel
         width: visible ? implicitWidth : 0
-        anchors.leftMargin: PlasmaCore.Units.smallSpacing
+        anchors.leftMargin: Kirigami.Units.smallSpacing
         anchors.left: strengthIcon.right
         anchors.verticalCenter: parent.verticalCenter
 
-        text: provider.label
-        color: PlasmaCore.ColorScope.textColor
+        text: MobileShell.SignalStrengthInfo.label
+        color: Kirigami.Theme.textColor
         font.pixelSize: textPixelSize
     }
 }

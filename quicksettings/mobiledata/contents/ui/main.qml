@@ -3,10 +3,11 @@
 
 import QtQuick 2.15
 
-import org.kde.plasma.mm 1.0 as PlasmaMM
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.mm as PlasmaMM
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.quicksettingsplugin as QS
 
-MobileShell.QuickSetting {
+QS.QuickSetting {
     text: i18n("Mobile Data")
     icon: "network-modem"
     status: {
@@ -22,10 +23,10 @@ MobileShell.QuickSetting {
             return i18n("Not Available");
         }
     }
-                
+
     settingsCommand: "plasma-open-settings kcm_cellular_network"
     enabled: PlasmaMM.SignalIndicator.mobileDataEnabled
-    
+
     function toggle() {
         if (PlasmaMM.SignalIndicator.needsAPNAdded || !PlasmaMM.SignalIndicator.mobileDataSupported) {
             // open settings if unable to toggle mobile data

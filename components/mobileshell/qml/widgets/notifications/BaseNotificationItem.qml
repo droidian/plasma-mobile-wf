@@ -1,44 +1,42 @@
 /*
  * SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
  * SPDX-FileCopyrightText: 2018-2019 Kai Uwe Broulik <kde@privat.broulik.de>
- * 
+ *
  * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.8
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.12
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasma5support 2.0 as P5Support
 import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 
-import org.kde.notificationmanager 1.0 as NotificationManager
+import org.kde.notificationmanager as NotificationManager
 
-import org.kde.kcoreaddons 1.0 as KCoreAddons
+import org.kde.coreaddons 1.0 as KCoreAddons
 
 Item {
     id: notificationItem
-    
+
     required property var notificationsModel
-    
+
     required property int notificationsModelType
-    
+
     /**
      * Whether the notification is allowed to invoke any action, or if it should instead
      * emit the runActionRequested(action) signal, containing the code to run.
-     * 
+     *
      * This is useful for cases like the lockscreen, where actions should only be run after
      * the user logs in.
      */
     property bool requestToInvoke: false
-    
+
     property var model
     property int modelIndex
-    
-    property PlasmaCore.DataSource timeSource
-    
+
+    property P5Support.DataSource timeSource
+
     readonly property int notificationType: model.type
 
     readonly property bool inGroup: model.isInGroup || false
@@ -56,8 +54,8 @@ Item {
     readonly property string replyPlaceholderText: model.replyPlaceholderText || ""
     readonly property string replySubmitButtonText: model.replySubmitButtonText || ""
     readonly property string replySubmitButtonIconName: model.replySubmitButtonIconName || ""
-    
-    // configure button on every single notifications is bit overwhelming
+
+    // configure button on every single notifications is a bit overwhelming
     readonly property bool configurable: !inGroup && model.configurable
 
     readonly property bool dismissable: model.type === NotificationManager.Notifications.JobType
@@ -77,7 +75,7 @@ Item {
     readonly property int jobError: model.jobError || 0
     readonly property bool suspendable: !!model.suspendable
     readonly property bool killable: !!model.killable
-    
+
     readonly property QtObject jobDetails: model.jobDetails || null
 
     readonly property string configureActionLabel: model.configureActionLabel || ""
@@ -99,13 +97,13 @@ Item {
         }
         return labels;
     }
-    
+
     /**
      * This signal is emitted and intended for the parent to make its own decision
      * on whether to run the requested notification action.
      */
     signal runActionRequested()
-    
+
     signal actionInvoked(string actionName)
     signal replied(string text)
     signal openUrl(string url)
@@ -114,7 +112,7 @@ Item {
     signal suspendJobClicked
     signal resumeJobClicked
     signal killJobClicked
-    
+
     function expire() {
         if (model.resident) {
             model.expired = true;
@@ -134,17 +132,17 @@ Item {
             notificationsModel.close(notificationsModel.index(modelIndex, 0));
         }
     }
-    
+
     // TODO call
     function configure() {
         notificationsModel.configure(notificationsModel.index(modelIndex, 0))
     }
-    
+
     property var pendingAction: () => {}
     function runPendingAction() {
         pendingAction();
     }
-    
+
     onActionInvoked: {
         let action = () => {
             if (notificationsModelType === NotificationsModelType.WatchedNotificationsModel) {
@@ -155,14 +153,14 @@ Item {
                 }
             } else if (notificationsModelType === NotificationsModelType.NotificationsModel) {
                 if (actionName === "default") {
-                    notificationsModel.invokeDefaultAction(notificationsModel.index(modelIndex, 0),  NotificationManager.Close); // notification closes 
+                    notificationsModel.invokeDefaultAction(notificationsModel.index(modelIndex, 0),  NotificationManager.Close); // notification closes
                 } else {
-                    notificationsModel.invokeAction(notificationsModel.index(modelIndex, 0), actionName,  NotificationManager.Close); // notification closes 
+                    notificationsModel.invokeAction(notificationsModel.index(modelIndex, 0), actionName,  NotificationManager.Close); // notification closes
                 }
             }
             expire();
         }
-        
+
         if (notificationItem.requestToInvoke) {
             pendingAction = action;
             runActionRequested();
@@ -170,13 +168,13 @@ Item {
             action();
         }
     }
-    
+
     onOpenUrl: {
         let action = () => {
             Qt.openUrlExternally(url);
             expire();
         }
-        
+
         if (notificationItem.requestToInvoke) {
             pendingAction = action;
             runActionRequested();
@@ -184,7 +182,7 @@ Item {
             action();
         }
     }
-    
+
     onFileActionInvoked: {
         let action = () => {
             if (action.objectName === "movetotrash" || action.objectName === "deletefile") {
@@ -193,7 +191,7 @@ Item {
                 expire();
             }
         }
-        
+
         if (notificationItem.requestToInvoke) {
             pendingAction = action;
             runActionRequested();
@@ -201,10 +199,10 @@ Item {
             action();
         }
     }
-    
+
     onSuspendJobClicked: {
         let action = () => notificationsModel.suspendJob(notificationsModel.index(modelIndex, 0));
-        
+
         if (notificationItem.requestToInvoke) {
             pendingAction = action;
             runActionRequested();
@@ -212,10 +210,10 @@ Item {
             action();
         }
     }
-    
+
     onResumeJobClicked: {
         let action = () => notificationsModel.resumeJob(notificationsModel.index(modelIndex, 0));
-        
+
         if (notificationItem.requestToInvoke) {
             pendingAction = action;
             runActionRequested();
@@ -223,10 +221,10 @@ Item {
             action();
         }
     }
-    
+
     onKillJobClicked: {
         let action = () => notificationsModel.killJob(notificationsModel.index(modelIndex, 0));
-    
+
         if (notificationItem.requestToInvoke) {
             pendingAction = action;
             runActionRequested();
