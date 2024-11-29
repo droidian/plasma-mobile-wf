@@ -1,12 +1,11 @@
 # Translation of plasma_shell_org.kde.plasma.phone to Norwegian Nynorsk
 #
-# Karl Ove Hufthammer <karl@huftis.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-19 00:47+0000\n"
-"PO-Revision-Date: 2023-02-23 17:43+0100\n"
+"POT-Creation-Date: 2024-08-01 00:42+0000\n"
+"PO-Revision-Date: 2024-07-17 17:36+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -14,59 +13,75 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 24.07.70\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+
+#: contents/applet/AppletError.qml:168
+msgid "Copy to Clipboard"
+msgstr "Kopier til utklippstavla"
+
+#: contents/applet/AppletError.qml:191
+msgid "View Error Details…"
+msgstr "Vis feildetaljar …"
+
+#: contents/applet/CompactApplet.qml:77
+msgid "Open %1"
+msgstr "Opna %1"
 
 #: contents/configuration/ConfigurationContainmentAppearance.qml:44
 msgid "Layout changes have been restricted by the system administrator"
 msgstr "Utformingsendringar er låste av systemadministratoren"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:65
+#: contents/configuration/ConfigurationContainmentAppearance.qml:59
 msgid "General"
 msgstr "Generelt"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:71
+#: contents/configuration/ConfigurationContainmentAppearance.qml:66
 msgid "Homescreen Layout"
 msgstr "Heimeskjerm-utforming"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:72
+#: contents/configuration/ConfigurationContainmentAppearance.qml:67
 msgid "The homescreen layout to use."
 msgstr "Heimeskjerm-utforminga som skal brukast."
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:98
+#: contents/configuration/ConfigurationContainmentAppearance.qml:93
 msgid "Wallpaper Plugin"
 msgstr "Bakgrunnsbilete-tillegg"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:99
+#: contents/configuration/ConfigurationContainmentAppearance.qml:94
 msgid "The wallpaper plugin to use."
 msgstr "Bakgrunnsbilete-tillegget som skal brukast."
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:134
+#: contents/configuration/ConfigurationContainmentAppearance.qml:129
 msgid "Wallpaper Plugins"
 msgstr "Bakgrunnsbilete-tillegg"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:139
+#: contents/configuration/ConfigurationContainmentAppearance.qml:134
 msgid "Get New Plugins…"
 msgstr "Hent nye tillegg …"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:154
+#: contents/configuration/ConfigurationContainmentAppearance.qml:148
 msgid "Layout changes must be applied before other changes can be made"
 msgstr "Du må ta i bruk utformings­endringane før du kan gjera andre endringar."
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:160
+#: contents/configuration/ConfigurationContainmentAppearance.qml:154
 msgid "Apply now"
 msgstr "Bruk no"
 
-#: contents/configuration/ContainmentConfiguration.qml:32
+#: contents/configuration/ContainmentConfiguration.qml:34
 msgid "Wallpaper"
 msgstr "Bakgrunnsbilete"
 
-#: contents/configuration/ContainmentConfiguration.qml:95
-msgid "Change Wallpaper"
-msgstr "Byt bakgrunnsbilete"
+#: contents/lockscreen/LockScreenState.qml:31
+msgid "Enter PIN"
+msgstr "Skriv inn PIN"
 
-#: contents/configuration/ContainmentConfiguration.qml:113
-msgid "Configure"
-msgstr "Set opp"
+#: contents/lockscreen/LockScreenState.qml:32
+msgid "Wrong PIN"
+msgstr "Feil PIN"
+
+#: contents/views/Panel.qml:321
+msgid "Panel Focus Indicator"
+msgstr "Panelfokus-markør"

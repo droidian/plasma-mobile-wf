@@ -1,16 +1,13 @@
 # SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-kcoreaddons_add_plugin(kcm_mobileshell SOURCES kcm.cpp INSTALL_NAMESPACE "plasma/kcms/systemsettings")
+kcmutils_add_qml_kcm(kcm_mobileshell SOURCES kcm.cpp)
 
-target_link_libraries(kcm_mobileshell
+target_link_libraries(kcm_mobileshell PRIVATE
     Qt::Core
-    KF5::CoreAddons
-    KF5::KCMUtils
-    KF5::I18n
-    KF5::QuickAddons
+    KF6::CoreAddons
+    KF6::KCMUtils
+    KF6::I18n
+    KF6::KCMUtilsQuick
 )
 
-kcmutils_generate_desktop_file(kcm_mobileshell)
-
-kpackage_install_package(package kcm_mobileshell kcms) # Install our QML kpackage.

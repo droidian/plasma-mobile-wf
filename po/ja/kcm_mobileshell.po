@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-24 00:51+0000\n"
+"POT-Creation-Date: 2024-06-29 00:40+0000\n"
 "PO-Revision-Date: 2022-12-20 22:48-0800\n"
 "Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -14,173 +14,176 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: package/contents/ui/main.qml:18
+#: ui/main.qml:18
 #, kde-format
 msgid "Shell"
 msgstr ""
 
-#: package/contents/ui/main.qml:36
+#: ui/main.qml:27
 #, kde-format
 msgid "General"
 msgstr ""
 
-#: package/contents/ui/main.qml:41 package/contents/ui/VibrationForm.qml:17
-#: package/contents/ui/VibrationForm.qml:35
+#: ui/main.qml:33 ui/VibrationForm.qml:18 ui/VibrationForm.qml:25
 #, kde-format
 msgid "Shell Vibrations"
 msgstr ""
 
-#: package/contents/ui/main.qml:49
+#: ui/main.qml:41
 #, kde-format
 msgid "Animations"
 msgstr ""
 
-#: package/contents/ui/main.qml:50
+#: ui/main.qml:42
 #, kde-format
 msgid "If this is off, animations will be reduced as much as possible."
 msgstr ""
 
-#: package/contents/ui/main.qml:69
+#: ui/main.qml:53
+#, kde-format
+msgid "Status bar"
+msgstr ""
+
+#: ui/main.qml:59
+#, kde-format
+msgid "Date in status bar"
+msgstr ""
+
+#: ui/main.qml:60
+#, kde-format
+msgid "If on, date will be shown next to the clock in the status bar."
+msgstr ""
+
+#: ui/main.qml:71
 #, kde-format
 msgid "Navigation Panel"
 msgstr ""
 
-#: package/contents/ui/main.qml:74
+#: ui/main.qml:77
 #, kde-format
 msgid "Gesture-only Mode"
 msgstr ""
 
-#: package/contents/ui/main.qml:75
+#: ui/main.qml:78
 #, kde-format
 msgid "Whether to hide the navigation panel."
 msgstr ""
 
-#: package/contents/ui/main.qml:94
+#: ui/main.qml:92
 #, kde-format
-msgid "Task Switcher"
+msgid "Always show keyboard toggle"
 msgstr ""
 
-#: package/contents/ui/main.qml:98
+#: ui/main.qml:93
 #, kde-format
-msgid "Show Application Previews"
+msgid ""
+"Whether to always show the keyboard toggle button on the navigation panel."
 msgstr ""
 
-#: package/contents/ui/main.qml:99
-#, kde-format
-msgid "Turning this off may help improve performance."
-msgstr ""
-
-#: package/contents/ui/main.qml:119
+#: ui/main.qml:104
 #, kde-format
 msgid "Action Drawer"
 msgstr ""
 
-#: package/contents/ui/main.qml:124
-#: package/contents/ui/QuickSettingsForm.qml:17
-#: package/contents/ui/QuickSettingsForm.qml:34
-#, kde-format
-msgid "Quick Settings"
-msgstr ""
-
-#: package/contents/ui/main.qml:130
+#: ui/main.qml:110
 #, kde-format
 msgctxt "Pinned action drawer mode"
 msgid "Pinned Mode"
 msgstr ""
 
-#: package/contents/ui/main.qml:131
+#: ui/main.qml:111
 #, kde-format
 msgctxt "Expanded action drawer mode"
 msgid "Expanded Mode"
 msgstr ""
 
-#: package/contents/ui/main.qml:135
+#: ui/main.qml:115 ui/QuickSettingsForm.qml:18 ui/QuickSettingsForm.qml:71
+#, kde-format
+msgid "Quick Settings"
+msgstr ""
+
+#: ui/main.qml:123
 #, kde-format
 msgid "Top Left Drawer Mode"
 msgstr ""
 
-#: package/contents/ui/main.qml:136
+#: ui/main.qml:124
 #, kde-format
 msgid "Mode when opening from the top left."
 msgstr ""
 
-#: package/contents/ui/main.qml:161
+#: ui/main.qml:149
 #, kde-format
 msgid "Top Right Drawer Mode"
 msgstr ""
 
-#: package/contents/ui/main.qml:162
+#: ui/main.qml:150
 #, kde-format
 msgid "Mode when opening from the top right."
 msgstr ""
 
-#: package/contents/ui/QuickSettingsForm.qml:35
+#: ui/QuickSettingsForm.qml:55
 #, kde-format
-msgid "Customize the order of quick settings in the pull-down panel."
+msgctxt "@action:button"
+msgid "Hide"
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:36
+#: ui/QuickSettingsForm.qml:55
+#, kde-format
+msgctxt "@action:button"
+msgid "Show"
+msgstr ""
+
+#: ui/QuickSettingsForm.qml:76
+#, kde-format
+msgid ""
+"Customize the order of quick settings in the pull-down panel and hide them."
+msgstr ""
+
+#: ui/QuickSettingsForm.qml:99
+#, kde-format
+msgid "Disabled Quick Settings"
+msgstr ""
+
+#: ui/QuickSettingsForm.qml:104
+#, kde-format
+msgid "Re-enable previously disabled quick settings."
+msgstr ""
+
+#: ui/VibrationForm.qml:26
 #, kde-format
 msgid "Whether to have vibrations enabled in the shell."
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:49
-#, kde-format
-msgid "Vibration Intensity"
-msgstr ""
-
-#: package/contents/ui/VibrationForm.qml:50
-#, kde-format
-msgid "How intense shell vibrations should be."
-msgstr ""
-
-#: package/contents/ui/VibrationForm.qml:52
-#, kde-format
-msgctxt "Low intensity"
-msgid "Low"
-msgstr ""
-
-#: package/contents/ui/VibrationForm.qml:53
-#, kde-format
-msgctxt "Medium intensity"
-msgid "Medium"
-msgstr ""
-
-#: package/contents/ui/VibrationForm.qml:54
-#, kde-format
-msgctxt "High intensity"
-msgid "High"
-msgstr ""
-
-#: package/contents/ui/VibrationForm.qml:80
+#: ui/VibrationForm.qml:39
 #, kde-format
 msgid "Vibration Duration"
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:81
+#: ui/VibrationForm.qml:40
 #, kde-format
 msgid "How long shell vibrations should be."
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:83
+#: ui/VibrationForm.qml:42
 #, kde-format
 msgctxt "Long duration"
 msgid "Long"
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:84
+#: ui/VibrationForm.qml:43
 #, kde-format
 msgctxt "Medium duration"
 msgid "Medium"
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:85
+#: ui/VibrationForm.qml:44
 #, kde-format
 msgctxt "Short duration"
 msgid "Short"
 msgstr ""
 
-#: package/contents/ui/VibrationForm.qml:110
+#: ui/VibrationForm.qml:68
 #, kde-format
 msgid ""
 "Keyboard vibrations are controlled separately in the keyboard settings "

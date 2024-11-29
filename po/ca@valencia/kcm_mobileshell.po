@@ -1,16 +1,16 @@
 # Translation of kcm_mobileshell.po to Catalan (Valencian)
-# Copyright (C) 2022 This_file_is_part_of_KDE
+# Copyright (C) 2022-2024 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Josep M. Ferrer <txemaq@gmail.com>
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2022-12-24 11:22+0100\n"
+"POT-Creation-Date: 2024-06-29 00:40+0000\n"
+"PO-Revision-Date: 2024-06-29 16:49+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -18,177 +18,184 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 24.05.1\n"
 
-#: package/contents/ui/main.qml:18
+#: ui/main.qml:18
 #, kde-format
 msgid "Shell"
 msgstr "Intèrpret d'ordres"
 
-#: package/contents/ui/main.qml:36
+#: ui/main.qml:27
 #, kde-format
 msgid "General"
 msgstr "General"
 
-#: package/contents/ui/main.qml:41 package/contents/ui/VibrationForm.qml:17
-#: package/contents/ui/VibrationForm.qml:35
+#: ui/main.qml:33 ui/VibrationForm.qml:18 ui/VibrationForm.qml:25
 #, kde-format
 msgid "Shell Vibrations"
 msgstr "Vibració de l'intèrpret d'ordres"
 
-#: package/contents/ui/main.qml:49
+#: ui/main.qml:41
 #, kde-format
 msgid "Animations"
 msgstr "Animacions"
 
-#: package/contents/ui/main.qml:50
+#: ui/main.qml:42
 #, kde-format
 msgid "If this is off, animations will be reduced as much as possible."
-msgstr ""
-"Si està desactivada, les animacions es reduiran tant com siga possible."
+msgstr "Si està marcada, les animacions es reduiran tant com siga possible."
 
-#: package/contents/ui/main.qml:69
+#: ui/main.qml:53
+#, kde-format
+msgid "Status bar"
+msgstr "Barra d'estat"
+
+#: ui/main.qml:59
+#, kde-format
+msgid "Date in status bar"
+msgstr "Data a la barra d'estat"
+
+#: ui/main.qml:60
+#, kde-format
+msgid "If on, date will be shown next to the clock in the status bar."
+msgstr ""
+"Si està marcada, es mostrarà la data al costat del rellotge en la barra "
+"d'estat."
+
+#: ui/main.qml:71
 #, kde-format
 msgid "Navigation Panel"
 msgstr "Quadro de navegació"
 
-#: package/contents/ui/main.qml:74
+#: ui/main.qml:77
 #, kde-format
 msgid "Gesture-only Mode"
 msgstr "Mode de només gestos"
 
-#: package/contents/ui/main.qml:75
+#: ui/main.qml:78
 #, kde-format
 msgid "Whether to hide the navigation panel."
 msgstr "Si s'ha d'ocultar el quadro de navegació."
 
-#: package/contents/ui/main.qml:94
+#: ui/main.qml:92
 #, kde-format
-msgid "Task Switcher"
-msgstr "Commutador de tasques"
+msgid "Always show keyboard toggle"
+msgstr "Mostra sempre el canvi del teclat"
 
-#: package/contents/ui/main.qml:98
+#: ui/main.qml:93
 #, kde-format
-msgid "Show Application Previews"
-msgstr "Mostra les vistes prèvies de les aplicacions"
+msgid ""
+"Whether to always show the keyboard toggle button on the navigation panel."
+msgstr ""
+"Si sempre s'ha de mostrar el botó de commutació del teclat en el quadro de "
+"navegació."
 
-#: package/contents/ui/main.qml:99
-#, kde-format
-msgid "Turning this off may help improve performance."
-msgstr "Desactivar açò pot ajudar a millorar el rendiment."
-
-#: package/contents/ui/main.qml:119
+#: ui/main.qml:104
 #, kde-format
 msgid "Action Drawer"
 msgstr "Calaix d'accions"
 
-#: package/contents/ui/main.qml:124
-#: package/contents/ui/QuickSettingsForm.qml:17
-#: package/contents/ui/QuickSettingsForm.qml:34
-#, kde-format
-msgid "Quick Settings"
-msgstr "Opcions ràpides"
-
-#: package/contents/ui/main.qml:130
+#: ui/main.qml:110
 #, kde-format
 msgctxt "Pinned action drawer mode"
 msgid "Pinned Mode"
 msgstr "Mode fixat"
 
-#: package/contents/ui/main.qml:131
+#: ui/main.qml:111
 #, kde-format
 msgctxt "Expanded action drawer mode"
 msgid "Expanded Mode"
 msgstr "Mode expandit"
 
-#: package/contents/ui/main.qml:135
+#: ui/main.qml:115 ui/QuickSettingsForm.qml:18 ui/QuickSettingsForm.qml:71
+#, kde-format
+msgid "Quick Settings"
+msgstr "Opcions ràpides"
+
+#: ui/main.qml:123
 #, kde-format
 msgid "Top Left Drawer Mode"
 msgstr "Mode del calaix superior esquerre"
 
-#: package/contents/ui/main.qml:136
+#: ui/main.qml:124
 #, kde-format
 msgid "Mode when opening from the top left."
 msgstr "Mode en obrir des de la part superior esquerra."
 
-#: package/contents/ui/main.qml:161
+#: ui/main.qml:149
 #, kde-format
 msgid "Top Right Drawer Mode"
 msgstr "Mode del calaix superior dret"
 
-#: package/contents/ui/main.qml:162
+#: ui/main.qml:150
 #, kde-format
 msgid "Mode when opening from the top right."
 msgstr "Mode en obrir des de la part superior dreta."
 
-#: package/contents/ui/QuickSettingsForm.qml:35
+#: ui/QuickSettingsForm.qml:55
 #, kde-format
-msgid "Customize the order of quick settings in the pull-down panel."
-msgstr ""
-"Personalitzeu l'ordre de la configuració ràpida en el quadro desplegable."
+msgctxt "@action:button"
+msgid "Hide"
+msgstr "Oculta"
 
-#: package/contents/ui/VibrationForm.qml:36
+#: ui/QuickSettingsForm.qml:55
+#, kde-format
+msgctxt "@action:button"
+msgid "Show"
+msgstr "Mostra"
+
+#: ui/QuickSettingsForm.qml:76
+#, kde-format
+msgid ""
+"Customize the order of quick settings in the pull-down panel and hide them."
+msgstr ""
+"Personalitzeu l'ordre de les opcions ràpides en el quadro desplegable i les "
+"oculta."
+
+#: ui/QuickSettingsForm.qml:99
+#, kde-format
+msgid "Disabled Quick Settings"
+msgstr "Opcions ràpides desactivades"
+
+#: ui/QuickSettingsForm.qml:104
+#, kde-format
+msgid "Re-enable previously disabled quick settings."
+msgstr "Torna a activar les opcions ràpides desactivades prèviament."
+
+#: ui/VibrationForm.qml:26
 #, kde-format
 msgid "Whether to have vibrations enabled in the shell."
-msgstr "Si s'ha activat la vibració en l'intèrpret d'ordres."
+msgstr "Si s'ha marcat la vibració en l'intèrpret d'ordres."
 
-#: package/contents/ui/VibrationForm.qml:49
-#, kde-format
-msgid "Vibration Intensity"
-msgstr "Intensitat de la vibració"
-
-#: package/contents/ui/VibrationForm.qml:50
-#, kde-format
-msgid "How intense shell vibrations should be."
-msgstr "Quant intensa ha de ser la vibració en l'intèrpret d'ordres."
-
-#: package/contents/ui/VibrationForm.qml:52
-#, kde-format
-msgctxt "Low intensity"
-msgid "Low"
-msgstr "Baixa"
-
-#: package/contents/ui/VibrationForm.qml:53
-#, kde-format
-msgctxt "Medium intensity"
-msgid "Medium"
-msgstr "Mitjana"
-
-#: package/contents/ui/VibrationForm.qml:54
-#, kde-format
-msgctxt "High intensity"
-msgid "High"
-msgstr "Alta"
-
-#: package/contents/ui/VibrationForm.qml:80
+#: ui/VibrationForm.qml:39
 #, kde-format
 msgid "Vibration Duration"
 msgstr "Duració de la vibració"
 
-#: package/contents/ui/VibrationForm.qml:81
+#: ui/VibrationForm.qml:40
 #, kde-format
 msgid "How long shell vibrations should be."
 msgstr "Quant llarga ha de ser la vibració en l'intèrpret d'ordres."
 
-#: package/contents/ui/VibrationForm.qml:83
+#: ui/VibrationForm.qml:42
 #, kde-format
 msgctxt "Long duration"
 msgid "Long"
 msgstr "Llarga"
 
-#: package/contents/ui/VibrationForm.qml:84
+#: ui/VibrationForm.qml:43
 #, kde-format
 msgctxt "Medium duration"
 msgid "Medium"
 msgstr "Mitjana"
 
-#: package/contents/ui/VibrationForm.qml:85
+#: ui/VibrationForm.qml:44
 #, kde-format
 msgctxt "Short duration"
 msgid "Short"
 msgstr "Curta"
 
-#: package/contents/ui/VibrationForm.qml:110
+#: ui/VibrationForm.qml:68
 #, kde-format
 msgid ""
 "Keyboard vibrations are controlled separately in the keyboard settings "

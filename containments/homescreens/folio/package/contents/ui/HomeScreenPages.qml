@@ -1,160 +1,116 @@
-/*
- *  SPDX-FileCopyrightText: 2019 Marco Martin <mart@kde.org>
- *  SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
- *
- *   SPDX-License-Identifier: LGPL-2.0-or-later
- */
+// SPDX-FileCopyrightText: 2023 Devin Lin <devin@kde.org>
+// SPDX-License-Identifier: LGPL-2.0-or-later
 
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Window
+import QtQuick.Layouts
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.draganddrop 2.0 as DragDrop
+import org.kde.plasma.components 3.0 as PC3
+import org.kde.kirigami 2.10 as Kirigami
+import org.kde.private.mobile.homescreen.folio 1.0 as Folio
 
-import "private" as Private
+MouseArea {
+    id: root
+    property Folio.HomeScreen folio
 
-import org.kde.plasma.private.containmentlayoutmanager 1.0 as ContainmentLayoutManager 
+    property var homeScreen
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+    readonly property real verticalMargin: Math.round((folio.HomeScreenState.pageHeight - folio.HomeScreenState.pageContentHeight) / 2)
+    readonly property real horizontalMargin: Math.round((folio.HomeScreenState.pageWidth - folio.HomeScreenState.pageContentWidth) / 2)
 
-Flickable {
-    id: mainFlickable
-    
-    required property var homeScreenState
-    
-    property Item footer
+    onPressAndHold: folio.HomeScreenState.openSettingsView()
 
-    property bool showAddPageIndicator: false
+    Repeater {
+        model: folio.PageListModel
 
-    contentX: homeScreenState.xPosition
-    
-    contentHeight: height
-    interactive: false
+        delegate: HomeScreenPage {
+            id: homeScreenPage
+            folio: root.folio
+            pageNum: model.index
+            pageModel: model.delegate
+            homeScreen: root.homeScreen
 
-    signal cancelEditModeForItemsRequested
-    onDragStarted: cancelEditModeForItemsRequested()
-    onDragEnded: cancelEditModeForItemsRequested()
-    onFlickStarted: cancelEditModeForItemsRequested()
-    onFlickEnded: cancelEditModeForItemsRequested()
+            anchors.fill: root
+            anchors.leftMargin: root.horizontalMargin
+            anchors.rightMargin: root.horizontalMargin
+            anchors.topMargin: root.verticalMargin
+            anchors.bottomMargin: root.verticalMargin
 
-    onFooterChanged: {
-        if (footer) {
-            footer.parent = mainFlickable;
-            footer.anchors.left = mainFlickable.left;
-            footer.anchors.bottom = mainFlickable.bottom;
-            footer.anchors.right = mainFlickable.right;
-        }
-    }
+            // animation so that full opacity is only when the page is in view
+            readonly property real distanceToCenter: Math.abs(-folio.HomeScreenState.pageViewX - root.width * pageNum)
+            readonly property real positionX: root.width * index + folio.HomeScreenState.pageViewX
+            readonly property real progressToCenter: 1 - Math.min(1, Math.max(0, distanceToCenter / root.width))
 
-    // autoscroll between pages (when holding a delegate to go to a new page)
-    function scrollLeft() {
-        if (mainFlickable.atXBeginning) {
-            return;
-        }
-        autoScrollTimer.scrollRight = false;
-        autoScrollTimer.running = true;
-        scrollLeftIndicator.opacity = 1;
-        scrollRightIndicator.opacity = 0;
-    }
-
-    function scrollRight() {
-        if (mainFlickable.atXEnd) {
-            return;
-        }
-        autoScrollTimer.scrollRight = true;
-        autoScrollTimer.running = true;
-        scrollLeftIndicator.opacity = 0;
-        scrollRightIndicator.opacity = 1;
-    }
-
-    function stopScroll() {
-        autoScrollTimer.running = false;
-        scrollLeftIndicator.opacity = 0;
-        scrollRightIndicator.opacity = 0;
-    }
-
-    Timer {
-        id: autoScrollTimer
-        property bool scrollRight: true
-        repeat: true
-        interval: 1500
-        onTriggered: {
-            homeScreenState.animateGoToPageIndex(Math.max(0, homeScreenState.currentPageIndex + (scrollRight ? 1 : -1)), PlasmaCore.Units.longDuration * 2);
-        }
-    }
-    
-    PlasmaComponents.PageIndicator {
-        id: pageIndicator
-        anchors {
-            bottom: parent.bottom
-            horizontalCenter: parent.horizontalCenter
-            bottomMargin: mainFlickable.footer ? mainFlickable.footer.height : 0
-        }
-        
-        PlasmaCore.ColorScope.inherit: false
-        PlasmaCore.ColorScope.colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
-        
-        parent: mainFlickable
-        visible: count > 1
-        
-        count: homeScreenState.pagesCount
-        currentIndex: homeScreenState.currentPageIndex
-        
-        delegate: Rectangle {
-            property bool isAddPageIndicator: index === pageIndicator.count-1 && mainFlickable.showAddPageIndicator
-            implicitWidth: PlasmaCore.Units.gridUnit/2
-            implicitHeight: implicitWidth
-            
-            radius: width
-            color: isAddPageIndicator ? "transparent" : PlasmaCore.ColorScope.textColor
-
-            PlasmaComponents.Label {
-                anchors.centerIn: parent
-                visible: parent.isAddPageIndicator
-                text: "⊕"
+            visible: opacity > 0
+            opacity: {
+                switch (folio.FolioSettings.pageTransitionEffect) {
+                    case Folio.FolioSettings.StackTransition:
+                        return (positionX < 0) ? progressToCenter :
+                            ((progressToCenter < 0.3) ? 0 : ((1 / 0.7) * (progressToCenter - 0.3)))
+                    default:
+                        return progressToCenter;
+                }
             }
 
-            opacity: index === pageIndicator.currentIndex ? 0.9 : pressed ? 0.7 : 0.5
-            Behavior on opacity {
-                OpacityAnimator {
-                    duration: PlasmaCore.Units.longDuration
-                    easing.type: Easing.InOutQuad
+            // x position of page
+            transform: {
+                switch (folio.FolioSettings.pageTransitionEffect) {
+                    case Folio.FolioSettings.SlideTransition:
+                        return [translate];
+                    case Folio.FolioSettings.CubeTransition:
+                        return [translate, cubeTransitionRotation];
+                    case Folio.FolioSettings.FadeTransition:
+                        return [];
+                    case Folio.FolioSettings.StackTransition:
+                        return [stackScale, stackTranslate];
+                    case Folio.FolioSettings.RotationTransition:
+                        return [translate, rotationTransitionRotation];
+                    default:
+                        return [translate];
+                }
+            }
+
+            Translate {
+                id: translate
+                x: homeScreenPage.positionX
+            }
+
+            Scale {
+                id: stackScale
+                origin.x: folio.HomeScreenState.pageWidth / 2
+                origin.y: folio.HomeScreenState.pageHeight / 2
+                xScale: (homeScreenPage.positionX < 0) ? 1 : 0.5 + homeScreenPage.progressToCenter * 0.5
+                yScale: (homeScreenPage.positionX < 0) ? 1 : 0.5 + homeScreenPage.progressToCenter * 0.5
+            }
+
+            Translate {
+                id: stackTranslate
+                x: Math.min(0, homeScreenPage.positionX)
+            }
+
+            Rotation {
+                id: cubeTransitionRotation
+                origin.x: (positionX < 0) ?
+                            (folio.HomeScreenState.pageWidth / 2) * homeScreenPage.progressToCenter :
+                            (folio.HomeScreenState.pageWidth / 2) + (folio.HomeScreenState.pageWidth / 2) * (1 - homeScreenPage.progressToCenter);
+                origin.y: folio.HomeScreenState.pageHeight / 2;
+                axis { x: 0; y: 1; z: 0 }
+                angle: {
+                    return Math.min(1, Math.max(0, distanceToCenter / root.width)) * 90 * ((positionX > 0) ? 1 : -1)
+                }
+            }
+
+            Rotation {
+                id: rotationTransitionRotation
+                origin.x: (positionX < 0) ?
+                            (folio.HomeScreenState.pageWidth / 2) * homeScreenPage.progressToCenter :
+                            (folio.HomeScreenState.pageWidth / 2) + (folio.HomeScreenState.pageWidth / 2) * (1 - homeScreenPage.progressToCenter);
+                origin.y: 0
+                axis { x: -0.2; y: 0.3; z: 0.5 }
+                angle: {
+                    return Math.min(1, Math.max(0, distanceToCenter / root.width)) * 90 * ((positionX > 0) ? 1 : -1)
                 }
             }
         }
     }
-
-    Item {
-        z: 9999999
-        anchors.fill: parent
-        parent: {
-            let candidate = mainFlickable;
-            while (candidate.parent) {
-                candidate = candidate.parent;
-            }
-            return candidate;
-        }
-
-        Private.ScrollIndicator {
-            id: scrollLeftIndicator
-            anchors {
-                left: parent.left
-                leftMargin: PlasmaCore.Units.smallSpacing
-            }
-            elementId: "left-arrow"
-        }
-        Private.ScrollIndicator {
-            id: scrollRightIndicator
-            anchors {
-                right: parent.right
-                rightMargin: PlasmaCore.Units.smallSpacing
-            }
-            elementId: "right-arrow"
-        }
-    }
 }
-
-

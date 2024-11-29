@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-19 00:47+0000\n"
+"POT-Creation-Date: 2024-08-01 00:42+0000\n"
 "PO-Revision-Date: 2022-06-24 10:36-0700\n"
 "Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -14,54 +14,70 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
+#: contents/applet/AppletError.qml:168
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: contents/applet/AppletError.qml:191
+msgid "View Error Details…"
+msgstr ""
+
+#: contents/applet/CompactApplet.qml:77
+msgid "Open %1"
+msgstr ""
+
 #: contents/configuration/ConfigurationContainmentAppearance.qml:44
 msgid "Layout changes have been restricted by the system administrator"
 msgstr "システム管理者によってレイアウトの変更が制限されている場合"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:65
+#: contents/configuration/ConfigurationContainmentAppearance.qml:59
 msgid "General"
 msgstr "概要"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:71
+#: contents/configuration/ConfigurationContainmentAppearance.qml:66
 msgid "Homescreen Layout"
 msgstr "ホーム画面のレイアウト"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:72
+#: contents/configuration/ConfigurationContainmentAppearance.qml:67
 msgid "The homescreen layout to use."
 msgstr "ホーム画面のレイアウトで使える"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:98
+#: contents/configuration/ConfigurationContainmentAppearance.qml:93
 msgid "Wallpaper Plugin"
 msgstr "壁紙用プラグイン"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:99
+#: contents/configuration/ConfigurationContainmentAppearance.qml:94
 msgid "The wallpaper plugin to use."
 msgstr "壁紙のプラグインとして使える"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:134
+#: contents/configuration/ConfigurationContainmentAppearance.qml:129
 msgid "Wallpaper Plugins"
 msgstr "壁紙用プラグイン"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:139
+#: contents/configuration/ConfigurationContainmentAppearance.qml:134
 msgid "Get New Plugins…"
 msgstr "新しいプラグインを入手する…"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:154
+#: contents/configuration/ConfigurationContainmentAppearance.qml:148
 msgid "Layout changes must be applied before other changes can be made"
 msgstr "レイアウトの変更は他の変更の前に行う必要があります"
 
-#: contents/configuration/ConfigurationContainmentAppearance.qml:160
+#: contents/configuration/ConfigurationContainmentAppearance.qml:154
 msgid "Apply now"
 msgstr "決定する"
 
-#: contents/configuration/ContainmentConfiguration.qml:32
+#: contents/configuration/ContainmentConfiguration.qml:34
 msgid "Wallpaper"
 msgstr "壁紙"
 
-#: contents/configuration/ContainmentConfiguration.qml:95
-msgid "Change Wallpaper"
-msgstr "壁紙を変更する"
+#: contents/lockscreen/LockScreenState.qml:31
+msgid "Enter PIN"
+msgstr ""
 
-#: contents/configuration/ContainmentConfiguration.qml:113
-msgid "Configure"
-msgstr "設定"
+#: contents/lockscreen/LockScreenState.qml:32
+msgid "Wrong PIN"
+msgstr ""
+
+#: contents/views/Panel.qml:321
+msgid "Panel Focus Indicator"
+msgstr ""

@@ -1,17 +1,17 @@
 /*
  * SPDX-FileCopyrightText: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
- * 
+ *
  * SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Effects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 2.20 as Kirigami
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.private.mobileshell as MobileShell
 
 import org.kde.kquickcontrolsaddons 2.0 as KQCAddons
 
@@ -62,13 +62,16 @@ MouseArea {
         id: previewBackground
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
-        layer.enabled: true
         opacity: 0.25
         pixmap: thumbnailer.pixmap
-        layer.effect: FastBlur {
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
             source: previewBackground
             anchors.fill: parent
-            radius: 30
+            autoPaddingEnabled: false
+            blurEnabled: true
+            blur: 1.0
         }
     }
 
@@ -89,11 +92,10 @@ MouseArea {
             fillMode: Image.PreserveAspectFit
         }
 
-        PlasmaCore.IconItem {
+        Kirigami.Icon {
             anchors.centerIn: parent
             width: height
-            height: PlasmaCore.Units.roundToIconSize(parent.height)
-            usesPlasmaTheme: false
+            height: Kirigami.Units.iconSizes.roundedIconSize(parent.height)
             source: !thumbnailer.busy && !thumbnailer.hasPreview ? thumbnailer.iconName : ""
         }
 
@@ -108,7 +110,7 @@ MouseArea {
             anchors {
                 top: parent.top
                 right: parent.right
-                margins: PlasmaCore.Units.smallSpacing
+                margins: Kirigami.Units.smallSpacing
             }
             Accessible.name: tooltip.text
             icon.name: "application-menu"

@@ -1,54 +1,54 @@
-/*
- *   SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
- *
- *   SPDX-License-Identifier: LGPL-2.0-or-later
- */
+// SPDX-FileCopyrightText: 2021-2024 Devin Lin <devin@kde.org>
+// SPDX-License-Identifier: LGPL-2.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.12
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
 
 import org.kde.kirigami 2.12 as Kirigami
-
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-
-import "../../statusbar" as StatusBar
-import "../../components" as Components
-import "../"
+import org.kde.ksvg 1.0 as KSvg
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.private.mobileshell.quicksettingsplugin as QS
 
 /**
  * Quick settings panel for landscape view (right sidebar).
  * For the portrait view quicksettings container, see QuickSettingsDrawer.
  */
-Components.BaseItem {
+MobileShell.BaseItem {
     id: root
-    
+
     required property var actionDrawer
-    
+
+    property QS.QuickSettingsModel quickSettingsModel
+
+    /**
+     * The height of the entire screen the panel opens in.
+     */
     required property real fullScreenHeight
-    
+
     /**
      * Implicit height of the contents of the panel.
      */
     readonly property real contentImplicitHeight: column.implicitHeight
-    
+
+    property alias quickSettings: quickSettingsProxy.contentItem
+    property alias statusBar: statusBarProxy.contentItem
+
     // we need extra padding since the background side border is enabled
-    topPadding: PlasmaCore.Units.smallSpacing * 4
-    leftPadding: PlasmaCore.Units.smallSpacing * 4
-    rightPadding: PlasmaCore.Units.smallSpacing * 4
-    bottomPadding: PlasmaCore.Units.smallSpacing * 4
-    
-    background: PlasmaCore.FrameSvgItem {
-        enabledBorders: PlasmaCore.FrameSvg.AllBorders
+    topPadding: Kirigami.Units.smallSpacing * 4
+    leftPadding: Kirigami.Units.smallSpacing * 4
+    rightPadding: Kirigami.Units.smallSpacing * 4
+    bottomPadding: Kirigami.Units.smallSpacing * 4
+
+    background: KSvg.FrameSvgItem {
+        enabledBorders: KSvg.FrameSvgItem.AllBorders
         imagePath: "widgets/background"
     }
 
     contentItem: Item {
         id: containerItem
-        
+
         // use container item so that our column doesn't get stretched if base item is anchored
         ColumnLayout {
             id: column
@@ -57,44 +57,32 @@ Components.BaseItem {
             anchors.top: parent.top
             height: root.fullScreenHeight
             spacing: 0
-            
-            StatusBar.StatusBar {
-                id: statusBar
+
+            MobileShell.BaseItem {
+                id: statusBarProxy
                 Layout.alignment: Qt.AlignTop
                 Layout.fillWidth: true
                 Layout.preferredHeight: Kirigami.Units.gridUnit * 1.5
                 Layout.maximumHeight: Kirigami.Units.gridUnit * 1.5
-                
-                colorGroup: PlasmaCore.Theme.NormalColorGroup
-                backgroundColor: "transparent"
-                showSecondRow: false
-                showDropShadow: false
-                showTime: false
-                
-                // security reasons, system tray also doesn't work on lockscreen
-                disableSystemTray: actionDrawer.restrictedPermissions
+
+                Kirigami.Theme.colorSet: Kirigami.Theme.Window
+                Kirigami.Theme.inherit: false
             }
-            
-            QuickSettings {
-                id: quickSettings
-                
-                mode: QuickSettings.ScrollView
+
+            MobileShell.BaseItem {
+                id: quickSettingsProxy
                 width: column.width
                 implicitHeight: quickSettings.fullHeight
-                
+
                 Layout.alignment: Qt.AlignTop
                 Layout.fillWidth: true
-                Layout.maximumHeight: root.fullScreenHeight - root.topPadding - root.bottomPadding - statusBar.height - PlasmaCore.Units.smallSpacing
+                Layout.maximumHeight: root.fullScreenHeight - root.topPadding - root.bottomPadding - statusBarProxy.height - Kirigami.Units.smallSpacing
                 Layout.maximumWidth: column.width
-                
-                actionDrawer: root.actionDrawer
-                minimizedViewProgress: 0
-                fullViewProgress: 1
             }
-            
+
             Item { Layout.fillHeight: true }
         }
-        
+
         Handle {
             id: handle
             anchors.horizontalCenter: parent.horizontalCenter

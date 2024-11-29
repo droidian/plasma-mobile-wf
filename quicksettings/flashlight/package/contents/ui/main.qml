@@ -3,12 +3,12 @@
 
 import QtQuick 2.15
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
 import org.kde.plasma.quicksetting.flashlight 1.0
+import org.kde.plasma.private.mobileshell.quicksettingsplugin as QS
 
-MobileShell.QuickSetting {
+QS.QuickSetting {
     text: i18n("Flashlight")
-    icon: "flashlight-on"
+    icon: FlashlightUtil.torchEnabled ? "flashlight-on" : "flashlight-off"
     enabled: FlashlightUtil.torchEnabled
     available: FlashlightUtil.available
     function toggle() {

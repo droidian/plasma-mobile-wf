@@ -1,22 +1,22 @@
-/*
- * SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
- * SPDX-License-Identifier: LGPL-2.0-or-later
- */
+// SPDX-FileCopyrightText: 2021-2023 Devin Lin <devin@kde.org>
+// SPDX-License-Identifier: LGPL-2.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Window
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.plasma.plasmoid
+import org.kde.taskmanager as TaskManager
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
+import org.kde.plasma.private.mobileshell.state as MobileShellState
+import org.kde.plasma.private.mobileshell.windowplugin as WindowPlugin
 
 /**
  * The base homescreen component, implementing features that simplify
  * homescreen implementation.
  */
+
 Item {
     id: root
 
@@ -24,28 +24,27 @@ Item {
      * Emitted when an action is triggered to open the homescreen.
      */
     signal homeTriggered()
-    
+
     /**
      * Emitted when resetting the homescreen position is requested.
      */
     signal resetHomeScreenPosition()
-    
+
     /**
      * Emitted when moving the homescreen position is requested.
      */
     signal requestRelativeScroll(var pos)
-    
+
     /**
      * The visual item that is the homescreen.
      */
     property alias contentItem: itemContainer.contentItem
 
     /**
-     * Whether a component is being shown on top of the homescreen within the same
-     * window.
+     * The root PlasmoidItem of the containment this is used into
      */
-    readonly property bool overlayShown: taskSwitcher.visible || startupFeedback.visible
-    
+    property PlasmoidItem plasmoidItem
+
     /**
      * Margins for the homescreen, taking panels into account.
      */
@@ -54,16 +53,20 @@ Item {
     property real leftMargin
     property real rightMargin
 
+    /**
+     * The opacity value that the homescreen content gets.
+     */
+    readonly property real contentOpacity: itemContainer.opacity
+
     function evaluateMargins() {
-        topMargin = plasmoid.availableScreenRect.y
-        // add a specific check for the nav panel for now, since the gesture mode still technically has height
-        bottomMargin = MobileShell.MobileShellSettings.navigationPanelEnabled ? root.height - (plasmoid.availableScreenRect.y + plasmoid.availableScreenRect.height) : 0;
-        leftMargin = plasmoid.availableScreenRect.x
-        rightMargin = root.width - (plasmoid.availableScreenRect.x + plasmoid.availableScreenRect.width)
+        topMargin = plasmoidItem.availableScreenRect.y
+        bottomMargin = root.height - (plasmoidItem.availableScreenRect.y + plasmoidItem.availableScreenRect.height)
+        leftMargin = plasmoidItem.availableScreenRect.x
+        rightMargin = root.width - (plasmoidItem.availableScreenRect.x + plasmoidItem.availableScreenRect.width)
     }
 
     Connections {
-        target: plasmoid
+        target: Plasmoid
 
         // avoid binding loops with root.height and root.width changing along with the availableScreenRect
         function onAvailableScreenRectChanged() {
@@ -74,48 +77,31 @@ Item {
     //BEGIN API implementation
 
     Connections {
-        target: MobileShellState.HomeScreenControls
-        
-        function onOpenHomeScreen() {
-            if (!MobileShell.WindowUtil.allWindowsMinimized) {
+        target: MobileShellState.ShellDBusClient
+
+        function onOpenHomeScreenRequested() {
+            if (windowMaximizedTracker.showingWindow) {
                 itemContainer.zoomIn();
             }
-            
-            MobileShellState.HomeScreenControls.resetHomeScreenPosition();
-            taskSwitcher.visible = false; // will trigger homescreen open
-            taskSwitcher.minimizeAll();
-            
+
+            resetHomeScreenPosition();
+
+            WindowPlugin.WindowUtil.unsetAllMinimizedGeometries(root);
+            WindowPlugin.WindowUtil.minimizeAll();
+
             root.homeTriggered();
         }
-        
-        function onResetHomeScreenPosition() {
+
+        function onResetHomeScreenPositionRequested() {
             root.resetHomeScreenPosition();
         }
-        
-        function onRequestRelativeScroll(pos) {
-            // TODO
-            //homescreen.appDrawer.offset -= pos.y;
-            //lastRequestedPosition = pos.y;
-        }
-        
-        function onOpenAppLaunchAnimation(splashIcon, title, x, y, sourceIconSize) {
-            startupFeedback.open(splashIcon, title, x, y, sourceIconSize);
-        }
-        
-        function onCloseAppLaunchAnimation() {
-            startupFeedback.close();
-        }
-    }
-    
-    Plasmoid.onScreenChanged: {
-        if (plasmoid.screen == 0) {
-            MobileShellState.HomeScreenControls.taskSwitcher = taskSwitcher;
-            MobileShellState.HomeScreenControls.homeScreenWindow = root.Window.window;
-        }
-    }
-    Window.onWindowChanged: {
-        if (plasmoid.screen == 0) {
-            MobileShellState.HomeScreenControls.homeScreenWindow = root.Window.window;
+
+        function onIsTaskSwitcherVisibleChanged() {
+            if (MobileShellState.ShellDBusClient.isTaskSwitcherVisible) {
+                itemContainer.zoomOutImmediately();
+            } else if (!windowMaximizedTracker.showingWindow) {
+                itemContainer.zoomIn();
+            }
         }
     }
 
@@ -124,54 +110,28 @@ Item {
     Component.onCompleted: {
         // determine the margins used
         evaluateMargins();
+    }
 
-        // set API variables
-        if (plasmoid.screen == 0) {
-            MobileShellState.HomeScreenControls.taskSwitcher = taskSwitcher;
-            MobileShellState.HomeScreenControls.homeScreenWindow = root.Window.window;
+    WindowPlugin.WindowMaximizedTracker {
+        id: windowMaximizedTracker
+        screenGeometry: Plasmoid.containment.screenGeometry
+
+        onShowingWindowChanged: {
+            itemContainer.evaluateAnimChange();
         }
     }
-    
-    TaskManager.VirtualDesktopInfo {
-        id: virtualDesktopInfo
-    }
 
-    TaskManager.ActivityInfo {
-        id: activityInfo
-    }
-
-    PlasmaCore.SortFilterModel {
-        id: visibleMaximizedWindowsModel
-        readonly property bool isWindowMaximized: count > 0
-        
-        filterRole: 'IsMinimized'
-        filterRegExp: 'false'
-        sourceModel: TaskManager.TasksModel {
-            id: tasksModel
-            filterByVirtualDesktop: true
-            filterByActivity: true
-            filterNotMaximized: true
-            filterByScreen: true
-            filterHidden: true
-
-            virtualDesktop: virtualDesktopInfo.currentDesktop
-            activity: activityInfo.currentActivity
-
-            groupMode: TaskManager.TasksModel.GroupDisabled
-        }
-    }
-    
     // homescreen visual component
     MobileShell.BaseItem {
         id: itemContainer
         anchors.fill: parent
-        
+
         // animations
         opacity: 0
-        property real zoomScale: 0.8
-        
-        Component.onCompleted: zoomIn()
-        
+        property real zoomScale: 1
+
+        readonly property real zoomScaleOut: 0.8
+
         function zoomIn() {
             // don't use check animationsEnabled here, so we ensure the scale and opacity is always 1 when disabled
             scaleAnim.to = 1;
@@ -179,111 +139,62 @@ Item {
             opacityAnim.to = 1;
             opacityAnim.restart();
         }
+
         function zoomOut() {
-            if (MobileShell.MobileShellSettings.animationsEnabled) {
-                scaleAnim.to = 0.8;
-                scaleAnim.restart();
-                opacityAnim.to = 0;
-                opacityAnim.restart();
-            }
+            scaleAnim.to = zoomScaleOut;
+            scaleAnim.restart();
+            opacityAnim.to = 0;
+            opacityAnim.restart();
         }
-        
+
+        function zoomOutImmediately() {
+            scaleAnim.stop();
+            opacityAnim.stop();
+            zoomScale = zoomScaleOut;
+            opacity = 0;
+        }
+
         NumberAnimation on opacity {
             id: opacityAnim
-            duration: MobileShell.MobileShellSettings.animationsEnabled ? 300 : 0
+            duration: 300
             running: false
         }
-        
+
         NumberAnimation on zoomScale {
             id: scaleAnim
-            duration: MobileShell.MobileShellSettings.animationsEnabled ? 600 : 0
+            duration: 600
             running: false
             easing.type: Easing.OutExpo
         }
-        
+
         function evaluateAnimChange() {
             // only animate if homescreen is visible
-            if (!taskSwitcher.visible) {
-                if (!visibleMaximizedWindowsModel.isWindowMaximized || MobileShell.WindowUtil.activeWindowIsShell) {
-                    itemContainer.zoomIn();
-                } else {
-                    itemContainer.zoomOut();
-                }
+            if (!windowMaximizedTracker.showingWindow && !MobileShellState.ShellDBusClient.isTaskSwitcherVisible) {
+                itemContainer.zoomIn();
+            } else {
+                itemContainer.zoomOut();
             }
         }
-        
-        Connections {
-            target: MobileShell.WindowUtil
-            function onActiveWindowIsShellChanged() {
-                itemContainer.evaluateAnimChange();
-            }
-        }
-        
-        Connections {
-            target: visibleMaximizedWindowsModel
-            function onIsWindowMaximizedChanged() {
-                itemContainer.evaluateAnimChange();
-            }
-        }
-        
-        transform: Scale { 
-            origin.x: itemContainer.width / 2; 
-            origin.y: itemContainer.height / 2; 
+
+        transform: Scale {
+            origin.x: itemContainer.width / 2;
+            origin.y: itemContainer.height / 2;
             xScale: itemContainer.zoomScale
             yScale: itemContainer.zoomScale
         }
     }
-    
-    // task switcher component
-    MobileShell.TaskSwitcher {
-        id: taskSwitcher
-        z: 999999
-        
+
+    // App start animation component
+    MobileShell.StartupFeedbackWindows {
+        id: startupFeedbackWindows
+        screen: Plasmoid.screen
+
         topMargin: root.topMargin
         bottomMargin: root.bottomMargin
         leftMargin: root.leftMargin
         rightMargin: root.rightMargin
 
-        tasksModel: TaskManager.TasksModel {
-            groupMode: TaskManager.TasksModel.GroupDisabled
-
-            screenGeometry: plasmoid.screenGeometry
-            sortMode: TaskManager.TasksModel.SortLastActivated
-
-            virtualDesktop: virtualDesktopInfo.currentDesktop
-            activity: activityInfo.currentActivity
-        }
-        
         anchors.fill: parent
-        
-        // hide homescreen elements to make use of wallpaper
-        onVisibleChanged: {
-            if (visible) {
-                startupFeedback.visible = false;
-                
-                // hide immediately when going from homescreen
-                if (!taskSwitcher.wasInActiveTask) {
-                    itemContainer.opacity = 0;
-                }
-                itemContainer.zoomOut();
-                
-            } else {
-                itemContainer.zoomIn();
-            }
-        }
-    }
-    
-    // start app animation component
-    MobileShell.StartupFeedback {
-        id: startupFeedback
-        z: 999999
-        anchors.fill: parent
-        
-        // if the startup feedback closes, clear the shell's stored launching app
-        onVisibleChanged: {
-            if (!visible) {
-                MobileShell.ShellUtil.clearLaunchingApp();
-            }
-        }
+        visible: false
     }
 }

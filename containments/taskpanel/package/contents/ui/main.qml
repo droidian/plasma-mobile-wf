@@ -1,59 +1,69 @@
-/*
- *  SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
- *  SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+// SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
+// SPDX-FileCopyrightText: 2021-2023 Devin Lin <devin@kde.org>
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 import QtQuick 2.4
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.15
-import QtGraphicalEffects 1.12
+
+import org.kde.kirigami 2.20 as Kirigami
 
 import org.kde.taskmanager 0.1 as TaskManager
 import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 import org.kde.kquickcontrolsaddons 2.0
 
-import org.kde.plasma.private.nanoshell 2.0 as NanoShell
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
+import org.kde.plasma.private.mobileshell.windowplugin as WindowPlugin
+import org.kde.plasma.private.mobileshell.state as MobileShellState
 
-PlasmaCore.ColorScope {
+ContainmentItem {
     id: root
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
-    
-    width: 480
-    height: PlasmaCore.Units.gridUnit * 2
+    Plasmoid.status: PlasmaCore.Types.PassiveStatus // ensure that the panel never takes focus away from the running app
 
-    // toggle visibility of navigation bar (show, or use gestures only)
-    Binding {
-        target: plasmoid.Window.window // assumed to be plasma-workspace "PanelView" component
-        property: "visibilityMode"
-        // 0 - VisibilityMode.NormalPanel
-        // 3 - VisibilityMode.WindowsGoBelow
-        value: MobileShell.MobileShellSettings.navigationPanelEnabled ? 0 : 3
+    // filled in by the shell (Panel.qml) with the plasma-workspace PanelView
+    property var panel: null
+    onPanelChanged: {
+        setWindowProperties()
     }
 
-    // we have the following scenarios:
-    // - system is in landscape orientation & nav panel is enabled (panel on right)
-    // - system is in landscape orientation & gesture mode is enabled (panel on bottom)
-    // - system is in portrait orientation (panel on bottom)
-    readonly property bool inLandscape: Screen.width > Screen.height;
-    readonly property bool isInLandscapeNavPanelMode: inLandscape && MobileShell.MobileShellSettings.navigationPanelEnabled
+    // filled in by the shell (Panel.qml)
+    property var tabBar: null
+    onTabBarChanged: {
+        if (tabBar) {
+            tabBar.visible = false;
+        }
+    }
 
-    readonly property real navigationPanelHeight: PlasmaCore.Units.gridUnit * 2
-    readonly property real gesturePanelHeight: 8
+    readonly property bool inLandscape: MobileShell.Constants.navigationPanelOnSide(Screen.width, Screen.height)
 
-    readonly property real intendedWindowThickness: MobileShell.MobileShellSettings.navigationPanelEnabled ? navigationPanelHeight : gesturePanelHeight
-    readonly property real intendedWindowLength: isInLandscapeNavPanelMode ? Screen.height : Screen.width
-    readonly property real intendedWindowOffset: isInLandscapeNavPanelMode ? MobileShellState.TopPanelControls.panelHeight : 0; // offset for top panel
-    readonly property int intendedWindowLocation: isInLandscapeNavPanelMode ? PlasmaCore.Types.RightEdge : PlasmaCore.Types.BottomEdge
+    readonly property real navigationPanelHeight: MobileShell.Constants.navigationPanelThickness
 
-    onIntendedWindowThicknessChanged: plasmoid.Window.window.thickness = intendedWindowThickness
+    readonly property real intendedWindowThickness: navigationPanelHeight
+    readonly property real intendedWindowLength: inLandscape ? Screen.height : Screen.width
+    readonly property real intendedWindowOffset: inLandscape ? MobileShell.Constants.topPanelHeight : 0; // offset for top panel
+    readonly property int intendedWindowLocation: inLandscape ? PlasmaCore.Types.RightEdge : PlasmaCore.Types.BottomEdge
+
     onIntendedWindowLengthChanged: maximizeTimer.restart() // ensure it always takes up the full length of the screen
-    onIntendedWindowOffsetChanged: plasmoid.Window.window.offset = intendedWindowOffset
-    onIntendedWindowLocationChanged: locationChangeTimer.restart()
+    onIntendedWindowLocationChanged: setPanelLocationTimer.restart()
+    onIntendedWindowOffsetChanged: {
+        if (root.panel) {
+            root.panel.offset = intendedWindowOffset;
+        }
+    }
+
+    // HACK: the entire shell seems to crash sometimes if this is applied immediately after a display change (ex. screen rotation)
+    // see https://invent.kde.org/plasma/plasma-mobile/-/issues/321
+    Timer {
+        id: setPanelLocationTimer
+        running: false
+        interval: 100
+        onTriggered: {
+            root.panel.location = intendedWindowLocation;
+        }
+    }
 
     // use a timer so we don't have to maximize for every single pixel
     // - improves performance if the shell is run in a window, and can be resized
@@ -63,41 +73,36 @@ PlasmaCore.ColorScope {
         interval: 100
         onTriggered: {
             // maximize first, then we can apply offsets (otherwise they are overridden)
-            plasmoid.Window.window.maximize()
-            plasmoid.Window.window.offset = intendedWindowOffset;
+            root.panel.maximize()
+            root.panel.offset = intendedWindowOffset;
         }
     }
 
-    // use a timer so that rotation events are faster (offload the panel movement to later, after everything is figured out)
-    Timer {
-        id: locationChangeTimer
-        running: false
-        interval: 100
-        onTriggered: plasmoid.Window.window.location = intendedWindowLocation
-    }
 
     function setWindowProperties() {
-        // plasmoid.Window.window is assumed to be plasma-workspace "PanelView" component
-        plasmoid.Window.window.maximize(); // maximize first, then we can apply offsets (otherwise they are overridden)
-        plasmoid.Window.window.offset = intendedWindowOffset;
-        plasmoid.Window.window.thickness = intendedWindowThickness;
-        plasmoid.Window.window.location = intendedWindowLocation;
+        if (root.panel) {
+            root.panel.floating = false;
+            root.panel.maximize(); // maximize first, then we can apply offsets (otherwise they are overridden)
+            root.panel.offset = intendedWindowOffset;
+            root.panel.thickness = navigationPanelHeight;
+            root.panel.location = intendedWindowLocation;
+        }
     }
-    
+
     Connections {
-        target: plasmoid.Window.window
+        target: root.panel
 
         // HACK: There seems to be some component that overrides our initial bindings for the panel,
         //   which is particularly problematic on first start (since the panel is misplaced)
         // - We set an event to override any attempts to override our bindings.
         function onLocationChanged() {
-            if (plasmoid.Window.window.location !== root.intendedWindowLocation) {
+            if (root.panel.location !== root.intendedWindowLocation) {
                 root.setWindowProperties();
             }
         }
 
         function onThicknessChanged() {
-            if (plasmoid.Window.window.thickness !== root.intendedWindowThickness) {
+            if (root.panel.thickness !== root.intendedWindowThickness) {
                 root.setWindowProperties();
             }
         }
@@ -105,60 +110,39 @@ PlasmaCore.ColorScope {
 
     Component.onCompleted: setWindowProperties();
 
-    TaskManager.VirtualDesktopInfo {
-        id: virtualDesktopInfo
-    }
-
-    TaskManager.ActivityInfo {
-        id: activityInfo
-    }
-
-    PlasmaCore.SortFilterModel {
-        id: visibleMaximizedWindowsModel
-        filterRole: 'IsMinimized'
-        filterRegExp: 'false'
-        sourceModel: TaskManager.TasksModel {
-            id: tasksModel
-            filterByVirtualDesktop: true
-            filterByActivity: true
-            filterNotMaximized: true
-            filterByScreen: true
-            filterHidden: true
-
-            virtualDesktop: virtualDesktopInfo.currentDesktop
-            activity: activityInfo.currentActivity
-
-            groupMode: TaskManager.TasksModel.GroupDisabled
-        }
-    }
-
     // only opaque if there are no maximized windows on this screen
-    readonly property bool opaqueBar: visibleMaximizedWindowsModel.count > 0
-    
-    // contrasting colour
-    colorGroup: opaqueBar ? PlasmaCore.Theme.NormalColorGroup : PlasmaCore.Theme.ComplementaryColorGroup
-    
-    // bottom navigation panel component
-    Component {
-        id: navigationPanel 
-        NavigationPanelComponent {
-            taskSwitcher: MobileShellState.HomeScreenControls.taskSwitcher
-            opaqueBar: root.opaqueBar
-        }
+    readonly property bool showingStartupFeedback: MobileShellState.ShellDBusObject.startupFeedbackModel.activeWindowIsStartupFeedback && windowMaximizedTracker.windowCount === 1
+    readonly property bool opaqueBar: windowMaximizedTracker.showingWindow && !showingStartupFeedback
+
+    WindowPlugin.WindowMaximizedTracker {
+        id: windowMaximizedTracker
+        screenGeometry: Plasmoid.containment.screenGeometry
     }
-    
-    // bottom navigation gesture area component
-    Component {
-        id: navigationGesture 
-        MobileShell.NavigationGestureArea {
-            taskSwitcher: MobileShellState.HomeScreenControls.taskSwitcher
-        }
+
+    MobileShell.StartupFeedbackPanelFill {
+        id: startupFeedbackColorAnimation
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        fullHeight: root.height
+        screen: Plasmoid.screen
+        maximizedTracker: windowMaximizedTracker
     }
-    
-    // load appropriate system navigation component
-    Loader {
-        id: navigationLoader
+
+    Item {
         anchors.fill: parent
-        sourceComponent: MobileShell.MobileShellSettings.navigationPanelEnabled ? navigationPanel : navigationGesture
+
+        // contrasting colour
+        Kirigami.Theme.colorSet: opaqueBar ? Kirigami.Theme.Window : Kirigami.Theme.Complementary
+        Kirigami.Theme.inherit: false
+
+        // load appropriate system navigation component
+        NavigationPanelComponent {
+            id: navigationPanel
+            anchors.fill: parent
+            opaqueBar: root.opaqueBar
+            isVertical: root.inLandscape
+        }
     }
 }

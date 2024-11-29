@@ -3,6 +3,7 @@
 
 import QtQuick 2.0
 
+import org.kde.plasma.plasmoid
 import org.kde.kirigami 2.10 as Kirigami
 
 Kirigami.ScrollablePage {
@@ -16,9 +17,9 @@ Kirigami.ScrollablePage {
     onSettingValueChanged: saveConfig() // we save config immediately on mobile
 
     function saveConfig() {
-        for (let key in plasmoid.configuration) {
+        for (let key in Plasmoid.configuration) {
             if (loader.item["cfg_" + key] != undefined) {
-                plasmoid.configuration[key] = loader.item["cfg_" + key]
+                Plasmoid.configuration[key] = loader.item["cfg_" + key]
             }
         }
 
@@ -41,21 +42,27 @@ Kirigami.ScrollablePage {
         // If it is zero fall back to the height of its children
         // Also make it at least as high as the page itself. Some existing configs assume they fill the whole space
         // TODO KF6 clean this up by making all configs based on SimpleKCM/ScrollViewKCM/GridViewKCM
-        height: Math.max(root.availableHeight, item.implicitHeight ? item.implicitHeight : item.childrenRect.height)
+        height: {
+            if (item) {
+                return Math.max(root.availableHeight, item.implicitHeight ? item.implicitHeight : item.childrenRect.height);
+            } else {
+                return root.availableHeight;
+            }
+        }
 
         Component.onCompleted: {
-            const plasmoidConfig = plasmoid.configuration
+            const plasmoidConfig = Plasmoid.configuration
 
             const props = {}
             for (let key in plasmoidConfig) {
-                props["cfg_" + key] = plasmoid.configuration[key]
+                props["cfg_" + key] = Plasmoid.configuration[key]
             }
 
             setSource(configItem.source, props)
         }
 
         onLoaded: {
-            const plasmoidConfig = plasmoid.configuration;
+            const plasmoidConfig = Plasmoid.configuration;
 
             for (let key in plasmoidConfig) {
                 const changedSignal = item["cfg_" + key + "Changed"]

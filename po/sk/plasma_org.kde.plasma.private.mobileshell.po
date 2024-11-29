@@ -1,21 +1,33 @@
 # translation of plasma_org.kde.plasma.private.mobileshell.po to Slovak
-# Roman Paholík <wizzardsk@gmail.com>, 2023.
+# Roman Paholik <wizzardsk@gmail.com>, 2023.
+# Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: plasma_org.kde.plasma.private.mobileshell\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-20 00:48+0000\n"
-"PO-Revision-Date: 2023-03-20 17:22+0100\n"
-"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
-"Language-Team: Slovak <kde-sk@linux.sk>\n"
+"POT-Creation-Date: 2024-08-02 00:42+0000\n"
+"PO-Revision-Date: 2023-07-28 16:07+0200\n"
+"Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
+"Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+#: notifications/notificationfileinfo.cpp:169
+#, kde-format
+msgid "Open with %1"
+msgstr ""
+
+#: notifications/notificationfileinfo.cpp:173
+#, kde-format
+msgid "Open with…"
+msgstr ""
+
 #: notifications/notificationfilemenu.cpp:109
+#: qml/widgets/notifications/NotificationJobItem.qml:217
 #, kde-format
 msgid "Open Containing Folder"
 msgstr "Otvoriť priečinok s obsahom"
@@ -36,177 +48,285 @@ msgstr "Kopírovať umiestnenie"
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: qml/actiondrawer/quicksettings/QuickSettingsFullDelegate.qml:100
+#: qml/actiondrawer/quicksettings/QuickSettingsFullDelegate.qml:97
 #, kde-format
 msgid "On"
 msgstr "Zapnuté"
 
-#: qml/actiondrawer/quicksettings/QuickSettingsFullDelegate.qml:100
+#: qml/actiondrawer/quicksettings/QuickSettingsFullDelegate.qml:97
 #, kde-format
 msgid "Off"
 msgstr "Vypnuté"
 
-#: qml/dataproviders/AudioProvider.qml:171
-#, kde-format
-msgid "Audio"
-msgstr "Zvuk"
-
-#: qml/dataproviders/AudioProvider.qml:175
-#, kde-format
-msgid "Increase Volume"
-msgstr "Zvýšiť hlasitosť"
-
-#: qml/dataproviders/AudioProvider.qml:182
-#, kde-format
-msgid "Decrease Volume"
-msgstr "Znížiť hlasitosť"
-
-#: qml/dataproviders/AudioProvider.qml:189 qml/osd/volume/VolumeOSD.qml:108
-#, kde-format
-msgid "Mute"
-msgstr "Stlmiť"
-
-#: qml/dataproviders/SignalStrengthInfo.qml:15
+#: qml/dataproviders/SignalStrengthInfo.qml:17
 #, kde-format
 msgid "SIM Locked"
-msgstr ""
-
-#: qml/osd/volume/AudioApplet.qml:73
-#, kde-format
-msgid "Outputs"
-msgstr "Výstupy"
-
-#: qml/osd/volume/AudioApplet.qml:103
-#, kde-format
-msgid "Inputs"
-msgstr ""
-
-#: qml/osd/volume/AudioApplet.qml:134
-#, kde-format
-msgid "Playback Streams"
-msgstr "Prúdy prehrávania"
-
-#: qml/osd/volume/AudioApplet.qml:187
-#, kde-format
-msgid "Recording Streams"
-msgstr "Nahrávacie prúdy"
-
-#: qml/osd/volume/DeviceListItem.qml:25
-#, kde-format
-msgctxt "label of device items"
-msgid "%1 (%2)"
-msgstr "%1 (%2)"
-
-#: qml/osd/volume/DeviceListItem.qml:34
-#, kde-format
-msgid "Device name not found"
-msgstr "Názov zariadenia nebol nájdený"
-
-#: qml/osd/volume/ListItemBase.qml:104
-#, kde-format
-msgid "Show additional options for %1"
-msgstr "Zobraziť dodatočné voľby pre %1"
-
-#: qml/osd/volume/ListItemBase.qml:160
-#, kde-format
-msgctxt "Accessibility data on volume slider"
-msgid "Adjust volume for %1"
-msgstr "Upraviť hlasitosť pre %1"
-
-#: qml/osd/volume/ListItemBase.qml:242
-#, kde-format
-msgctxt "volume percentage"
-msgid "%1%"
-msgstr "%1%"
-
-#: qml/osd/volume/ListItemBase.qml:257
-#, kde-format
-msgctxt "only used for sizing, should be widest possible string"
-msgid "100%"
-msgstr "100%"
-
-#: qml/osd/volume/StreamListItem.qml:21
-#, kde-format
-msgid "Notification Sounds"
-msgstr "Zvuky notifikácií"
-
-#: qml/osd/volume/StreamListItem.qml:24
-#, kde-format
-msgctxt "label of stream items"
-msgid "%1: %2"
-msgstr "%1: %2"
-
-#: qml/osd/volume/StreamListItem.qml:29
-#, kde-format
-msgid "Stream name not found"
-msgstr "Názov prúdu nebol nájdený"
-
-#: qml/osd/volume/VolumeOSD.qml:108
-#, kde-format
-msgid "Unmute"
-msgstr "Zrušiť stlmenie"
-
-#: qml/osd/volume/VolumeOSD.qml:132
-#, kde-format
-msgid "100%"
-msgstr "100%"
-
-#: qml/osd/volume/VolumeOSD.qml:142
-#, kde-format
-msgctxt "Percentage value"
-msgid "%1%"
-msgstr "%1%"
-
-#: qml/osd/volume/VolumeOSD.qml:162
-#, kde-format
-msgid "Open audio settings"
-msgstr ""
-
-#: qml/osd/volume/VolumeOSD.qml:175
-#, kde-format
-msgid "Audio Settings"
-msgstr "Nastavenia zvuku"
-
-#: qml/osd/volume/VolumeOSD.qml:182
-#, kde-format
-msgid "Toggle showing audio streams"
-msgstr ""
+msgstr "Uzamknutá SIM"
 
 #: qml/statusbar/indicators/BatteryIndicator.qml:36
 #, kde-format
 msgid "%1%"
 msgstr "%1%"
 
-#: qml/widgets/krunner/KRunnerWidget.qml:175
+#: qml/volumeosd/AudioApplet.qml:59
+#, kde-format
+msgid "Outputs"
+msgstr "Výstupy"
+
+#: qml/volumeosd/AudioApplet.qml:89
+#, kde-format
+msgid "Inputs"
+msgstr "Vstupy"
+
+#: qml/volumeosd/AudioApplet.qml:120
+#, kde-format
+msgid "Playback Streams"
+msgstr "Prúdy prehrávania"
+
+#: qml/volumeosd/AudioApplet.qml:173
+#, kde-format
+msgid "Recording Streams"
+msgstr "Nahrávacie prúdy"
+
+#: qml/volumeosd/DeviceListItem.qml:25
+#, kde-format
+msgctxt "label of device items"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: qml/volumeosd/DeviceListItem.qml:34
+#, kde-format
+msgid "Device name not found"
+msgstr "Názov zariadenia nebol nájdený"
+
+#: qml/volumeosd/ListItemBase.qml:96
+#, kde-format
+msgid "Show additional options for %1"
+msgstr "Zobraziť dodatočné voľby pre %1"
+
+#: qml/volumeosd/ListItemBase.qml:152
+#, kde-format
+msgctxt "Accessibility data on volume slider"
+msgid "Adjust volume for %1"
+msgstr "Upraviť hlasitosť pre %1"
+
+#: qml/volumeosd/ListItemBase.qml:230
+#, kde-format
+msgctxt "volume percentage"
+msgid "%1%"
+msgstr "%1%"
+
+#: qml/volumeosd/ListItemBase.qml:245
+#, kde-format
+msgctxt "only used for sizing, should be widest possible string"
+msgid "100%"
+msgstr "100%"
+
+#: qml/volumeosd/StreamListItem.qml:21
+#, kde-format
+msgid "Notification Sounds"
+msgstr "Zvuky notifikácií"
+
+#: qml/volumeosd/StreamListItem.qml:24
+#, kde-format
+msgctxt "label of stream items"
+msgid "%1: %2"
+msgstr "%1: %2"
+
+#: qml/volumeosd/StreamListItem.qml:29
+#, kde-format
+msgid "Stream name not found"
+msgstr "Názov prúdu nebol nájdený"
+
+#: qml/volumeosd/VolumeOSD.qml:106
+#, kde-format
+msgid "Unmute"
+msgstr "Zrušiť stlmenie"
+
+#: qml/volumeosd/VolumeOSD.qml:106
+#, kde-format
+msgid "Mute"
+msgstr "Stlmiť"
+
+#: qml/volumeosd/VolumeOSD.qml:130
+#, kde-format
+msgid "100%"
+msgstr "100%"
+
+#: qml/volumeosd/VolumeOSD.qml:140
+#, kde-format
+msgctxt "Percentage value"
+msgid "%1%"
+msgstr "%1%"
+
+#: qml/volumeosd/VolumeOSD.qml:160
+#, kde-format
+msgid "Open audio settings"
+msgstr "Otvoriť nastavenia zvuku"
+
+#: qml/volumeosd/VolumeOSD.qml:179
+#, kde-format
+msgid "Toggle showing audio streams"
+msgstr "Prepnúť zobrazovanie zvukových prúdov"
+
+#: qml/widgets/krunner/KRunnerScreen.qml:84
+#: qml/widgets/krunner/KRunnerWidget.qml:181
 #, kde-format
 msgid "Search…"
 msgstr "Hľadať..."
 
-#: qml/widgets/mediacontrols/MediaControlsWidget.qml:128
+#: qml/widgets/mediacontrols/MediaControlsWidget.qml:195
 #, kde-format
 msgid "No media playing"
 msgstr "Neprehráva sa žiadne médium"
 
-#: qml/widgets/mediacontrols/MediaControlsWidget.qml:156
+#: qml/widgets/mediacontrols/MediaControlsWidget.qml:223
 #, kde-format
 msgid "Previous track"
 msgstr "Predchádzajúca skladba"
 
-#: qml/widgets/mediacontrols/MediaControlsWidget.qml:167
+#: qml/widgets/mediacontrols/MediaControlsWidget.qml:234
 #, kde-format
 msgid "Play or Pause media"
 msgstr "Prehrať alebo pozastaviť médium"
 
-#: qml/widgets/mediacontrols/MediaControlsWidget.qml:180
+#: qml/widgets/mediacontrols/MediaControlsWidget.qml:247
 #, kde-format
 msgid "Next track"
 msgstr "Nasledujúca skladba"
+
+#: qml/widgets/notifications/NotificationEditContextMenu.qml:32
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Copy Link Address"
+msgstr ""
+
+#: qml/widgets/notifications/NotificationEditContextMenu.qml:44
+#, fuzzy, kde-format
+#| msgid "&Copy"
+msgctxt "@action:inmenu"
+msgid "Copy"
+msgstr "&Kopírovať"
+
+#: qml/widgets/notifications/NotificationEditContextMenu.qml:61
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Select All"
+msgstr ""
 
 #: qml/widgets/notifications/NotificationFooterActions.qml:55
 #, kde-format
 msgctxt "Reply to message"
 msgid "Reply"
 msgstr "Odpovedať"
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:31
+#, fuzzy, kde-format
+#| msgid "%1%"
+msgctxt "Row description, e.g. Source"
+msgid "%1:"
+msgstr "%1%"
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:102
+#, kde-format
+msgctxt "How many bytes have been copied"
+msgid "%2 of %1"
+msgstr ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:106
+#, kde-format
+msgctxt "How many files have been copied"
+msgid "%2 of %1 file"
+msgid_plural "%2 of %1 files"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:109
+#, kde-format
+msgctxt "How many dirs have been copied"
+msgid "%2 of %1 folder"
+msgid_plural "%2 of %1 folders"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:112
+#, kde-format
+msgctxt "How many items (that includes files and dirs) have been copied"
+msgid "%2 of %1 item"
+msgid_plural "%2 of %1 items"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:120
+#, kde-format
+msgid "%1 file"
+msgid_plural "%1 files"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:122
+#, kde-format
+msgid "%1 folder"
+msgid_plural "%1 folders"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:124
+#, kde-format
+msgid "%1 item"
+msgid_plural "%1 items"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: qml/widgets/notifications/NotificationJobDetails.qml:141
+#, kde-format
+msgctxt "Bytes per second"
+msgid "%1/s"
+msgstr ""
+
+#: qml/widgets/notifications/NotificationJobItem.qml:115
+#, fuzzy, kde-format
+#| msgid "%1%"
+msgctxt "Percentage of a job"
+msgid "%1%"
+msgstr "%1%"
+
+#: qml/widgets/notifications/NotificationJobItem.qml:130
+#, kde-format
+msgctxt "Hides/expands item details"
+msgid "Details"
+msgstr ""
+
+#: qml/widgets/notifications/NotificationJobItem.qml:141
+#, fuzzy, kde-format
+#| msgctxt "Job name, e.g. Copying is paused"
+#| msgid "%1 (Paused)"
+msgctxt "Pause running job"
+msgid "Pause"
+msgstr "%1 (Pozastavené)"
+
+#: qml/widgets/notifications/NotificationJobItem.qml:150
+#, kde-format
+msgctxt "Cancel running job"
+msgid "Cancel"
+msgstr ""
+
+#: qml/widgets/notifications/NotificationJobItem.qml:181
+#: qml/widgets/notifications/ThumbnailStrip.qml:134
+#, kde-format
+msgid "More Options…"
+msgstr "Viac možností..."
+
+#: qml/widgets/notifications/NotificationJobItem.qml:209
+#, kde-format
+msgid "Open"
+msgstr ""
 
 #: qml/widgets/notifications/NotificationReplyField.qml:36
 #, kde-format
@@ -220,86 +340,98 @@ msgctxt "@action:button"
 msgid "Send"
 msgstr "Poslať"
 
-#: qml/widgets/notifications/NotificationsWidget.qml:176
-#, kde-format
-msgid "Notification service not available"
-msgstr "Služba upozornení nie je dostupná"
-
-#: qml/widgets/notifications/NotificationsWidget.qml:185
-#, kde-format
-msgctxt "Vendor and product name"
-msgid "Notifications are currently provided by '%1 %2'"
-msgstr "Oznámenia v súčasnosti poskytuje '%1 %2'"
-
-#: qml/widgets/notifications/NotificationsWidget.qml:321
-#, kde-format
-msgid "Show Fewer"
-msgstr "Zobraziť menej"
-
-#: qml/widgets/notifications/NotificationsWidget.qml:323
-#, kde-format
-msgctxt "Expand to show n more notifications"
-msgid "Show %1 More"
-msgstr "Zobraziť ďalších %1"
-
-#: qml/widgets/notifications/NotificationsWidget.qml:382
-#, kde-format
-msgid "Clear All Notifications"
-msgstr "Vymazať všetky oznámenia"
-
-#: qml/widgets/notifications/ThumbnailStrip.qml:132
-#, kde-format
-msgid "More Options…"
-msgstr "Viac možností..."
-
-#: qml/widgets/notifications/util.js:14
+#: qml/widgets/notifications/NotificationsUtils.js:14
 #, kde-format
 msgctxt "Job name, e.g. Copying is paused"
 msgid "%1 (Paused)"
 msgstr "%1 (Pozastavené)"
 
-#: qml/widgets/notifications/util.js:19
+#: qml/widgets/notifications/NotificationsUtils.js:19
 #, kde-format
 msgctxt "Job name, e.g. Copying has failed"
 msgid "%1 (Failed)"
 msgstr "%1 (Zlyhalo)"
 
-#: qml/widgets/notifications/util.js:21
+#: qml/widgets/notifications/NotificationsUtils.js:21
 #, kde-format
 msgid "Job Failed"
 msgstr "Úloha zlyhala"
 
-#: qml/widgets/notifications/util.js:24
+#: qml/widgets/notifications/NotificationsUtils.js:24
 #, kde-format
 msgctxt "Job name, e.g. Copying has finished"
 msgid "%1 (Finished)"
 msgstr "%1 (Dokončené)"
 
-#: qml/widgets/notifications/util.js:26
+#: qml/widgets/notifications/NotificationsUtils.js:26
 #, kde-format
 msgid "Job Finished"
 msgstr "Úloha dokončená"
 
-#: qml/widgets/notifications/util.js:49
+#: qml/widgets/notifications/NotificationsUtils.js:44
+#, kde-format
+msgid "now"
+msgstr ""
+
+#: qml/widgets/notifications/NotificationsUtils.js:49
 #, kde-format
 msgctxt "Notification was added minutes ago, keep short"
 msgid "%1m ago"
-msgstr ""
+msgstr "pred %1m"
 
-#: qml/widgets/notifications/util.js:81
+#: qml/widgets/notifications/NotificationsUtils.js:81
 #, kde-format
 msgctxt "seconds remaining, keep short"
 msgid "%1 s remaining"
-msgstr "Zostáva %1 sekúnd"
+msgstr "%1 s zostáva"
 
-#: qml/widgets/notifications/util.js:84
+#: qml/widgets/notifications/NotificationsUtils.js:84
 #, kde-format
 msgctxt "minutes remaining, keep short"
 msgid "%1m remaining"
-msgstr ""
+msgstr "%1m zostáva"
 
-#: qml/widgets/notifications/util.js:87
+#: qml/widgets/notifications/NotificationsUtils.js:87
 #, kde-format
 msgctxt "hours remaining, keep short"
 msgid "%1h remaining"
-msgstr "Zostáva %1 hodín"
+msgstr "%1h zostáva"
+
+#: qml/widgets/notifications/NotificationsWidget.qml:179
+#, kde-format
+msgid "Notification service not available"
+msgstr "Služba upozornení nie je dostupná"
+
+#: qml/widgets/notifications/NotificationsWidget.qml:188
+#, kde-format
+msgctxt "Vendor and product name"
+msgid "Notifications are currently provided by '%1 %2'"
+msgstr "Oznámenia v súčasnosti poskytuje '%1 %2'"
+
+#: qml/widgets/notifications/NotificationsWidget.qml:325
+#, kde-format
+msgid "Show Fewer"
+msgstr "Zobraziť menej"
+
+#: qml/widgets/notifications/NotificationsWidget.qml:327
+#, kde-format
+msgctxt "Expand to show n more notifications"
+msgid "Show %1 More"
+msgstr "Zobraziť ďalších %1"
+
+#: qml/widgets/notifications/NotificationsWidget.qml:386
+#, kde-format
+msgid "Clear All Notifications"
+msgstr "Vymazať všetky oznámenia"
+
+#~ msgid "Audio Settings"
+#~ msgstr "Nastavenia zvuku"
+
+#~ msgid "Audio"
+#~ msgstr "Zvuk"
+
+#~ msgid "Increase Volume"
+#~ msgstr "Zvýšiť hlasitosť"
+
+#~ msgid "Decrease Volume"
+#~ msgstr "Znížiť hlasitosť"

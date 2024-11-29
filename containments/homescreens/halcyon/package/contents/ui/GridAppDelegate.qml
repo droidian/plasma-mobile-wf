@@ -4,20 +4,20 @@
  *  SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.15 as Controls
-import QtGraphicalEffects 1.6
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Effects
+import QtQuick.Controls as Controls
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kquickcontrolsaddons
 
-import org.kde.plasma.private.containmentlayoutmanager 1.0 as ContainmentLayoutManager 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-import org.kde.phone.homescreen.halcyon 1.0 as Halcyon
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
+import org.kde.private.mobile.homescreen.halcyon as Halcyon
 
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami as Kirigami
 
 MouseArea {
     id: delegate
@@ -25,40 +25,40 @@ MouseArea {
     height: GridView.view.cellHeight
 
     property Halcyon.Application application: model.application
-    
+
     property int reservedSpaceForLabel
     property alias iconItem: icon
 
     readonly property real margins: Math.floor(width * 0.2)
 
     signal launch(int x, int y, var source, string title, string storageId)
-    
+
     function openContextMenu() {
         dialogLoader.active = true;
         dialogLoader.item.open();
     }
-    
+
     cursorShape: Qt.PointingHandCursor
     acceptedButtons: Qt.LeftButton | Qt.RightButton
     onPressAndHold: openContextMenu()
-    
+
     function launchApp() {
         // launch app
         if (application.running) {
             delegate.launch(0, 0, "", application.name, application.storageId);
         } else {
-            delegate.launch(delegate.x + (PlasmaCore.Units.smallSpacing * 2), delegate.y + (PlasmaCore.Units.smallSpacing * 2), icon.source, application.name, application.storageId);
+            delegate.launch(delegate.x + (Kirigami.Units.smallSpacing * 2), delegate.y + (Kirigami.Units.smallSpacing * 2), icon.source, application.name, application.storageId);
         }
     }
-    
+
     Loader {
         id: dialogLoader
         active: false
-        
+
         sourceComponent: PlasmaComponents.Menu {
             title: label.text
             closePolicy: PlasmaComponents.Menu.CloseOnReleaseOutside | PlasmaComponents.Menu.CloseOnEscape
-            
+
             PlasmaComponents.MenuItem {
                 icon.name: "emblem-favorite"
                 text: i18n("Add to favourites")
@@ -72,31 +72,31 @@ MouseArea {
 
     // grow/shrink animation
     property real zoomScale: 1
-    transform: Scale { 
-        origin.x: delegate.width / 2; 
-        origin.y: delegate.height / 2; 
+    transform: Scale {
+        origin.x: delegate.width / 2;
+        origin.y: delegate.height / 2;
         xScale: delegate.zoomScale
         yScale: delegate.zoomScale
     }
-    
+
     property bool launchAppRequested: false
-    
+
     NumberAnimation on zoomScale {
         id: shrinkAnim
         running: false
-        duration: MobileShell.MobileShellSettings.animationsEnabled ? 80 : 1
-        to: MobileShell.MobileShellSettings.animationsEnabled ? 0.8 : 1
+        duration: ShellSettings.Settings.animationsEnabled ? 80 : 1
+        to: ShellSettings.Settings.animationsEnabled ? 0.8 : 1
         onFinished: {
             if (!delegate.pressed) {
                 growAnim.restart();
             }
         }
     }
-    
+
     NumberAnimation on zoomScale {
         id: growAnim
         running: false
-        duration: MobileShell.MobileShellSettings.animationsEnabled ? 80 : 1
+        duration: ShellSettings.Settings.animationsEnabled ? 80 : 1
         to: 1
         onFinished: {
             if (delegate.launchAppRequested) {
@@ -105,7 +105,7 @@ MouseArea {
             }
         }
     }
-    
+
     onPressedChanged: {
         if (pressed) {
             growAnim.stop();
@@ -115,8 +115,14 @@ MouseArea {
         }
     }
     // launch app handled by press animation
-    onClicked: (mouse.button === Qt.RightButton) ? openContextMenu() : launchAppRequested = true
-    
+    onClicked: mouse => {
+        if (mouse.button === Qt.RightButton) {
+            openContextMenu();
+        } else {
+            launchAppRequested = true;
+        }
+    }
+
     ColumnLayout {
         anchors {
             fill: parent
@@ -127,12 +133,12 @@ MouseArea {
         }
         spacing: 0
 
-        PlasmaCore.IconItem {
+        Kirigami.Icon {
             id: icon
 
             Kirigami.Theme.inherit: false
             Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
-            
+
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             Layout.fillWidth: true
             Layout.preferredHeight: Math.floor(parent.height - delegate.reservedSpaceForLabel)
@@ -148,19 +154,20 @@ MouseArea {
                 }
                 visible: application.running
                 radius: width
-                width: PlasmaCore.Units.smallSpacing
+                width: Kirigami.Units.smallSpacing
                 height: width
-                color: theme.highlightColor
+                color: Kirigami.Theme.highlightColor
             }
-            
+
             // darken effect when hovered/pressed
             layer {
                 enabled: delegate.pressed
-                effect: ColorOverlay {
-                    color: Qt.rgba(0, 0, 0, 0.3)
+                effect: MultiEffect {
+                    colorization: 1.0
+                    colorizationColor: Qt.rgba(0, 0, 0, 0.3)
                 }
             }
-            
+
             FontMetrics {
                 id: labelFontMetrics
                 font: label.font
@@ -173,10 +180,10 @@ MouseArea {
 
             Layout.fillWidth: true
             Layout.preferredHeight: delegate.reservedSpaceForLabel
-            Layout.topMargin: PlasmaCore.Units.smallSpacing
-            Layout.leftMargin: -parent.anchors.leftMargin + PlasmaCore.Units.smallSpacing
-            Layout.rightMargin: -parent.anchors.rightMargin + PlasmaCore.Units.smallSpacing
-            
+            Layout.topMargin: Kirigami.Units.smallSpacing
+            Layout.leftMargin: -parent.anchors.leftMargin + Kirigami.Units.smallSpacing
+            Layout.rightMargin: -parent.anchors.rightMargin + Kirigami.Units.smallSpacing
+
             wrapMode: Text.WordWrap
             maximumLineCount: 2
             horizontalAlignment: Text.AlignHCenter
@@ -185,7 +192,7 @@ MouseArea {
 
             text: application.name
 
-            font.pointSize: theme.defaultFont.pointSize * 0.85
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.85
             font.weight: Font.Bold
             color: "white"
         }

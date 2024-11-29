@@ -1,11 +1,15 @@
 // SPDX-FileCopyrightText: 2021 Tobias Fella <fella@posteo.de>
-// SPDX-FileCopyrightText: 2022 Devin Lin <devin@kde.org>
+// SPDX-FileCopyrightText: 2022-2023 Devin Lin <devin@kde.org>
 // SPDX-License-Identifier: GPL-2.0-or-later
+
+#include "signalindicator.h"
 
 #include <NetworkManagerQt/GsmSetting>
 #include <NetworkManagerQt/Manager>
 #include <NetworkManagerQt/Settings>
 #include <NetworkManagerQt/Utils>
+
+#include <KUser>
 
 #include "signalindicator.h"
 
@@ -67,6 +71,11 @@ bool SignalIndicator::mobileDataSupported() const
 
 bool SignalIndicator::mobileDataEnabled() const
 {
+    // if wwan is globally disabled
+    if (!NetworkManager::isWwanEnabled()) {
+        return false;
+    }
+
     // no modem -> no mobile data -> report disabled
     if (!m_nmModem) {
         return false;
@@ -100,19 +109,20 @@ bool SignalIndicator::needsAPNAdded() const
 
 void SignalIndicator::setMobileDataEnabled(bool enabled)
 {
+    // ensure that wwan is on
+    if (enabled && !NetworkManager::isWwanEnabled()) {
+        NetworkManager::setWwanEnabled(true);
+    }
+
     if (!m_nmModem) {
         return;
     }
-    if (!enabled) {
-        m_nmModem->setAutoconnect(false);
-        // we need to also set all connections to not autoconnect (#182)
-        for (NetworkManager::Connection::Ptr con : m_nmModem->availableConnections()) {
-            con->settings()->setAutoconnect(false);
-            con->update(con->settings()->toMap());
-        }
-        m_nmModem->disconnectInterface();
-    } else {
+
+    if (enabled) {
+        // enable mobile data...
+
         m_nmModem->setAutoconnect(true);
+
         // activate the connection that was last used
         QDateTime latestTimestamp;
         NetworkManager::Connection::Ptr latestCon;
@@ -127,6 +137,7 @@ void SignalIndicator::setMobileDataEnabled(bool enabled)
                 latestCon = con;
             }
         }
+
         // if we found the last used connection
         if (!latestCon.isNull()) {
             // set it to autoconnect and connect it immediately
@@ -134,6 +145,176 @@ void SignalIndicator::setMobileDataEnabled(bool enabled)
             latestCon->update(latestCon->settings()->toMap());
             NetworkManager::activateConnection(latestCon->path(), m_nmModem->uni(), "");
         }
+
+    } else {
+        // disable mobile data...
+
+        // we do not call NetworkManager::setWwanEnabled(false), because it turns off cellular
+
+        // turn off autoconnect
+        m_nmModem->setAutoconnect(false);
+        // we need to also set all connections to not autoconnect (#182)
+        for (NetworkManager::Connection::Ptr con : m_nmModem->availableConnections()) {
+            con->settings()->setAutoconnect(false);
+            con->update(con->settings()->toMap());
+        }
+
+        // disconnect network
+        m_nmModem->disconnectInterface();
+    }
+}
+
+QString SignalIndicator::activeConnectionUni() const
+{
+    if (m_nmModem && m_nmModem->activeConnection() && m_nmModem->activeConnection()->connection()) {
+        return m_nmModem->activeConnection()->connection()->uuid();
+    }
+    return QString();
+}
+
+QList<ProfileSettings *> &SignalIndicator::profileList()
+{
+    return m_profileList;
+}
+
+void SignalIndicator::refreshProfiles()
+{
+    m_profileList.clear();
+
+    if (!m_nmModem) {
+        Q_EMIT profileListChanged();
+        qWarning() << "No NetworkManager modem found, cannot refresh profiles.";
+        return;
+    }
+
+    for (auto connection : m_nmModem->availableConnections()) {
+        for (auto setting : connection->settings()->settings()) {
+            if (setting.dynamicCast<NetworkManager::GsmSetting>()) {
+                m_profileList.append(new ProfileSettings(this, setting.dynamicCast<NetworkManager::GsmSetting>(), connection));
+            }
+        }
+    }
+    Q_EMIT profileListChanged();
+}
+
+void SignalIndicator::activateProfile(const QString &connectionUni)
+{
+    if (!m_nmModem) {
+        qWarning() << "Cannot activate profile since there is no NetworkManager modem";
+        return;
+    }
+
+    qDebug() << QStringLiteral("Activating profile on modem") << m_nmModem->uni() << QStringLiteral("for connection") << connectionUni << ".";
+
+    NetworkManager::Connection::Ptr con;
+
+    // disable autoconnect for all other connections
+    for (auto connection : m_nmModem->availableConnections()) {
+        if (connection->uuid() == connectionUni) {
+            connection->settings()->setAutoconnect(true);
+            con = connection;
+        } else {
+            connection->settings()->setAutoconnect(false);
+        }
+    }
+
+    if (!con) {
+        qDebug() << QStringLiteral("Connection") << connectionUni << QStringLiteral("not found.");
+        return;
+    }
+
+    // activate connection manually
+    // despite the documentation saying otherwise, activateConnection seems to need the DBus path, not uuid of the connection
+    QDBusPendingReply<QDBusObjectPath> reply = NetworkManager::activateConnection(con->path(), m_nmModem->uni(), {});
+    reply.waitForFinished();
+    if (reply.isError()) {
+        qWarning() << QStringLiteral("Error activating connection:") << reply.error().message();
+        return;
+    }
+}
+
+void SignalIndicator::addProfile(const QString &name, const QString &apn, const QString &username, const QString &password, const QString &networkType)
+{
+    if (!m_nmModem) {
+        qWarning() << "Cannot add profile since there is no NetworkManager modem";
+        return;
+    }
+
+    NetworkManager::ConnectionSettings::Ptr settings{new NetworkManager::ConnectionSettings(NetworkManager::ConnectionSettings::Gsm)};
+    settings->setId(name);
+    settings->setUuid(NetworkManager::ConnectionSettings::createNewUuid());
+    settings->setAutoconnect(true);
+    settings->addToPermissions(KUser().loginName(), QString());
+
+    NetworkManager::GsmSetting::Ptr gsmSetting = settings->setting(NetworkManager::Setting::Gsm).dynamicCast<NetworkManager::GsmSetting>();
+    gsmSetting->setApn(apn);
+    gsmSetting->setUsername(username);
+    gsmSetting->setPassword(password);
+    gsmSetting->setPasswordFlags(password.isEmpty() ? NetworkManager::Setting::NotRequired : NetworkManager::Setting::AgentOwned);
+    gsmSetting->setNetworkType(ProfileSettings::networkTypeFlag(networkType));
+
+    gsmSetting->setInitialized(true);
+
+    QDBusPendingReply<QDBusObjectPath> reply = NetworkManager::addAndActivateConnection(settings->toMap(), m_nmModem->uni(), {});
+    reply.waitForFinished();
+    if (reply.isError()) {
+        qWarning() << "Error adding connection:" << reply.error().message();
+    } else {
+        qDebug() << "Successfully added a new connection" << name << "with APN" << apn << ".";
+    }
+}
+
+void SignalIndicator::removeProfile(const QString &connectionUni)
+{
+    NetworkManager::Connection::Ptr con = NetworkManager::findConnectionByUuid(connectionUni);
+    if (!con) {
+        qWarning() << "Could not find connection" << connectionUni << "to update!";
+        return;
+    }
+
+    QDBusPendingReply reply = con->remove();
+    reply.waitForFinished();
+    if (reply.isError()) {
+        qWarning() << "Error removing connection" << reply.error().message();
+    }
+}
+
+void SignalIndicator::updateProfile(const QString &connectionUni,
+                                    const QString &name,
+                                    const QString &apn,
+                                    const QString &username,
+                                    const QString &password,
+                                    const QString &networkType)
+{
+    NetworkManager::Connection::Ptr con = NetworkManager::findConnectionByUuid(connectionUni);
+    if (!con) {
+        qWarning() << "Could not find connection" << connectionUni << "to update!";
+        return;
+    }
+
+    NetworkManager::ConnectionSettings::Ptr conSettings = con->settings();
+    if (!conSettings) {
+        qWarning() << "Could not find connection settings for" << connectionUni << "to update!";
+        return;
+    }
+
+    conSettings->setId(name);
+
+    NetworkManager::GsmSetting::Ptr gsmSetting = conSettings->setting(NetworkManager::Setting::Gsm).dynamicCast<NetworkManager::GsmSetting>();
+    gsmSetting->setApn(apn);
+    gsmSetting->setUsername(username);
+    gsmSetting->setPassword(password);
+    gsmSetting->setPasswordFlags(password.isEmpty() ? NetworkManager::Setting::NotRequired : NetworkManager::Setting::AgentOwned);
+    gsmSetting->setNetworkType(ProfileSettings::networkTypeFlag(networkType));
+
+    gsmSetting->setInitialized(true);
+
+    QDBusPendingReply reply = con->update(conSettings->toMap());
+    reply.waitForFinished();
+    if (reply.isError()) {
+        qWarning() << "Error updating connection settings for" << connectionUni << ":" << reply.error().message() << ".";
+    } else {
+        qDebug() << "Successfully updated connection settings" << connectionUni << ".";
     }
 }
 
@@ -186,6 +367,14 @@ void SignalIndicator::updateNetworkManagerModem()
             connect(m_nmModem.get(), &NetworkManager::Device::stateChanged, this, &SignalIndicator::mobileDataEnabledChanged);
             connect(m_nmModem.get(), &NetworkManager::Device::availableConnectionAppeared, this, &SignalIndicator::mobileDataEnabledChanged);
             connect(m_nmModem.get(), &NetworkManager::Device::availableConnectionDisappeared, this, &SignalIndicator::mobileDataEnabledChanged);
+
+            connect(m_nmModem.data(), &NetworkManager::ModemDevice::availableConnectionChanged, this, &SignalIndicator::refreshProfiles);
+            connect(m_nmModem.data(), &NetworkManager::ModemDevice::activeConnectionChanged, this, [this]() -> void {
+                refreshProfiles();
+                Q_EMIT activeConnectionUniChanged();
+            });
+
+            refreshProfiles();
         }
     }
 

@@ -3,10 +3,10 @@
 
 import QtQuick 2.15
 
-import org.kde.plasma.networkmanagement 0.2 as PlasmaNM
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
+import org.kde.plasma.networkmanagement as PlasmaNM
+import org.kde.plasma.private.mobileshell.quicksettingsplugin as QS
 
-MobileShell.QuickSetting {
+QS.QuickSetting {
     PlasmaNM.Handler {
         id: nmHandler
     }
@@ -14,14 +14,14 @@ MobileShell.QuickSetting {
     PlasmaNM.EnabledConnections {
         id: enabledConnections
     }
-    
-    PlasmaNM.NetworkStatus {
-        id: networkStatus
+
+    PlasmaNM.WirelessStatus {
+        id: wirelessStatus
     }
 
     text: i18n("Wi-Fi")
-    status: enabledConnections.wirelessEnabled ? networkStatus.activeConnections : ""
-    icon: "network-wireless-signal"
+    status: enabledConnections.wirelessEnabled ? wirelessStatus.wifiSSID : ""
+    icon: enabledConnections.wirelessEnabled ? "network-wireless" : "network-wireless-disconnected"
     settingsCommand: "plasma-open-settings kcm_mobile_wifi"
     function toggle() {
         nmHandler.enableWireless(!enabledConnections.wirelessEnabled)

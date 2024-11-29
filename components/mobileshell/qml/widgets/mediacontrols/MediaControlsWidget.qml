@@ -1,48 +1,57 @@
-/*
- *  SPDX-FileCopyrightText: 2021 Devin Lin <devin@kde.org>
- *  SPDX-FileCopyrightText: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- *  SPDX-License-Identifier: LGPL-2.0-or-later
- */
+// SPDX-FileCopyrightText: 2021-2023 Devin Lin <devin@kde.org>
+// SPDX-FileCopyrightText: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
+// SPDX-License-Identifier: LGPL-2.0-or-later
 
-import QtQuick 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Controls 2.15 as QQC2
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QQC2
+import QtQuick.Effects
 
-import org.kde.kirigami 2.12 as Kirigami
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.components 3.0 as PC3
+import org.kde.plasma.private.mobileshell as MobileShell
+import org.kde.plasma.private.mobileshell.state as MobileShellState
 
-import org.kde.plasma.private.mobileshell 1.0 as MobileShell
-import org.kde.plasma.private.mobileshell.state 1.0 as MobileShellState
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-
-import "../../components" as Components
+import org.kde.plasma.private.mpris as Mpris
 
 /**
  * Embeddable component that provides MPRIS control.
  */
 Item {
     id: root
-    visible: mpris2Source.hasPlayer
-    
-    readonly property real padding: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing
-    readonly property real contentHeight: PlasmaCore.Units.gridUnit * 2 + PlasmaCore.Units.smallSpacing
+    visible: sourceRepeater.count > 0
+
+    property bool inActionDrawer: false
+
+    property bool detailledView: false
+
+    readonly property real padding: Kirigami.Units.gridUnit
+    readonly property real contentHeight: {
+        let heightMultiplier = detailledView ? 2 : 1
+        Kirigami.Units.gridUnit * 2 * heightMultiplier
+    }
     implicitHeight: visible ? padding * 2 + contentHeight : 0
-    
+
+    Behavior on implicitHeight {
+       NumberAnimation {
+           duration: implicitHeight == 0 ? 0 : Kirigami.Units.shortDuration
+           easing.type: Easing.InOutQuad
+       }
+    }
+
     MediaControlsSource {
         id: mpris2Source
     }
-    
+
     // page indicator
     RowLayout {
         z: 1
         visible: view.count > 1
         spacing: Kirigami.Units.smallSpacing
-        anchors.bottomMargin: Kirigami.Units.smallSpacing * 2
+        anchors.bottomMargin: Kirigami.Units.smallSpacing
         anchors.bottom: view.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        
+
         Repeater {
             model: view.count
             delegate: Rectangle {
@@ -53,131 +62,229 @@ Item {
             }
         }
     }
-    
+
+    // shadow
+    MultiEffect {
+        anchors.fill: root
+        visible: !inActionDrawer
+        source: simpleShadow
+        blurMax: 32
+        shadowEnabled: true
+        shadowVerticalOffset: 1
+        shadowOpacity: 0.5
+        shadowColor: Qt.lighter(Kirigami.Theme.backgroundColor, 0.2)
+    }
+
+    Rectangle {
+        id: simpleShadow
+        anchors.fill: root
+        anchors.leftMargin: -1
+        anchors.rightMargin: -1
+        anchors.bottomMargin: -1
+
+        color: {
+            let darkerBackgroundColor = Qt.darker(Kirigami.Theme.backgroundColor, 1.3);
+            return Qt.rgba(darkerBackgroundColor.r, darkerBackgroundColor.g, darkerBackgroundColor.b, 0.3)
+        }
+        radius: Kirigami.Units.cornerRadius
+    }
+
     // list of app media widgets
     QQC2.SwipeView {
         id: view
         clip: true
-        
+
         anchors.fill: parent
-        
+
         Repeater {
-            model: mpris2Source.mprisSourcesModel
-            
+            id: sourceRepeater
+            model: mpris2Source.mpris2Model
+
             delegate: Loader {
-                active: modelData
-                
+                id: delegate
+                // NOTE: model is PlayerContainer from KMpris in plasma-workspace
+
                 asynchronous: true
-                
+
+                function getTrackName() {
+                    console.log('track name: ' + model.title);
+                    if (model.title) {
+                        return model.title;
+                    }
+                    // if no track title is given, print out the file name
+                    if (!model.url) {
+                        return "";
+                    }
+                    const lastSlashPos = model.url.lastIndexOf('/')
+                    if (lastSlashPos < 0) {
+                        return ""
+                    }
+                    const lastUrlPart = model.url.substring(lastSlashPos + 1);
+                    return decodeURIComponent(lastUrlPart);
+                }
+
+                function msecToString(duration: int): string {
+                    let seconds = Math.floor(duration / 1000000)
+                    let minutes = Math.floor(seconds / 60)
+                    seconds -= minutes * 60
+                    return `${minutes}:${seconds.toString().padStart(2, '0')}`
+                }
+
                 sourceComponent: MouseArea {
                     id: mouseArea
-                    implicitHeight: playerItem.implicitHeight
-                    implicitWidth: playerItem.implicitWidth
-                    
-                    onClicked: {
-                        MobileShell.ShellUtil.launchApp(modelData.desktopEntry + ".desktop");
-                        MobileShellState.Shell.closeActionDrawer();
+                    implicitHeight: root.contentHeight + root.padding * 2
+                    implicitWidth: root.width
+
+                    onPressAndHold: {
+                        MobileShell.AppLaunch.launchOrActivateApp(model.desktopEntry + ".desktop");
+                        MobileShellState.ShellDBusClient.closeActionDrawer();
                     }
-                    
-                    Components.BaseItem {
-                        id: playerItem
+
+                    onClicked: {
+                        root.detailledView = !root.detailledView
+                    }
+
+                    BlurredBackground {
                         anchors.fill: parent
-                        
-                        property string source: modelData.source
-                        
+                        darken: mouseArea.pressed
+                        inActionDrawer: root.inActionDrawer
+                        imageSource: model.artUrl
+                    }
+
+                    MobileShell.BaseItem {
+                        id: playerItem
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
                         padding: root.padding
-                        implicitHeight: root.contentHeight + root.padding * 2
-                        implicitWidth: root.width
-                        
-                        background: BlurredBackground {
-                            darken: mouseArea.pressed
-                            imageSource: mpris2Source.albumArt(playerItem.source)
-                        }
-                        
-                        contentItem: PlasmaCore.ColorScope {
-                            colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
+
+                        contentItem: ColumnLayout {
+                            Kirigami.Theme.inherit: true
                             width: playerItem.width - playerItem.leftPadding - playerItem.rightPadding
-                            
+                            spacing: Kirigami.Units.largeSpacing
+
                             RowLayout {
                                 id: controlsRow
-                                width: parent.width
-                                height: parent.height
                                 spacing: 0
 
-                                enabled: mpris2Source.canControl(playerItem.source)
+                                enabled: model.canControl
 
                                 Image {
                                     id: albumArt
                                     Layout.preferredWidth: height
-                                    Layout.fillHeight: true
+                                    Layout.preferredHeight: controlsRow.height
                                     asynchronous: true
                                     fillMode: Image.PreserveAspectFit
-                                    source: mpris2Source.albumArt(playerItem.source)
+                                    source: model.artUrl
                                     sourceSize.height: height
                                     visible: status === Image.Loading || status === Image.Ready
                                 }
 
                                 ColumnLayout {
-                                    Layout.leftMargin: albumArt.visible ? Kirigami.Units.largeSpacing : 0
+                                    Layout.leftMargin: albumArt.visible ? Kirigami.Units.gridUnit : 0
+                                    Layout.rightMargin: Kirigami.Units.largeSpacing
                                     Layout.fillWidth: true
                                     spacing: Kirigami.Units.smallSpacing
 
-                                    Components.MarqueeLabel {
+                                    // media track name text
+                                    MobileShell.MarqueeLabel {
+                                        id: trackLabel
                                         Layout.fillWidth: true
 
-                                        inputText: mpris2Source.track(playerItem.source) || i18n("No media playing")
+                                        inputText: model.track || i18n("No media playing");
                                         textFormat: Text.PlainText
-                                        font.pointSize: PlasmaCore.Theme.defaultFont.pointSize
-                                        color: "white"
+                                        font.pointSize: Kirigami.Theme.defaultFont.pointSize
                                     }
 
-                                    Components.MarqueeLabel {
+                                    // media artist name text
+                                    MobileShell.MarqueeLabel {
+                                        id: artistLabel
                                         Layout.fillWidth: true
 
                                         // if no artist is given, show player name instead
-                                        inputText: mpris2Source.artist(playerItem.source) || modelData.application || ""
+                                        inputText: model.artist || model.identity || ""
                                         textFormat: Text.PlainText
-                                        font.pointSize: PlasmaCore.Theme.smallestFont.pointSize
+                                        font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.9
                                         opacity: 0.9
-                                        color: "white"
                                     }
                                 }
 
-                                PlasmaComponents3.ToolButton {
-                                    Layout.fillHeight: true
-                                    Layout.preferredWidth: height
-                                    
-                                    enabled: mpris2Source.canGoBack(playerItem.source)
+                                QQC2.ToolButton {
+                                    enabled: model.canGoPrevious
                                     icon.name: LayoutMirroring.enabled ? "media-skip-forward" : "media-skip-backward"
-                                    icon.width: PlasmaCore.Units.iconSizes.small
-                                    icon.height: PlasmaCore.Units.iconSizes.small
-                                    onClicked: mpris2Source.goPrevious(playerItem.source)
-                                    visible: mpris2Source.canGoBack(playerItem.source) || mpris2Source.canGoNext(playerItem.source)
+                                    icon.width: Kirigami.Units.iconSizes.smallMedium
+                                    icon.height: Kirigami.Units.iconSizes.smallMedium
+                                    onClicked: {
+                                        mpris2Source.setIndex(model.index);
+                                        mpris2Source.goPrevious();
+                                    }
+                                    visible: model.canGoPrevious || model.canGoNext
                                     Accessible.name: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Previous track")
                                 }
 
-                                PlasmaComponents3.ToolButton {
-                                    Layout.fillHeight: true
-                                    Layout.preferredWidth: height
-                                    
-                                    icon.name: mpris2Source.isPlaying(playerItem.source) ? "media-playback-pause" : "media-playback-start"
-                                    icon.width: PlasmaCore.Units.iconSizes.small
-                                    icon.height: PlasmaCore.Units.iconSizes.small
-                                    onClicked: mpris2Source.playPause(playerItem.source)
+                                QQC2.ToolButton {
+                                    icon.name: (model.playbackStatus === Mpris.PlaybackStatus.Playing) ? "media-playback-pause" : "media-playback-start"
+                                    icon.width: Kirigami.Units.iconSizes.smallMedium
+                                    icon.height: Kirigami.Units.iconSizes.smallMedium
+                                    onClicked: {
+                                        mpris2Source.setIndex(model.index);
+                                        mpris2Source.playPause();
+                                    }
                                     Accessible.name: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Play or Pause media")
                                 }
 
-                                PlasmaComponents3.ToolButton {
-                                    Layout.fillHeight: true
-                                    Layout.preferredWidth: height
-                                    
-                                    enabled: mpris2Source.canGoBack(playerItem.source)
+                                QQC2.ToolButton {
+                                    enabled: model.canGoNext
                                     icon.name: LayoutMirroring.enabled ? "media-skip-backward" : "media-skip-forward"
-                                    icon.width: PlasmaCore.Units.iconSizes.small
-                                    icon.height: PlasmaCore.Units.iconSizes.small
-                                    onClicked: mpris2Source.goNext(playerItem.source)
-                                    visible: mpris2Source.canGoBack(playerItem.source) || mpris2Source.canGoNext(playerItem.source)
+                                    icon.width: Kirigami.Units.iconSizes.smallMedium
+                                    icon.height: Kirigami.Units.iconSizes.smallMedium
+                                    onClicked: {
+                                        mpris2Source.setIndex(model.index);
+                                        mpris2Source.goNext();
+                                    }
+                                    visible: model.canGoPrevious || model.canGoNext
                                     Accessible.name: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Next track")
+                                }
+                            }
+
+                            RowLayout {
+                                id: timerControlsRow
+
+                                spacing: Kirigami.Units.largeSpacing
+
+                                visible: root.detailledView
+
+                                Text {
+                                    text: msecToString(model.position)
+
+                                    font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.9
+                                    color: Kirigami.Theme.textColor
+                                }
+
+                                PC3.Slider {
+                                    Layout.fillWidth: true
+
+                                    from: 0
+                                    value: model.position
+                                    to: model.length
+
+                                    onMoved: model.position = value
+
+                                    Timer {
+                                        interval: 1000; running: true; repeat: true
+                                        onTriggered: {
+                                            mpris2Source.setIndex(model.index);
+                                            mpris2Source.updatePosition()
+                                        }
+                                    }
+                                }
+
+                                Text {
+                                    text: msecToString(model.length)
+
+                                    font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.9
+                                    color: Kirigami.Theme.textColor
                                 }
                             }
                         }

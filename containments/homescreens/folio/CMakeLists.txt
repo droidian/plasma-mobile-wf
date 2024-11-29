@@ -1,28 +1,44 @@
-# SPDX-FileCopyrightText: 2015-2021 Marco Martin <mart@kde.org>
+# SPDX-FileCopyrightText: 2023 Devin Lin <devin@kde.org>
 # SPDX-License-Identifier: GPL-2.0-or-later
+
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.plasma.mobile.homescreen.folio\")
 
 set(homescreen_SRCS
     homescreen.cpp
-    desktopmodel.cpp
     applicationlistmodel.cpp
+    homescreenstate.cpp
+    windowlistener.cpp
+    favouritesmodel.cpp
+    folioapplication.cpp
+    folioapplicationfolder.cpp
+    foliodelegate.cpp
+    foliosettings.cpp
+    foliowidget.cpp
+    pagemodel.cpp
+    pagelistmodel.cpp
+    delegatetoucharea.cpp
+    dragstate.cpp
+    widgetcontainer.cpp
+    widgetsmanager.cpp
 )
 
-add_library(plasma_containment_phone_homescreen MODULE ${homescreen_SRCS})
+add_library(org.kde.plasma.mobile.homescreen.folio MODULE ${homescreen_SRCS})
 
-target_link_libraries(plasma_containment_phone_homescreen
+target_link_libraries(org.kde.plasma.mobile.homescreen.folio
                       Qt::Gui
-                      KF5::Plasma
                       Qt::Qml
                       Qt::Quick
-                      KF5::I18n
-                      KF5::Service
-                      KF5::KIOGui
-                      KF5::Notifications
-                      KF5::WaylandClient
-                      KF5::WindowSystem
+                      Plasma::Plasma
+                      Plasma::PlasmaQuick
+                      KF6::I18n
+                      KF6::Service
+                      KF6::KIOGui
+                      KF6::Notifications
+                      Plasma::KWaylandClient
+                      KF6::WindowSystem
+                      KF6::JobWidgets
 )
 
+install(TARGETS org.kde.plasma.mobile.homescreen.folio DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/applets)
 
-install(TARGETS plasma_containment_phone_homescreen DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/applets)
-
-plasma_install_package(package org.kde.phone.homescreen)
+plasma_install_package(package org.kde.plasma.mobile.homescreen.folio)

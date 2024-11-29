@@ -8,22 +8,16 @@ set(recordplugin_SRCS
 
 add_library(recordplugin ${recordplugin_SRCS})
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS 
-    Declarative
-    Notifications
-)
-
 target_link_libraries(recordplugin
-    PUBLIC
-        Qt::Core
-    PRIVATE
-        Qt::DBus
-        KF5::CoreAddons
-        KF5::QuickAddons
-        KF5::ConfigCore
-        KF5::ConfigGui
-        KF5::I18n
-        KF5::Notifications
+    Qt::Core
+    Qt::DBus
+    Qt::Qml
+    Qt::Quick
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui
+    KF6::I18n
+    KF6::Notifications
 )
 
 set_property(TARGET recordplugin PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/quicksetting/record)
@@ -31,5 +25,6 @@ file(COPY qmldir DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/qu
 
 install(TARGETS recordplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/quicksetting/record)
 install(FILES qmldir ${qml_SRC} DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/quicksetting/record)
+install(FILES plasma_mobile_quicksetting_record.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
 
 plasma_install_package(package org.kde.plasma.quicksetting.record quicksettings)

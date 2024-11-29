@@ -8,22 +8,16 @@ set(powermenuplugin_SRCS
 
 add_library(powermenuplugin ${powermenuplugin_SRCS})
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS 
-    Config
-    Declarative
-)
-
 find_package(LibKWorkspace)
 
 target_link_libraries(powermenuplugin
-        PUBLIC
-            Qt::Core
-        PRIVATE
-            KF5::CoreAddons
-            KF5::QuickAddons
-            PW::KWorkspace
-    )
-    
+    Qt::Core
+    Qt::Qml
+    Qt::Quick
+    KF6::CoreAddons
+    PW::KWorkspace
+)
+
 set_property(TARGET powermenuplugin PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/quicksetting/powermenu)
 file(COPY qmldir DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/org/kde/plasma/quicksetting/powermenu)
 
