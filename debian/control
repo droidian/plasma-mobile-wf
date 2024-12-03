@@ -1,4 +1,4 @@
-Source: plasma-mobile
+Source: plasma-mobile-wf
 Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
@@ -60,8 +60,9 @@ Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile
 Vcs-Git: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile.git
 Rules-Requires-Root: no
 
-Package: plasma-mobile
+Package: plasma-mobile-wf
 Architecture: any
+Conflicts: plasma-mobile
 Multi-Arch: foreign
 Depends: kde-style-breeze (>= 4:6.0.0~),
          kf6-breeze-icon-theme,
@@ -81,7 +82,7 @@ Depends: kde-style-breeze (>= 4:6.0.0~),
 Recommends: bluedevil (>= 6.0.0~),
             hfd-service,
             iio-sensor-proxy,
-            plasma-mobile-tweaks,
+            plasma-mobile-tweaks-wf,
             plasma-workspace-wallpapers,
 Replaces: plasma-settings (<< 24.02.0~),
 Breaks: kde-config-mobile-networking (<< 4:6.0.0~),
@@ -97,8 +98,9 @@ Description: User interface for phones, based on Plasma technologies
  Plasma Mobile aims to contribute to and implement open standards, and is
  developed in a transparent process that is open for anyone to participate in.
 
-Package: plasma-mobile-tweaks
+Package: plasma-mobile-wf-tweaks
 Architecture: all
+Conflicts: plasma-mobile-tweaks
 Multi-Arch: foreign
 Depends: ${misc:Depends},
 Description: Components to improve the Plasma mobile UX on touch devices
