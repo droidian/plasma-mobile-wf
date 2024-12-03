@@ -1,4 +1,4 @@
-Source: plasma-mobile
+Source: plasma-mobile-wf
 Section: kde
 Priority: optional
 Maintainer: DebianOnMobile Maintainers <debian-on-mobile-maintainers@alioth-lists.debian.net>
@@ -47,8 +47,9 @@ Vcs-Browser: https://salsa.debian.org/DebianOnMobile-team/plasma-mobile
 Vcs-Git: https://salsa.debian.org/DebianOnMobile-team/plasma-mobile.git
 Rules-Requires-Root: no
 
-Package: plasma-mobile
+Package: plasma-mobile-wf
 Architecture: any
+Conflicts: plasma-mobile
 Multi-Arch: foreign
 Depends: ${misc:Depends},
          ${shlibs:Depends},
@@ -82,7 +83,7 @@ Depends: ${misc:Depends},
          xdg-desktop-portal-kde (>= 6.0.0~),
 Recommends: bluedevil (>= 6.0.0~),
             hfd-service,
-            plasma-mobile-tweaks,
+            plasma-mobile-tweaks-wf,
             plasma-workspace-wallpapers,
 Breaks: kde-config-mobile-networking (<< 4:6.0.0~),
 Description: User interface for phones, based on Plasma technologies
@@ -96,8 +97,9 @@ Description: User interface for phones, based on Plasma technologies
  Plasma Mobile aims to contribute to and implement open standards, and is
  developed in a transparent process that is open for anyone to participate in.
 
-Package: plasma-mobile-tweaks
+Package: plasma-mobile-wf-tweaks
 Architecture: all
+Conflicts: plasma-mobile-tweaks
 Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: Components to improve the Plasma mobile UX on touch devices
