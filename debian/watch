@@ -1,0 +1,2 @@
+version=4
+opts=pgpmode=auto https://download.kde.org/stable/plasma/@ANY_VERSION@/@PACKAGE@@ANY_VERSION@@ARCHIVE_EXT@

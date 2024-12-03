@@ -1,0 +1,10 @@
+# startplasmamobile and plasma-mobile-envmanager are not intended to be launched by the user
+plasma-mobile: no-manual-page [usr/bin/startplasmamobile]
+plasma-mobile: no-manual-page [usr/bin/plasma-mobile-envmanager]
+# systemsettings executable required for the KCMs is installed through plasma-workspace dependency
+plasma-mobile: desktop-command-not-in-package systemsettings [usr/share/applications/kcm_*]
+plasma-mobile [s390x]: library-not-linked-against-libc [usr/lib/*/qt6/plugins/plasma/applets/*]
+# plasma-mobile-initial-start is a intuitive graphical app to do first setup of the shell
+plasma-mobile: no-manual-page [usr/bin/plasma-mobile-initial-start]
+# plasma-mobile-notificationtest is a CLI executable that is not relevant for the end user
+plasma-mobile: no-manual-page [usr/bin/plasma-mobile-notificationtest]

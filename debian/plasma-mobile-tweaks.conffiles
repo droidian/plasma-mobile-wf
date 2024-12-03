@@ -1,0 +1,3 @@
+remove-on-upgrade /etc/xdg/applications-blacklistrc
+remove-on-upgrade /etc/xdg/kdeglobals
+remove-on-upgrade /etc/xdg/kwinrc

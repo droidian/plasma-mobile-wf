@@ -1,0 +1,14 @@
+usr/bin/*
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/kf6/*
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/kwin/*
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/plasma/*
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/qml/org/kde/*
+usr/share/applications/*
+usr/share/dbus-1/interfaces/org.kde.plasmashell.Mobile.xml
+usr/share/kwin/*
+usr/share/knotifications6/*
+usr/share/locale/*
+usr/share/metainfo/*
+usr/share/plasma/*
+usr/share/plasma-mobile-apn-info/*
+usr/share/wayland-sessions/plasma-mobile.desktop
