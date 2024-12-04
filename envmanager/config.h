@@ -27,7 +27,7 @@ const QMap<QString, QMap<QString, QVariant>> APPLICATIONS_BLACKLIST_DEFAULT_SETT
        "waydroid.org.lineageos.jelly,waydroid.org.lineageos.recorder,wordview,org.kde.drkonqi.coredump.gui"}}}};
 
 // .config/plasma-mobile/kdeglobals - non-immutable settings:
-const QMap<QString, QMap<QString, QVariant>> KDEGLOBALS_DEFAULT_SETTINGS = {{"General", {{"BrowserApplication", "angelfish"}}}};
+const QMap<QString, QMap<QString, QVariant>> KDEGLOBALS_DEFAULT_SETTINGS = {{"General", {{"BrowserApplication", "angelfish"}, {"AccentColor", "28,105,16"}}}};
 
 // .config/plasma-mobile/kdeglobals - immutable settings:
 const QMap<QString, QMap<QString, QVariant>> KDEGLOBALS_SETTINGS = {{"KDE", {{"LookAndFeelPackage", "org.kde.breeze.mobile"}}}};
