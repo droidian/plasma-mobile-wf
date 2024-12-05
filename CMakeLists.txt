@@ -91,20 +91,11 @@ pkg_check_modules(GIO gio-2.0 REQUIRED IMPORTED_TARGET)
 find_package(KF6KirigamiAddons 0.6 REQUIRED)
 find_package(epoxy REQUIRED)
 find_package(XCB REQUIRED COMPONENTS XCB)
-find_package(KWin ${PROJECT_DEP_VERSION} REQUIRED COMPONENTS
-    kwin
-)
 
 find_package(LayerShellQt REQUIRED)
 
 find_package(LibKWorkspace CONFIG REQUIRED)
 find_package(Libudev REQUIRED)
-
-find_package(KWinDBusInterface)
-set_package_properties(KWinDBusInterface PROPERTIES DESCRIPTION "KWin DBus interface"
-    TYPE REQUIRED
-    PURPOSE "Needed for virtual keyboard toggle button"
-)
 
 include(CheckIncludeFiles)
 
@@ -119,7 +110,6 @@ add_subdirectory(containments)
 add_subdirectory(quicksettings)
 add_subdirectory(kcms)
 add_subdirectory(kded)
-add_subdirectory(kwin)
 add_subdirectory(envmanager)
 add_subdirectory(initialstart)
 add_subdirectory(layout-templates)
