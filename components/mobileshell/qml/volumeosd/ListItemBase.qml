@@ -21,16 +21,21 @@ import org.kde.plasma.private.volume 0.1
 import "icon.js" as Icon
 
 // adapted from https://invent.kde.org/plasma/plasma-pa/-/blob/master/applet/contents/ui/ListItemBase.qml
-Controls.ItemDelegate {
+Controls.Control {
     id: baseItem
 
     property string label
     property alias listIcon: clientIcon.source
     property string type // sink, source, source-output
 
-    onClicked: {
-        if (selectButton.visible) {
-            model.PulseObject.default = true;
+    MouseArea {
+        id: clickArea
+        anchors.fill: parent
+        z: -1
+        onClicked: {
+            if (selectButton.visible) {
+                model.PulseObject.default = true;
+            }
         }
     }
 
@@ -119,7 +124,6 @@ Controls.ItemDelegate {
                                 return sourceView.model;
                             }
                         }
-                        onVisibleChanged: window.suppressActiveClose = visible
                     }
                 }
             }
@@ -127,6 +131,18 @@ Controls.ItemDelegate {
             RowLayout {
                 Layout.fillWidth: true
                 spacing: Kirigami.Units.smallSpacing
+
+                PlasmaComponents.ToolButton {
+                    icon.name: Icon.name(Volume / PulseAudio.NormalVolume * 100.0, Muted)
+                    text: Muted ? i18n("Unmute") : i18n("Mute")
+                    display: Controls.AbstractButton.IconOnly
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
+                    Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
+                    onClicked: {
+                        Muted = !Muted
+                    }
+                }
 
                 // this slider was effectively copied from the source (linked at the top of the file)
                 PlasmaComponents.Slider {

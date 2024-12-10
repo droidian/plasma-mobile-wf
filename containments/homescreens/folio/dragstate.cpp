@@ -238,6 +238,9 @@ void DragState::onDelegateDragPositionChanged()
     // stop the favourites insertion timer if the delegate has moved out
     if (!inFavouritesArea) {
         m_favouritesInsertBetweenTimer->stop();
+
+        // clear any ghost entries in the favourites model
+        m_homeScreen->favouritesModel()->deleteGhostEntry();
     }
 
     if (inFavouritesArea || inFolder) {
@@ -590,7 +593,7 @@ void DragState::onChangePageTimerFinished()
         // if we are at the left edge, go left
         int page = m_state->currentPage() - 1;
         if (page >= 0) {
-            m_state->goToPage(page);
+            m_state->goToPage(page, false);
         }
 
     } else if (qAbs(rightPagePosition - x) <= PAGE_CHANGE_THRESHOLD) {
@@ -604,7 +607,7 @@ void DragState::onChangePageTimerFinished()
 
         // go to page if it exists
         if (page < pageListModel->rowCount()) {
-            m_state->goToPage(page);
+            m_state->goToPage(page, false);
         }
     }
 }
@@ -691,7 +694,7 @@ void DragState::onChangeFolderPageTimerFinished()
         // if we are at the left edge, go left
         int page = m_state->currentFolderPage() - 1;
         if (page >= 0) {
-            m_state->goToFolderPage(page);
+            m_state->goToFolderPage(page, false);
         }
 
     } else if (x >= rightPagePosition - PAGE_CHANGE_THRESHOLD) {
@@ -700,7 +703,7 @@ void DragState::onChangeFolderPageTimerFinished()
 
         // go to page if it exists
         if (page < folder->applications()->numTotalPages()) {
-            m_state->goToFolderPage(page);
+            m_state->goToFolderPage(page, false);
         }
     }
 }

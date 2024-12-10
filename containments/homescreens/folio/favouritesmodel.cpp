@@ -24,24 +24,6 @@ FavouritesModel::FavouritesModel(HomeScreen *parent)
     : QAbstractListModel{parent}
     , m_homeScreen{parent}
 {
-    connect(m_homeScreen->homeScreenState(), &HomeScreenState::pageWidthChanged, this, [this]() {
-        evaluateDelegatePositions(true);
-    });
-    connect(m_homeScreen->homeScreenState(), &HomeScreenState::pageHeightChanged, this, [this]() {
-        evaluateDelegatePositions(true);
-    });
-    connect(m_homeScreen->homeScreenState(), &HomeScreenState::pageCellWidthChanged, this, [this]() {
-        evaluateDelegatePositions(true);
-    });
-    connect(m_homeScreen->homeScreenState(), &HomeScreenState::pageCellHeightChanged, this, [this]() {
-        evaluateDelegatePositions(true);
-    });
-    connect(m_homeScreen->homeScreenState(), &HomeScreenState::favouritesBarLocationChanged, this, [this]() {
-        evaluateDelegatePositions(true);
-    });
-    connect(m_homeScreen->homeScreenState(), &HomeScreenState::pageOrientationChanged, this, [this]() {
-        evaluateDelegatePositions(true);
-    });
 }
 
 int FavouritesModel::rowCount(const QModelIndex &parent) const
@@ -59,8 +41,6 @@ QVariant FavouritesModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case DelegateRole:
         return QVariant::fromValue(m_delegates.at(index.row()).delegate);
-    case XPositionRole:
-        return QVariant::fromValue(m_delegates.at(index.row()).xPosition);
     }
 
     return QVariant();
@@ -68,7 +48,7 @@ QVariant FavouritesModel::data(const QModelIndex &index, int role) const
 
 QHash<int, QByteArray> FavouritesModel::roleNames() const
 {
-    return {{DelegateRole, "delegate"}, {XPositionRole, "xPosition"}};
+    return {{DelegateRole, "delegate"}};
 }
 
 void FavouritesModel::removeEntry(int row)
@@ -82,8 +62,6 @@ void FavouritesModel::removeEntry(int row)
     // m_delegates[row].delegate->deleteLater();
     m_delegates.removeAt(row);
     endRemoveRows();
-
-    evaluateDelegatePositions();
 
     save();
 }
@@ -108,8 +86,6 @@ void FavouritesModel::moveEntry(int fromRow, int toRow)
         m_delegates.insert(toRow, delegate);
     }
     endMoveRows();
-
-    evaluateDelegatePositions();
 
     save();
 }
@@ -136,21 +112,17 @@ bool FavouritesModel::addEntry(int row, FolioDelegate *delegate)
     if (row == m_delegates.size()) {
         beginInsertRows(QModelIndex(), row, row);
         m_delegates.append({delegate, 0});
-        evaluateDelegatePositions(false);
         endInsertRows();
     } else if (m_delegates[row].delegate->type() == FolioDelegate::None) {
         replaceGhostEntry(delegate);
     } else {
         beginInsertRows(QModelIndex(), row, row);
         m_delegates.insert(row, {delegate, 0});
-        evaluateDelegatePositions(false);
         endInsertRows();
     }
 
     // ensure saves are connected when requested by the delegate
     connectSaveRequests(delegate);
-
-    evaluateDelegatePositions();
 
     save();
 
@@ -171,10 +143,19 @@ bool FavouritesModel::isFull() const
     auto homeScreenState = m_homeScreen->homeScreenState();
     bool isLocationBottom = homeScreenState->favouritesBarLocation() == HomeScreenState::Bottom;
 
+    // we should not include the ghost entry in the delegate count
+    int count = 0;
+    for (const auto &delegate : m_delegates) {
+        if (delegate.delegate->type() == FolioDelegate::None) {
+            continue;
+        }
+        ++count;
+    }
+
     if (isLocationBottom) {
-        return m_delegates.size() >= homeScreenState->pageColumns();
+        return count >= homeScreenState->pageColumns();
     } else {
-        return m_delegates.size() >= homeScreenState->pageRows();
+        return count >= homeScreenState->pageRows();
     }
 }
 
@@ -291,7 +272,6 @@ void FavouritesModel::loadFromJson(QJsonArray arr)
         }
     }
 
-    evaluateDelegatePositions(false);
     endResetModel();
 }
 
@@ -396,25 +376,6 @@ QPointF FavouritesModel::getDelegateScreenPosition(int position) const
     }
     }
     return {0, 0};
-}
-
-void FavouritesModel::evaluateDelegatePositions(bool emitSignal)
-{
-    auto homeScreenState = m_homeScreen->homeScreenState();
-
-    bool isLocationBottom = homeScreenState->favouritesBarLocation() == HomeScreenState::Bottom;
-    qreal cellLength = isLocationBottom ? homeScreenState->pageCellWidth() : homeScreenState->pageCellHeight();
-    qreal startPosition = getDelegateRowStartPos();
-    qreal currentPos = startPosition;
-
-    for (int i = 0; i < m_delegates.size(); ++i) {
-        m_delegates[adjustIndex(i)].xPosition = qRound(currentPos);
-        currentPos += cellLength;
-    }
-
-    if (emitSignal) {
-        Q_EMIT dataChanged(createIndex(0, 0), createIndex(m_delegates.size() - 1, 0), {XPositionRole});
-    }
 }
 
 qreal FavouritesModel::getDelegateRowStartPos() const

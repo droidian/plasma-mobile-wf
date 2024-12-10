@@ -26,6 +26,10 @@ BaseNotificationItem {
 
     property bool inLockscreen: false
 
+    signal dragStart()
+    signal dragEnd()
+    signal takeFocus()
+
     // notification heading for groups with one element
     NotificationGroupHeader {
         id: notificationHeading
@@ -57,16 +61,19 @@ BaseNotificationItem {
         tapEnabled: notificationItem.hasDefaultAction
         onTapped: notificationItem.actionInvoked("default");
         swipeGestureEnabled: notificationItem.closable
-        onDismissRequested: notificationItem.close()
+        onDismissRequested: notificationItem.close();
+
+        onDragStart: notificationItem.dragStart()
+        onDragEnd: notificationItem.dragEnd()
 
         ColumnLayout {
             id: column
             spacing: 0
 
-
             // notification summary row
             RowLayout {
-                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignRight
+                Layout.fillWidth: summaryLabel.visible
                 Layout.bottomMargin: Kirigami.Units.smallSpacing
 
                 // notification summary
@@ -107,7 +114,7 @@ BaseNotificationItem {
                     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
                     Layout.preferredWidth: column.width - iconContainer.width - Kirigami.Units.smallSpacing
 
-                    text: notificationItem.body
+                    text: ShellUtil.toPlainText(notificationItem.body)
                 }
 
                 // notification icon
@@ -165,6 +172,7 @@ BaseNotificationItem {
                 Layout.fillWidth: true
                 Layout.topMargin: Kirigami.Units.smallSpacing
                 notification: notificationItem
+                onTakeFocus: notificationItem.takeFocus()
             }
 
             // thumbnails

@@ -9,6 +9,7 @@
 
 #include <QObject>
 #include <QQuickItem>
+#include <QQuickWindow>
 #include <qqmlregistration.h>
 
 #include <KConfigWatcher>
@@ -64,6 +65,23 @@ public:
      * Whether the system is using 24 hour format.
      */
     Q_INVOKABLE bool isSystem24HourFormat();
+
+    /**
+     * Set window input to be transparent.
+     */
+    Q_INVOKABLE void setInputTransparent(QQuickWindow *window, bool transparent);
+
+    /**
+     * Sets a region where inputs will get registered on a window.
+     * Inputs outside the region will pass through to the surface below.
+     * Set this to empty to fill the whole window again.
+     */
+    Q_INVOKABLE void setInputRegion(QWindow *window, const QRect &region);
+
+    /**
+     * Converts rich text to plain text.
+     */
+    Q_INVOKABLE QString toPlainText(QString htmlString);
 
 Q_SIGNALS:
     void isSystem24HourFormatChanged();
