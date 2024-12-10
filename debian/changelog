@@ -1,3 +1,11 @@
+plasma-mobile (6.2.4-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update d/control after upstream changes
+  * Update d/copyright after upstream changes
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Tue, 10 Dec 2024 21:56:10 +0100
+
 plasma-mobile (6.2.3-1) unstable; urgency=medium
 
   * New upstream release (Closes: #1035655)
