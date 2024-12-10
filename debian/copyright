@@ -64,6 +64,12 @@ Copyright: 2023 Devin Lin <devin@kde.org>
            2016-2020 The Qt Company Ltd.
 License: GPL-2+
 
+Files: components/mobileshell/qml/notificationpopup/NotificationPopup*
+       components/mobileshell/qml/volumeosd/VolumeChangedPopup.qml
+       shell/contents/updates/6_3_update.js
+Copyright: 2024 Micah Stanley <stanleymicah@proton.me>
+License: GPL-2+
+
 Files: components/mobileshell/qml/widgets/mediacontrols/*
 Copyright: 2016 Kai Uwe Broulik <kde@privat.broulik.de>
            2021-2023 Devin Lin <devin@kde.org>
@@ -187,6 +193,11 @@ Copyright: 2014-2015 Harald Sitter <sitter@kde.org>
            2019 Sefa Eyeoglu <contact@scrumplex.net>
            2021 Devin Lin <devin@kde.org>
 License: GPL-2+
+
+Files: components/mobileshell/qml/volumeosd/PopupCard.qml
+Copyright: 2021 Devin Lin <espidev@gmail.com>
+           2024 Micah Stanley <stanleymicah@proton.me>
+License: GPL-2+
     
 Files: components/mobileshell/qml/volumeosd/VolumeOSD.qml
        initialstart/modules/time/timezonemodel.*
@@ -213,6 +224,11 @@ Files: components/mobileshell/qml/widgets/notifications/*.qml
 Copyright: 2011 Marco Martin <mart@kde.org>
            2014, 2018-2019 Kai Uwe Broulik <kde@privat.broulik.de>
            2021-2024 Devin Lin <devin@kde.org>
+License: GPL-2 OR GPL-3 OR LicenseRef-KDE-Accepted-GPL
+
+Files: components/mobileshell/qml/widgets/notifications/NotificationPopupItem.qml
+Copyright: 2021 Devin Lin <devin@kde.org>
+           2018-2019 Kai Uwe Broulik <kde@privat.broulik.de>
 License: GPL-2 OR GPL-3 OR LicenseRef-KDE-Accepted-GPL
     
 Files: components/mobileshell/qml/widgets/notifications/ThumbnailStrip.qml
