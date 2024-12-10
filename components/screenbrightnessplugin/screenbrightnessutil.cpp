@@ -15,9 +15,6 @@ ScreenBrightnessUtil::ScreenBrightnessUtil(QObject *parent)
                                                                          QDBusConnection::sessionBus(),
                                                                          this);
 
-    fetchBrightness();
-    fetchMaxBrightness();
-
     connect(m_brightnessInterface,
             &org::kde::Solid::PowerManagement::Actions::BrightnessControl::brightnessChanged,
             this,
@@ -27,6 +24,9 @@ ScreenBrightnessUtil::ScreenBrightnessUtil(QObject *parent)
             this,
             &ScreenBrightnessUtil::fetchMaxBrightness);
 
+    fetchBrightness();
+    fetchMaxBrightness();
+
     // watch for brightness interface
     m_brightnessInterfaceWatcher = new QDBusServiceWatcher(QStringLiteral("org.kde.Solid.PowerManagement.Actions.BrightnessControl"),
                                                            QDBusConnection::sessionBus(),
@@ -34,6 +34,8 @@ ScreenBrightnessUtil::ScreenBrightnessUtil(QObject *parent)
                                                            this);
 
     connect(m_brightnessInterfaceWatcher, &QDBusServiceWatcher::serviceRegistered, this, [this]() -> void {
+        fetchBrightness();
+        fetchMaxBrightness();
         Q_EMIT brightnessAvailableChanged();
     });
 

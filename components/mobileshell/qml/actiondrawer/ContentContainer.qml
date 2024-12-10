@@ -14,7 +14,7 @@ import org.kde.plasma.private.mobileshell.quicksettingsplugin as QS
 /**
  * Root element that contains all the ActionDrawer's contents, and is anchored to the screen.
  */
-Rectangle {
+Item {
     id: root
 
     required property var actionDrawer
@@ -30,13 +30,18 @@ Rectangle {
     Kirigami.Theme.colorSet: Kirigami.Theme.View
     Kirigami.Theme.inherit: false
 
+    readonly property alias brightnessPressedValue: quickSettings.brightnessPressedValue
+
     // Background color
-    color: Qt.rgba(Kirigami.Theme.backgroundColor.r,
-                    Kirigami.Theme.backgroundColor.g,
-                    Kirigami.Theme.backgroundColor.b,
-                    (root.actionDrawer.mode == ActionDrawer.Portrait || notificationWidget.hasNotifications) ? 0.95 : 0.9)
-    Behavior on color { ColorAnimation { duration: Kirigami.Units.longDuration } }
-    opacity: Math.max(0, Math.min(1, actionDrawer.offset / root.minimizedQuickSettingsOffset))
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(Kirigami.Theme.backgroundColor.r,
+                        Kirigami.Theme.backgroundColor.g,
+                        Kirigami.Theme.backgroundColor.b,
+                        (root.actionDrawer.mode == ActionDrawer.Portrait || notificationWidget.hasNotifications) ? 0.95 : 0.9)
+        Behavior on color { ColorAnimation { duration: Kirigami.Units.longDuration; easing.type: Easing.OutQuad } }
+        opacity: Math.max(0, Math.min(brightnessPressedValue, actionDrawer.offset / root.minimizedQuickSettingsOffset))
+    }
 
     // Layout that switches between landscape and portrait mode
     Loader {
@@ -105,11 +110,15 @@ Rectangle {
 
         // security reasons, system tray also doesn't work on lockscreen
         disableSystemTray: root.actionDrawer.restrictedPermissions
+
+        opacity: brightnessPressedValue
     }
 
     property MobileShell.MediaControlsWidget mediaControlsWidget: MobileShell.MediaControlsWidget {
         id: mediaWidget
         inActionDrawer: true
+
+        opacity: brightnessPressedValue
     }
 
     property MobileShell.NotificationsWidget notificationsWidget: MobileShell.NotificationsWidget {
@@ -119,6 +128,8 @@ Rectangle {
         notificationSettings: root.actionDrawer.notificationSettings
         actionsRequireUnlock: root.actionDrawer.restrictedPermissions
         onUnlockRequested: root.actionDrawer.permissionsRequested()
+
+        opacity: brightnessPressedValue
 
         Connections {
             target: root.actionDrawer

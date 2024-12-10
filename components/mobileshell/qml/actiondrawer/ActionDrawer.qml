@@ -10,6 +10,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
 
+import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.private.nanoshell 2.0 as NanoShell
 import org.kde.plasma.private.mobileshell as MobileShell
@@ -202,7 +203,6 @@ Item {
                 // go back to pinned, or close if pinned mode is disabled
                 openToPinnedMode ? open() : close();
             }
-
         } else if (root.direction === MobileShell.Direction.Down) {
             // if drag is between pinned view and open view, and dragging down
             open();
@@ -273,9 +273,35 @@ Item {
         mode: MobileShell.SwipeArea.VerticalOnly
         anchors.fill: parent
 
-        function startSwipe() {
+
+        function startSwipeWithPoint(point) {
             root.cancelAnimations();
             root.dragging = true;
+
+            // Immediately open action drawer if we interact with it and it's already open
+            // This allows us to have 2 quick flicks from minimized -> expanded
+            if (root.intendedToBeVisible && !root.opened) {
+                root.opened = true;
+            }
+
+            // if the user swiped from the top left, otherwise it's from the top right
+            if (!root.intendedToBeVisible) {
+                if (point.x < root.width / 2) {
+                    root.openToPinnedMode = ShellSettings.Settings.actionDrawerTopLeftMode == ShellSettings.Settings.Pinned;
+                } else {
+                    root.openToPinnedMode = ShellSettings.Settings.actionDrawerTopRightMode == ShellSettings.Settings.Pinned;
+                }
+
+                if (root.intendedToBeVisible) {
+                    // ensure the action drawer state is consistent
+                    root.closeImmediately();
+                }
+
+                actionDrawer.offset = 0;
+                actionDrawer.oldOffset = 0;
+
+                intendedToBeVisible = true;
+            }
         }
 
         function endSwipe() {
@@ -287,7 +313,7 @@ Item {
             root.offset += deltaY;
         }
 
-        onSwipeStarted: startSwipe()
+        onSwipeStarted: (point) => startSwipeWithPoint(point)
         onSwipeEnded: endSwipe()
         onSwipeMove: (totalDeltaX, totalDeltaY, deltaX, deltaY) => moveSwipe(totalDeltaX, totalDeltaY, deltaX, deltaY)
 
@@ -298,6 +324,8 @@ Item {
         ContentContainer {
             id: contentContainer
             anchors.fill: parent
+
+            opacity: root.opened || swipeArea.moving || drawerAnimation.running ||  root.offset > 0 || root.intendedToBeVisible ? 1 : 0
 
             actionDrawer: root
             quickSettingsModel: root.quickSettingsModel

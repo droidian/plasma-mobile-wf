@@ -17,9 +17,29 @@ import org.kde.plasma.private.mobileshell.screenbrightnessplugin as ScreenBright
 Item {
     id: root
     implicitHeight: brightnessRow.implicitHeight
+    visible: screenBrightness.brightnessAvailable
+
+    property double brightnessPressedValue: 1
+    Behavior on brightnessPressedValue {
+        NumberAnimation {
+            duration: Kirigami.Units.longDuration
+            easing.type: Easing.OutQuad
+        }
+    }
 
     ScreenBrightness.ScreenBrightnessUtil {
         id: screenBrightness
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        anchors.leftMargin: -Kirigami.Units.smallSpacing
+        anchors.rightMargin: -Kirigami.Units.smallSpacing
+        anchors.topMargin: -Kirigami.Units.smallSpacing * 2
+        anchors.bottomMargin: -Kirigami.Units.smallSpacing * 2
+
+        color: Kirigami.Theme.backgroundColor
+        radius: Kirigami.Units.cornerRadius
     }
 
     RowLayout {
@@ -45,6 +65,26 @@ Item {
             to: screenBrightness.maxBrightness
             value: screenBrightness.brightness
             onMoved: screenBrightness.brightness = value;
+
+            onPressedChanged: {
+                if (pressed) {
+                    brightnessPressedTimer.restart();
+                } else{
+                    brightnessPressedTimer.stop();
+                    brightnessPressedValue = 1;
+                }
+            }
+
+            Timer {
+                id: brightnessPressedTimer
+                interval: 200
+                repeat: false
+                onTriggered: {
+                    if (brightnessSlider.pressed) {
+                        brightnessPressedValue = 0;
+                    }
+                }
+            }
 
             // HACK: for some reason, the slider initial value doesn't set without being done after the component completes loading
             Timer {

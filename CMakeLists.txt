@@ -7,10 +7,10 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(plasma-mobile)
-set(PROJECT_VERSION "6.2.3")
+set(PROJECT_VERSION "6.2.4")
 set(PROJECT_VERSION_MAJOR 6)
 
-set(PROJECT_DEP_VERSION "6.2.3")
+set(PROJECT_DEP_VERSION "6.2.4")
 set(QT_MIN_VERSION "6.7.0")
 set(KF6_MIN_VERSION "6.5.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
@@ -54,6 +54,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED
     Quick
     Gui
     Sensors
+    WaylandClient
 )
 
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
@@ -93,6 +94,8 @@ find_package(XCB REQUIRED COMPONENTS XCB)
 find_package(KWin ${PROJECT_DEP_VERSION} REQUIRED COMPONENTS
     kwin
 )
+
+find_package(LayerShellQt REQUIRED)
 
 find_package(LibKWorkspace CONFIG REQUIRED)
 find_package(Libudev REQUIRED)

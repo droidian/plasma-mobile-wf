@@ -9,6 +9,8 @@ import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 Loader {
     id: root
 
+    property var currentWindow
+
     function run(window) {
         // HACK: don't maximize xwaylandvideobridge
         // see: https://invent.kde.org/plasma/plasma-mobile/-/issues/324
@@ -26,6 +28,9 @@ Loader {
             if (!window.fullScreen) {
                 const output = window.output;
                 const desktop = window.desktops[0]; // assume it's the first desktop that the window is on
+                if (desktop === undefined) {
+                    return;
+                }
                 const maximizeRect = KWinComponents.Workspace.clientArea(KWinComponents.Workspace.MaximizeArea, output, desktop);
 
                 // set the window to the maximized size and position instantly, avoiding race condition
@@ -41,6 +46,27 @@ Loader {
                 // run maximize after to ensure the state is maximized
                 window.setMaximize(true, true);
             }
+        }
+    }
+
+    Connections {
+        target: currentWindow
+
+        function onFullScreenChanged() {
+            currentWindow.interactiveMoveResizeFinished.connect((currentWindow) => {
+                root.run(currentWindow);
+            });
+            root.run(currentWindow);
+        }
+
+        function onMaximizedChanged() {
+            if (!currentWindow.maximizable) {
+                return;
+            }
+            currentWindow.interactiveMoveResizeFinished.connect((currentWindow) => {
+                root.run(currentWindow);
+            });
+            root.run(currentWindow);
         }
     }
 
@@ -63,6 +89,16 @@ Loader {
 
         function onWindowAdded(window) {
             if (window.normalWindow) {
+                window.interactiveMoveResizeFinished.connect((window) => {
+                    root.run(window);
+                });
+                root.run(window);
+            }
+        }
+
+        function onWindowActivated(window) {
+            if (window.normalWindow) {
+                currentWindow = window;
                 window.interactiveMoveResizeFinished.connect((window) => {
                     root.run(window);
                 });

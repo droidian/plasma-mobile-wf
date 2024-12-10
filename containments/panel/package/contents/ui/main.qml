@@ -83,7 +83,7 @@ ContainmentItem {
     Binding {
         target: MobileShellState.ShellDBusClient
         property: "isActionDrawerOpen"
-        value: drawer.visible
+        value: drawer.intendedToBeVisible
     }
 
 //END API implementation
@@ -95,6 +95,8 @@ ContainmentItem {
         // HACK: we need to initialize the DBus server somewhere, it might as well be here...
         // initialize the volume osd, and volume keys
         MobileShell.VolumeOSDProviderLoader.load();
+        // initialize notification popups
+        MobileShell.NotificationPopupProviderLoader.load();
     }
 
     MobileShell.StartupFeedbackPanelFill {
@@ -118,13 +120,6 @@ ContainmentItem {
 
         showDropShadow: !root.showingApp
         backgroundColor: !root.showingApp ? "transparent" : root.backgroundColor
-    }
-
-    // swiping area for swipe-down drawer
-    MobileShell.ActionDrawerOpenSurface {
-        id: swipeArea
-        actionDrawer: drawer.actionDrawer
-        anchors.fill: parent
     }
 
     // swipe-down drawer component
