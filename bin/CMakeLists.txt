@@ -5,6 +5,9 @@
 configure_file(startplasmamobile.in ${CMAKE_CURRENT_BINARY_DIR}/startplasmamobile)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/startplasmamobile DESTINATION ${KDE_INSTALL_BINDIR})
 
+configure_file(startplasmamobile-wf.in ${CMAKE_CURRENT_BINARY_DIR}/startplasmamobile-wf)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/startplasmamobile-wf DESTINATION ${KDE_INSTALL_BINDIR})
+
 configure_file(plasma-mobile.desktop.cmake ${CMAKE_CURRENT_BINARY_DIR}/plasma-mobile.desktop)
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/plasma-mobile.desktop
