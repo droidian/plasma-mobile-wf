@@ -109,3 +109,11 @@ Description: Components to improve the Plasma mobile UX on touch devices
   - Setting the default look-and-feel package
   - Set the default keyboard to maliit-keyboard
   - Prevent some unneeded applications from showing in the app list
+
+Package: plasma-mobile-wf-config-hwcomposer
+Architecture: all
+Pre-Depends: plasma-mobile-wf, libhybris
+Depends: ${misc:Depends},
+         halium-wrappers (>= 10),
+Description: APT configurations for droidian
+ This package contains configurations required to start plasma-mobile-wf on hwcomposer
