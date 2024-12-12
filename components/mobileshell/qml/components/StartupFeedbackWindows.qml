@@ -10,6 +10,7 @@ import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 import org.kde.plasma.private.mobileshell.state as MobileShellState
 import org.kde.plasma.private.nanoshell 2.0 as NanoShell
+import org.kde.plasma.private.mobileshell.wayfireipcplugin as WayfireIpcPlugin
 
 Item {
     id: root
@@ -26,6 +27,13 @@ Item {
 
     Component.onCompleted: {
         repeater.model.setFilterFixedString(root.screen);
+    }
+
+    Connections {
+        target: WayfireIpcPlugin.WayfireIPC
+        function onViewMapped(appId: string) {
+            MobileShellState.ShellDBusObject.startupFeedbackModel.viewMapped(appId);
+        }
     }
 
     Repeater {
