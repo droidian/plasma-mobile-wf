@@ -31,7 +31,8 @@ ConditionPathExists=/dev/tty0
 
 [Service]
 Environment=LANG=C.UTF-8
-ExecStart=/usr/bin/startplasmamobile
+Environment=XDG_SESSION_TYPE=wayland
+ExecStart=/usr/bin/startplasmamobile-wf
 TimeoutStartSec=30
 User=1000
 PAMName=login

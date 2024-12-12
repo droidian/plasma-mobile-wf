@@ -1,0 +1,19 @@
+#!/bin/sh
+
+check_wayfire_config()
+{
+    if [ ! -e  /home/$USER/.config/Droidian/plasma-mobile-wf.ini ]; then
+        cp /usr/share/plasma-mobile-wf/plasma-mobile-wf.ini /home/$USER/.config/Droidian/plasma-mobile-wf.ini
+        chmod u+w /home/$USER/.config/Droidian/plasma-mobile-wf.ini
+    fi
+
+    return 0
+}
+
+export KSCREEN_BACKEND=KSC_QScreen.so
+export KSCREEN_BACKEND_INPROCESS=KSC_QScreen.so
+export KDE_NO_KWIN=1
+
+check_wayfire_config
+
+exec dbus-run-session wayfire -c /home/$USER/.config/Droidian/plasma-mobile-wf.ini
