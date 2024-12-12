@@ -229,6 +229,49 @@ void StartupFeedbackModel::onActiveWindowChanged(KWayland::Client::PlasmaWindow 
     updateActiveWindowIsStartupFeedback();
 }
 
+void StartupFeedbackModel::viewMapped(QString appId)
+{
+    int indexToRemove = 0;
+    bool matched = false;
+
+    // storageId may get suffixed with ".desktop", check for that
+    const QString suffix = QStringLiteral(".desktop");
+
+    // Remove StartupFeedback when the respective window is created
+    // NOTE: often, the window "appId" does not match the actual app storageId in third-party apps, so we can't rely on this.
+    for (int i = 0; i < m_list.size(); ++i) {
+        auto *startupFeedback = m_list[i];
+        if (startupFeedback->storageId() == appId || startupFeedback->storageId() == appId + suffix) {
+            matched = true;
+            indexToRemove = i;
+            break;
+        }
+    }
+
+    // If no windows were matched, the oldest StartupFeedback (since indexToRemove = 0)
+    // NOTE: This is our fallback if the window "appId" doesn't match anything.
+
+    if (m_list.size() > indexToRemove && matched) {
+        StartupFeedback *feedbackToRemove = m_list[indexToRemove];
+
+        // Function to remove the startup feedback from the model
+        auto removeFunction = [this, feedbackToRemove]() {
+            int indexToRemove = m_list.indexOf(feedbackToRemove);
+
+            if (indexToRemove != -1) {
+                beginRemoveRows(QModelIndex{}, indexToRemove, indexToRemove);
+
+                m_list[indexToRemove]->deleteLater();
+                m_list.removeAt(indexToRemove);
+                updateActiveWindowIsStartupFeedback();
+
+                endRemoveRows();
+            }
+        };
+        removeFunction();
+    }
+}
+
 void StartupFeedbackModel::updateActiveWindowIsStartupFeedback()
 {
     bool isStartupFeedback = false;
