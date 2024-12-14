@@ -158,13 +158,13 @@ Window {
                     y: flickable.offset
                 }
 
-                AudioApplet {
-                    id: applet
-                    Layout.topMargin: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 3
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: cards.width
-                    scale: flickable.scale
-                }
+                // AudioApplet {
+                //     id: applet
+                //     Layout.topMargin: Kirigami.Units.gridUnit + Kirigami.Units.smallSpacing * 3
+                //     Layout.alignment: Qt.AlignHCenter
+                //     Layout.preferredWidth: cards.width
+                //     scale: flickable.scale
+                // }
 
                 PopupCard {
                     id: settings
