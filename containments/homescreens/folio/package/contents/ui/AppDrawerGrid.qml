@@ -106,6 +106,10 @@ MobileShell.GridView {
                 model.delegate.application.storageId
             );
         }
+
+        onClicked: {
+            folio.HomeScreenState.closeAppDrawer();
+        }
     }
 
     PC3.ScrollBar.vertical: PC3.ScrollBar {
