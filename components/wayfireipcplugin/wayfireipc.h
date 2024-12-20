@@ -8,6 +8,8 @@
 
 #include <QLocalSocket>
 #include <QDataStream>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class WayfireIPC : public QObject
 {
@@ -17,6 +19,7 @@ class WayfireIPC : public QObject
 
 public:
     WayfireIPC(QObject *parent = nullptr);
+    void setFullscreen(int viewId, bool state);
     
 Q_SIGNALS:
     void viewMapped(QString appId);
@@ -25,6 +28,8 @@ private Q_SLOTS:
     void onReadData();
 
 private:
+    void sendMessage(QJsonDocument jsonDoc);
+
     QLocalSocket *m_wfsocket = nullptr;
     QDataStream m_in;
 };
