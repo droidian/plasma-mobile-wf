@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <QDebug>
-#include <QJsonDocument>
-#include <QJsonObject>
 
 #include "wayfireipc.h"
 
@@ -24,14 +22,22 @@ WayfireIPC::WayfireIPC(QObject *parent)
 
     QJsonObject jsonObj { {"method", "window-rules/events/watch"}, };
     QJsonDocument jsonDoc = QJsonDocument(jsonObj);
+    sendMessage(jsonDoc);
+}
 
-    std::string msgString = jsonDoc.toJson(QJsonDocument::Compact).toStdString();
+void WayfireIPC::setFullscreen(int viewId, bool state)
+{
+    QJsonObject msgObj;
+    QJsonObject dataObj;
+    
+    dataObj["view_id"] = viewId;
+    dataObj["state"] = state;
 
-    QDataStream out;
-    out.setDevice(m_wfsocket);
-    out.setVersion(QDataStream::Qt_6_7);
-    out.setByteOrder(QDataStream::LittleEndian);
-    out.writeBytes(msgString.c_str(), msgString.size());
+    msgObj["method"] = "wm-actions/set-fullscreen";
+    msgObj["data"] = dataObj;
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
 }
 
 void WayfireIPC::onReadData()
@@ -44,10 +50,28 @@ void WayfireIPC::onReadData()
 
         QJsonDocument msg = QJsonDocument::fromJson(QString(data).toUtf8());
 
-        if(msg.object().value("event") == "view-mapped")
-            Q_EMIT viewMapped(msg.object().value("view").toObject().value("app-id").toString());
+        QString event = msg.object().value("event").toString();
+        QString appId = msg.object().value("view").toObject().value("app-id").toString();
+        int viewId = msg.object().value("view").toObject().value("id").toInt();
+
+        if(event == "view-mapped" && appId != ""){
+            Q_EMIT viewMapped(appId);
+        } else if(event == "view-focused" && appId == "org.kde.polkit-kde-authentication-agent-1"){
+            setFullscreen(viewId, false);
+        }
 
         bytesToRead = m_wfsocket->bytesAvailable();
         delete data;
     }
+}
+
+void WayfireIPC::sendMessage(QJsonDocument jsonDoc)
+{
+    std::string msgString = jsonDoc.toJson(QJsonDocument::Compact).toStdString();
+
+    QDataStream out;
+    out.setDevice(m_wfsocket);
+    out.setVersion(QDataStream::Qt_6_7);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.writeBytes(msgString.c_str(), msgString.size());
 }
