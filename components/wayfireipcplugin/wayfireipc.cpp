@@ -15,14 +15,16 @@ WayfireIPC::WayfireIPC(QObject *parent)
 
     connect(m_wfsocket, &QLocalSocket::readyRead, this, &WayfireIPC::onReadData);
 
-    m_wfsocket->connectToServer("/tmp/wayfire-wayland-1.socket");
-    if (m_wfsocket->waitForConnected(1000)){
-        qDebug()<<"Connected to wayfire socket!";
-    }
+    QString socket_str = qgetenv("WAYFIRE_SOCKET");
 
-    QJsonObject jsonObj { {"method", "window-rules/events/watch"}, };
-    QJsonDocument jsonDoc = QJsonDocument(jsonObj);
-    sendMessage(jsonDoc);
+    if (socket_str != "")
+        m_wfsocket->connectToServer(socket_str);
+    
+    if (m_wfsocket->waitForConnected(1000)){
+        QJsonObject jsonObj { {"method", "window-rules/events/watch"}, };
+        QJsonDocument jsonDoc = QJsonDocument(jsonObj);
+        sendMessage(jsonDoc);
+    }
 }
 
 void WayfireIPC::setFullscreen(int viewId, bool state)
