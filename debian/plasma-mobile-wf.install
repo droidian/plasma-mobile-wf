@@ -20,3 +20,4 @@ usr/share/plasma-mobile-apn-info/
 usr/share/polkit-1/actions/org.kde.plasma.mobileshell.flashlighthelper.policy
 usr/share/polkit-1/actions/org.kde.plasma.mobileshell.waydroidhelper.policy
 usr/share/wayland-sessions/plasma-mobile.desktop
+wayfire.ini /usr/share/plasma-mobile-wf/
