@@ -9,6 +9,7 @@ plasma-mobile (6.2.5-1) UNRELEASED; urgency=medium
 
   [ Marco Mattiolo ]
   * New upstream release (6.2.5).
+  * Replaces+Breaks plasma-settings 24.02.0 (Closes: #1092569).
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 11 Jan 2025 16:27:20 +0100
 
