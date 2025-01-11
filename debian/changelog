@@ -1,18 +1,18 @@
-plasma-mobile (6.2.5-1) UNRELEASED; urgency=medium
-  [ Debian Qt/KDE Maintainers ]
-  * New changelog entry.
+plasma-mobile (6.2.5-1) unstable; urgency=medium
+
+  * New upstream release (6.2.5).
   * Change maintainer to the Qt/KDE Team.
   * Update Vcs-* URLs to the new location in the Qt/KDE team’s GitLab
     group.
   * Drop gbp.conf.
   * Simplify packaging by using dh-* build-deps.
-
-  [ Marco Mattiolo ]
-  * New upstream release (6.2.5).
   * Replaces+Breaks plasma-settings 24.02.0 (Closes: #1092569).
   * Update build-deps and deps with the info from cmake.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 11 Jan 2025 16:27:20 +0100
+  [ Aurélien COUDERC ]
+  * Remove upstream source from the packaging repo.
+
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Sat, 11 Jan 2025 17:55:53 +0100
 
 plasma-mobile (6.2.4-1) unstable; urgency=medium
 
