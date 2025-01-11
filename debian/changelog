@@ -5,6 +5,7 @@ plasma-mobile (6.2.5-1) UNRELEASED; urgency=medium
   * Update Vcs-* URLs to the new location in the Qt/KDE team’s GitLab
     group.
   * Drop gbp.conf.
+  * Simplify packaging by using dh-* build-deps.
 
   [ Marco Mattiolo ]
   * New upstream release (6.2.5).
