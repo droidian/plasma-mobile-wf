@@ -86,7 +86,9 @@ Recommends: bluedevil (>= 6.0.0~),
             hfd-service,
             plasma-mobile-tweaks-wf,
             plasma-workspace-wallpapers,
+Replaces: plasma-settings (<< 24.02.0~),
 Breaks: kde-config-mobile-networking (<< 4:6.0.0~),
+        plasma-settings (<< 24.02.0~),
 Description: User interface for phones, based on Plasma technologies
  Plasma Mobile is a graphical user interface and ecosystem targeted at mobile
  devices, built on the KDE Plasma stack.
