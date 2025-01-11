@@ -44,8 +44,8 @@ Build-Depends: cmake (>= 3.16~),
                libkdsingleapplication-qt6-dev,
 Standards-Version: 4.7.0
 Homepage: https://invent.kde.org/plasma/plasma-mobile
-Vcs-Browser: https://salsa.debian.org/DebianOnMobile-team/plasma-mobile
-Vcs-Git: https://salsa.debian.org/DebianOnMobile-team/plasma-mobile.git
+Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile
+Vcs-Git: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile.git
 Rules-Requires-Root: no
 
 Package: plasma-mobile-wf
