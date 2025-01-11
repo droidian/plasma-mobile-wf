@@ -3,6 +3,7 @@ plasma-mobile (6.2.4-1.1) UNRELEASED; urgency=medium
   * Change maintainer to the Qt/KDE Team.
   * Update Vcs-* URLs to the new location in the Qt/KDE team’s GitLab
     group.
+  * Drop gbp.conf.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 11 Jan 2025 16:27:20 +0100
 
