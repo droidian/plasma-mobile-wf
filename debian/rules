@@ -3,7 +3,7 @@
 export DEB_BUILD_MAINT_OPTIONS=hardening=+all
 
 %:
-	dh $@ --with kf6,pkgkde_symbolshelper,sodeps --buildsystem kf6 --without build_stamp
+	dh $@
 
 override_dh_installsystemd:
 	dh_installsystemd --no-restart-on-upgrade
