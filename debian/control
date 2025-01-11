@@ -52,6 +52,7 @@ Build-Depends: cmake (>= 3.16~),
                qt6-declarative-dev (>= 6.7.0~),
                qt6-declarative-private-dev,
                qt6-sensors-dev (>= 6.7.0~),
+               qt6-wayland-dev (>= 6.7.0~),
                qt6-wayland-private-dev (>= 6.7.0~),
                libkdsingleapplication-qt6-dev,
 Standards-Version: 4.7.0
@@ -64,10 +65,7 @@ Package: plasma-mobile-wf
 Architecture: any
 Conflicts: plasma-mobile
 Multi-Arch: foreign
-Depends: ${misc:Depends},
-         ${shlibs:Depends},
-         ${qml6:Depends},
-         kde-style-breeze (>= 4:6.0.0~),
+Depends: kde-style-breeze (>= 4:6.0.0~),
          kf6-breeze-icon-theme,
          layer-shell-qt (>= 6.0.0~),
          maliit-keyboard,
@@ -82,6 +80,9 @@ Depends: ${misc:Depends},
          wayfire,
          libsessionlockqtinterface6,
          libkdsingleapplication-qt6-1.0,
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
 Recommends: bluedevil (>= 6.0.0~),
             hfd-service,
             plasma-mobile-tweaks-wf,
@@ -104,7 +105,7 @@ Package: plasma-mobile-wf-tweaks
 Architecture: all
 Conflicts: plasma-mobile-tweaks
 Multi-Arch: foreign
-Depends: ${misc:Depends}
+Depends: ${misc:Depends},
 Description: Components to improve the Plasma mobile UX on touch devices
  plasma-mobile-tweaks package contains recommended configurations for
  distributions shipping Plasma Mobile by default.
