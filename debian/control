@@ -1,7 +1,7 @@
 Source: plasma-mobile-wf
 Section: kde
 Priority: optional
-Maintainer: DebianOnMobile Maintainers <debian-on-mobile-maintainers@alioth-lists.debian.net>
+Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>,
            Arnaud Ferraris <aferraris@debian.org>,
 Build-Depends: cmake (>= 3.16~),
