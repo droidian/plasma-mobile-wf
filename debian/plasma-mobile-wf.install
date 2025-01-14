@@ -11,3 +11,4 @@ usr/share/plasma/*
 usr/share/plasma-mobile-apn-info/*
 usr/share/wayland-sessions/plasma-mobile.desktop
 wayfire.ini /usr/share/plasma-mobile-wf/
+debian/zz-plasma-vars.sh etc/profile.d/
