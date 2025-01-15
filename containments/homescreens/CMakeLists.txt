@@ -2,4 +2,4 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 add_subdirectory(folio)
-add_subdirectory(halcyon)
+# add_subdirectory(halcyon)
