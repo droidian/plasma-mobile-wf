@@ -29,4 +29,4 @@ QT_QPA_PLATFORM=offscreen plasma-mobile-envmanager --apply-settings
 # start the shell
 export PLASMA_DEFAULT_SHELL=org.kde.plasma.mobileshell
 systemctl --user start plasma-mobile-wf.target
-startplasma-wayland --xwayland --inputmethod maliit-keyboard
+startplasma-wayland 2>&1 | systemd-cat -t plasma-mobile-wf
