@@ -113,6 +113,7 @@ Description: Components to improve the Plasma mobile UX on touch devices
 
 Package: plasma-mobile-wf-config-hwcomposer
 Architecture: all
+Conflicts: phosh-config-hwcomposer
 Pre-Depends: plasma-mobile-wf, libhybris
 Depends: ${misc:Depends},
          halium-wrappers (>= 10),
