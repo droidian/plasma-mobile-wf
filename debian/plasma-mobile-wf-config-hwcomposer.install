@@ -1,1 +1,2 @@
 plasma-mobile-wf.service.d/* /usr/lib/systemd/system/plasma-mobile-wf.service.d/
+android-service@hwcomposer.service.d/* /usr/lib/systemd/system/android-service@hwcomposer.service.d/
