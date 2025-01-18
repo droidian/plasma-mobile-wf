@@ -17,6 +17,8 @@ import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 
 import org.kde.kirigami as Kirigami
 
+import org.kde.plasma.private.mobileshell.wayfireipcplugin as WayfireIpcPlugin
+
 MobileShell.NavigationPanel {
     id: root
     required property bool opaqueBar
@@ -63,7 +65,8 @@ MobileShell.NavigationPanel {
         iconSizeFactor: 0.75
 
         onTriggered: {
-            Plasmoid.triggerTaskSwitcher();
+            WayfireIpcPlugin.WayfireIPC.toggleScale();
+            //Plasmoid.triggerTaskSwitcher();
         }
     }
 

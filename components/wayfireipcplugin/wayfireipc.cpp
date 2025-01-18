@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Alexander Rutz <arpio@droidian.org>
+// SPDX-FileCopyrightText: 2024 Deepak Kumar <notwho53@gmail.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <QDebug>
@@ -42,6 +43,15 @@ void WayfireIPC::setFullscreen(int viewId, bool state)
     sendMessage(jsonDoc);
 }
 
+void WayfireIPC::toggleScale()
+{
+    QJsonObject msgObj;
+    msgObj["method"] = "scale/toggle";
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
+}
+
 void WayfireIPC::onReadData()
 {
     qint64 bytesToRead = m_wfsocket->bytesAvailable();
@@ -70,6 +80,7 @@ void WayfireIPC::onReadData()
 void WayfireIPC::sendMessage(QJsonDocument jsonDoc)
 {
     std::string msgString = jsonDoc.toJson(QJsonDocument::Compact).toStdString();
+    qDebug() << "Sending message:" << QString::fromStdString(msgString);
 
     QDataStream out;
     out.setDevice(m_wfsocket);
