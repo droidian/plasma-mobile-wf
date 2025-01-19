@@ -20,8 +20,13 @@ class WayfireIPC : public QObject
 
 public:
     WayfireIPC(QObject *parent = nullptr);
+
+    bool anyAppFocused = false;
+
     void setFullscreen(int viewId, bool state);
     Q_INVOKABLE void toggleScale();
+    Q_INVOKABLE void toggleShowDesktop();
+    Q_INVOKABLE bool isAnyAppFocused();
     
 Q_SIGNALS:
     void viewMapped(QString appId);

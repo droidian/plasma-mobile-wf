@@ -43,6 +43,16 @@ void WayfireIPC::setFullscreen(int viewId, bool state)
     sendMessage(jsonDoc);
 }
 
+void WayfireIPC::toggleShowDesktop()
+{
+    QJsonObject msgObj;
+    msgObj["method"] = "wm-actions/plamo_showdesktop";
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
+    anyAppFocused = false;
+}
+
 void WayfireIPC::toggleScale()
 {
     QJsonObject msgObj;
@@ -50,6 +60,11 @@ void WayfireIPC::toggleScale()
 
     QJsonDocument jsonDoc = QJsonDocument(msgObj);
     sendMessage(jsonDoc);
+}
+
+bool WayfireIPC::isAnyAppFocused()
+{
+    return anyAppFocused;
 }
 
 void WayfireIPC::onReadData()
@@ -68,8 +83,11 @@ void WayfireIPC::onReadData()
 
         if(event == "view-mapped" && appId != ""){
             Q_EMIT viewMapped(appId);
-        } else if(event == "view-focused" && appId == "org.kde.polkit-kde-authentication-agent-1"){
-            setFullscreen(viewId, false);
+        } else if(event == "view-focused" && appId != ""){
+            anyAppFocused = true;
+            if (appId == "org.kde.polkit-kde-authentication-agent-1") {
+                setFullscreen(viewId, false);
+            }
         }
 
         bytesToRead = m_wfsocket->bytesAvailable();
