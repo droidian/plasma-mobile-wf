@@ -80,7 +80,11 @@ MobileShell.NavigationPanel {
         iconSizeFactor: 1
 
         onTriggered: {
-            MobileShellState.ShellDBusClient.openHomeScreen();
+            if (WayfireIpcPlugin.WayfireIPC.isAnyAppFocused()) {
+                WayfireIpcPlugin.WayfireIPC.toggleShowDesktop();
+            } else {
+                MobileShellState.ShellDBusClient.openHomeScreen();
+            }
         }
     }
 
