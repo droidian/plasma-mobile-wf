@@ -119,3 +119,26 @@ Depends: ${misc:Depends},
          halium-wrappers (>= 10),
 Description: APT configurations for droidian
  This package contains configurations required to start plasma-mobile-wf on hwcomposer
+
+Package: libsessionlockqtinterface6-dev
+Architecture: any
+Section: libdevel
+Depends: libsessionlockqtinterface6 (= ${binary:Version}),
+         qt6-base-dev,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: use the Wayland ext-session-lock-v1 protocol - development files
+ Qt component to allow a privileged Wayland client to lock the session
+ and display arbitrary graphics while the session is locked.
+ .
+ This package includes the development files.
+
+Package: libsessionlockqtinterface6
+Architecture: any
+Section: libs
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Description: use the Wayland ext-session-lock-v1 protocol - run-time library
+ Qt component to allow a privileged Wayland client to lock the session
+ and display arbitrary graphics while the session is locked.
+ .
+ This package includes the library.
