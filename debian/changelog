@@ -12,6 +12,9 @@ plasma-mobile (6.2.5-1) UNRELEASED; urgency=medium
   * Replaces+Breaks plasma-settings 24.02.0 (Closes: #1092569).
   * Update build-deps and deps with the info from cmake.
 
+  [ Aurélien COUDERC ]
+  * Remove upstream source from the packaging repo.
+
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 11 Jan 2025 16:27:20 +0100
 
 plasma-mobile (6.2.4-1) unstable; urgency=medium
