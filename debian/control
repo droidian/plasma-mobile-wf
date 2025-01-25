@@ -55,6 +55,7 @@ Build-Depends: cmake (>= 3.16~),
                qt6-wayland-dev (>= 6.7.0~),
                qt6-wayland-private-dev (>= 6.7.0~),
                libkdsingleapplication-qt6-dev,
+               libdroid-dev,
 Standards-Version: 4.7.0
 Homepage: https://invent.kde.org/plasma/plasma-mobile
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile
