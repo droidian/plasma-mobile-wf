@@ -16,6 +16,8 @@ import org.kde.coreaddons 1.0 as KCoreAddons
 
 import org.kde.plasma.private.sessions 2.0
 
+import org.kde.plasma.private.mobileshell as MobileShell
+
 Item {
     id: root
 
@@ -141,6 +143,7 @@ Item {
                 onClicked: {
                     closeAnim.closeToBlack = true;
                     closeAnim.execute(root.rebootRequested);
+                    MobileShell.ShellUtil.executeCommand("systemctl reboot");
                 }
             }
 
@@ -150,15 +153,17 @@ Item {
                 onClicked: {
                     closeAnim.closeToBlack = true;
                     closeAnim.execute(root.haltRequested);
+                    MobileShell.ShellUtil.executeCommand("systemctl poweroff");
                 }
             }
 
             ActionButton {
                 iconSource: "system-log-out"
-                text: i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Log Out")
+                text: "Restart Wayfire"
                 onClicked: {
                     closeAnim.closeToBlack = true;
                     closeAnim.execute(root.logoutRequested);
+                    MobileShell.ShellUtil.executeCommand("systemctl restart plasma-mobile-wf");
                 }
             }
         }
