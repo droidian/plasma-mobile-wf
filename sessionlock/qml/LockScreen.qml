@@ -8,10 +8,11 @@ import QtQuick.Layouts
 
 import org.kde.plasma.core as PlasmaCore
 import org.kde.notificationmanager as Notifications
-import org.kde.plasma.private.mobileshell.dpmsplugin as DPMS
 import org.kde.plasma.components 3.0 as PC3
 
 import org.kde.kirigami 2.12 as Kirigami
+import org.kde.plasma.private.mobileshell.wallpaperimageplugin as WallpaperImagePlugin
+import org.kde.plasma.private.mobileshell.screenbrightnessplugin as ScreenBrightness
 
 /**
  * Lockscreen component that is loaded after the device is locked.
@@ -30,8 +31,11 @@ Item {
 
     property var passwordBar: flickableLoader.item ? flickableLoader.item.passwordBar : null
 
-    Component.onCompleted: {
-        forceActiveFocus();
+    Image {
+        id: wallpaper
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        source: "file:/" + WallpaperImagePlugin.WallpaperPlugin.lockscreenWallpaperPath
     }
 
     // Listen for keyboard events, and focus on input area
@@ -76,19 +80,6 @@ Item {
         }
     }
 
-    // when screen turns off, reset state
-    DPMS.DPMSUtil {
-        id: dpms
-
-        onDpmsTurnedOff: (screen) => {
-            if (screen.name === Screen.name) {
-                if (flickableLoader.item) {
-                    flickableLoader.item.goToClosePosition();
-                }
-                lockScreenState.resetPassword();
-            }
-        }
-    }
 
     Item {
         id: lockscreenContainer
@@ -162,7 +153,7 @@ Item {
                 // Unlock lockscreen if it's already unlocked and keypad is opened
                 onOpened: {
                     if (root.lockScreenState.canBeUnlocked) {
-                        Qt.quit();
+                        //Qt.quit();
                     }
                 }
 
@@ -171,7 +162,6 @@ Item {
                     target: root.lockScreenState
                     function onCanBeUnlockedChanged() {
                         if (root.lockScreenState.canBeUnlocked && flickable.openFactor > 0.8) {
-                            Qt.quit();
                         }
                     }
                 }
@@ -232,7 +222,7 @@ Item {
 
                 Keypad {
                     id: keypad
-                    visible: !root.lockScreenState.canBeUnlocked // don't show for passwordless login
+                    visible: true//!root.lockScreenState.canBeUnlocked // don't show for passwordless login
                     anchors.fill: parent
                     openProgress: flickable.openFactor
                     lockScreenState: root.lockScreenState

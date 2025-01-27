@@ -29,7 +29,6 @@ Item {
         repeat: false
         onTriggered: {
             statusBarLoader.active = true
-            actionDrawerLoader.active = true
         }
     }
 
@@ -85,59 +84,29 @@ Item {
     // Drag down gesture to open action drawer
     MobileShell.ActionDrawerOpenSurface {
         id: swipeArea
-        actionDrawer: actionDrawerLoader.item ? actionDrawerLoader.item.actionDrawer : null
+        actionDrawer: drawer
 
         anchors.fill: statusBarLoader
     }
 
-    // Dynamically load on swipe-down to avoid having to load at start
-    Loader {
-        id: actionDrawerLoader
-        active: false
-        asynchronous: true
-        visible: status == Loader.Ready
-
+    MobileShell.ActionDrawer {
+        id: drawer
         anchors.fill: parent
 
-        sourceComponent: Item {
-            property var actionDrawer: drawer
+        visible: offset !== 0
+        restrictedPermissions: true
 
-            // Action drawer component
-            MobileShell.ActionDrawer {
-                id: drawer
-                anchors.fill: parent
+        notificationSettings: NotificationManager.Settings {}
+        notificationModel: root.notificationsModel
+        notificationModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
 
-                visible: offset !== 0
-                restrictedPermissions: true
+        property bool requestNotificationAction: false
 
-                notificationSettings: NotificationManager.Settings {}
-                notificationModel: root.notificationsModel
-                notificationModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
-
-                property bool requestNotificationAction: false
-
-                // notification button clicked, requesting auth
-                onPermissionsRequested: {
-                    requestNotificationAction = true;
-                    drawer.close();
-                    root.passwordRequested();
-                }
-            }
-
-            // listen to authentication events
-            Connections {
-                target: authenticator
-                function onSucceeded() {
-                    // run pending action if successfully unlocked
-                    if (drawer.requestNotificationAction) {
-                        drawer.runPendingAction();
-                        drawer.requestNotificationAction = false;
-                    }
-                }
-                function onFailed() {
-                    drawer.requestNotificationAction = false;
-                }
-            }
+        // notification button clicked, requesting auth
+        onPermissionsRequested: {
+            requestNotificationAction = true;
+            drawer.close();
+            root.passwordRequested();
         }
     }
 }

@@ -1,0 +1,3 @@
+usr/lib/*/libSessionLockQtInterface.so.6
+usr/lib/*/libSessionLockQtInterface.so.6.*
+usr/lib/*/qt6/plugins/wayland-shell-integration/libext-session-lock-v1.so
