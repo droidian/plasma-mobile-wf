@@ -1,0 +1,3 @@
+usr/include/SessionLockQt/
+usr/lib/*/cmake/SessionLockQt/
+usr/lib/*/libSessionLockQtInterface.so

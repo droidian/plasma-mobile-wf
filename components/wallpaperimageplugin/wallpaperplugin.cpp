@@ -24,7 +24,7 @@ WallpaperPlugin::WallpaperPlugin(QObject *parent)
     , m_homescreenConfig{new QQmlPropertyMap{this}}
     , m_lockscreenConfig{new QQmlPropertyMap{this}}
     , m_homescreenConfigFile{KSharedConfig::openConfig("plasma-org.kde.plasma.mobileshell-appletsrc", KConfig::SimpleConfig)}
-    , m_lockscreenConfigFile{KSharedConfig::openConfig("kscreenlockerrc", KConfig::SimpleConfig)}
+    , m_lockscreenConfigFile{KSharedConfig::openConfig("plamolockrc", KConfig::SimpleConfig)}
 {
     m_lockscreenConfigWatcher = KConfigWatcher::create(m_lockscreenConfigFile);
 
@@ -254,6 +254,12 @@ void WallpaperPlugin::loadLockscreenSettings()
     auto greeterGroup = m_lockscreenConfigFile->group(QStringLiteral("Greeter"));
     m_lockscreenWallpaperPlugin = greeterGroup.readEntry(QStringLiteral("WallpaperPlugin"), QString());
     m_lockscreenWallpaperPath = QString{};
+
+    if(m_lockscreenWallpaperPlugin.isEmpty())
+        setLockscreenWallpaperPlugin(QStringLiteral("org.kde.image"));
+
+    if(m_lockscreenWallpaperPath.isEmpty())
+        setLockscreenWallpaper(QStringLiteral("/usr/share/wallpapers/DebianTheme/contents/images/1920x1080.svg"));
 
     greeterGroup = m_lockscreenConfigFile->group(QStringLiteral("Greeter")).group(QStringLiteral("Wallpaper")).group(m_lockscreenWallpaperPlugin);
 

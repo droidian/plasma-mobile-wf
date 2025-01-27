@@ -4,8 +4,6 @@
 import QtQml
 import QtQuick
 
-import org.kde.kscreenlocker 1.0 as ScreenLocker
-
 QtObject {
     id: root
 
@@ -19,10 +17,10 @@ QtObject {
     property string info: ""
 
     // whether the lockscreen can be unlocked (no password needed, passwordless login)
-    readonly property bool canBeUnlocked: authenticator.unlocked
+    readonly property bool canBeUnlocked: true//authenticator.unlocked
 
     // whether the device can log in with fingerprint
-    readonly property bool isFingerprintSupported: authenticator.authenticatorTypes & ScreenLocker.Authenticator.Fingerprint
+    readonly property bool isFingerprintSupported: false //authenticator.authenticatorTypes & ScreenLocker.Authenticator.Fingerprint
 
     // whether we are in keyboard mode (hiding the numpad)
     property bool isKeyboardMode: false
@@ -35,18 +33,11 @@ QtObject {
     signal unlockSucceeded()
     signal unlockFailed()
 
-    Component.onCompleted: authenticator.startAuthenticating();
-
     function tryPassword() {
-        // ensure it's in authenticating state (it might get unset after suspend)
-        authenticator.startAuthenticating();
-
-        // prevent typing lock when password is empty
         if (root.password !== '') {
             root.waitingForAuth = true;
         }
-        console.log('attempt password');
-        authenticator.respond(root.password);
+        PlamoLock.unlock(root.password);
     }
 
     function resetPassword() {
@@ -63,32 +54,26 @@ QtObject {
         onTriggered: {
             root.waitingForAuth = false;
             root.password = "";
-            authenticator.startAuthenticating();
         }
     }
 
     property var connections: Connections {
-        target: authenticator
+        target: PlamoLock
 
         function onSucceeded() {
-            if (authenticator.hadPrompt) {
-                console.log('login succeeded');
-                root.waitingForAuth = false;
-                root.unlockSucceeded();
-                Qt.quit();
-            }
+            console.log('login succeeded');
+            root.waitingForAuth = false;
+            root.unlockSucceeded();
         }
 
         function onFailed(kind: int): void {
-            if (kind != 0) { // if this is coming from the noninteractive authenticators
-                return;
-            }
             console.log('login failed');
             graceLockTimer.restart();
             root.pinLabel = root.wrongPinLabel;
             root.unlockFailed();
         }
 
+        // TODO
         function onInfoMessageChanged() {
             console.log('info: ' + authenticator.infoMessage);
             root.info += authenticator.infoMessage + " ";
@@ -104,6 +89,7 @@ QtObject {
             console.log('prompt: ' + authenticator.prompt);
         }
 
+        // TODO
         function onPromptForSecretChanged() {
             console.log('prompt secret: ' + authenticator.promptForSecret);
         }

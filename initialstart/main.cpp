@@ -11,6 +11,8 @@
 #include <KAboutData>
 #include <KLocalizedString>
 
+#include <QProcess>
+
 #include "settings.h"
 #include "version.h"
 #include "wizard.h"
@@ -48,6 +50,7 @@ int main(int argc, char *argv[])
         // if the wizard has already been run, or we aren't in plasma mobile
         if (!Settings::self()->shouldStartWizard()) {
             qDebug() << "Wizard will not be started since either it has already been run, or the current session is not Plasma Mobile.";
+            QProcess::startDetached(QStringLiteral("plamolock"), {});
             return 0;
         }
     }

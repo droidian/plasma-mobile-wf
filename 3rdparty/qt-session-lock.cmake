@@ -7,6 +7,10 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
 endif ()
 
+execute_process(COMMAND ${GIT_EXECUTABLE} apply ../fix_apply_configure.patch
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock
+    COMMAND_ERROR_IS_FATAL ANY)
+
 include(GNUInstallDirs)
 include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
