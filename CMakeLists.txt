@@ -48,12 +48,6 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER ${CMAKE_CURRENT_BINARY_DIR}/version.h
 )
 
-find_package(Git REQUIRED)
-
-execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    COMMAND_ERROR_IS_FATAL ANY)
-
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED
     Core
     Qml
