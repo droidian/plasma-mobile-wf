@@ -1,0 +1,13 @@
+diff --git a/src/qwaylandextsessionlocksurface.cpp b/src/qwaylandextsessionlocksurface.cpp
+index 257d459..f7e53ad 100644
+--- a/src/qwaylandextsessionlocksurface.cpp
++++ b/src/qwaylandextsessionlocksurface.cpp
+@@ -52,7 +52,7 @@ QWaylandExtLockSurface::ext_session_lock_surface_v1_configure(uint32_t serial,
+         window()->resizeFromApplyConfigure(m_peddingSize);
+         window()->sendRecursiveExposeEvent();
+     } else {
+-        window()->applyConfigureWhenPossible();
++        window()->resizeFromApplyConfigure(m_peddingSize);
+     }
+ }
+ 
