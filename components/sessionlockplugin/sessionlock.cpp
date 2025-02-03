@@ -32,6 +32,8 @@ static int conversation(int num_msg, const struct pam_message **msg, struct pam_
 SessionLockManager::SessionLockManager(QObject *parent)
     : QObject{parent}
 {
+    ExtSessionLockV1Qt::Shell::useExtSessionLock();
+    qDebug() << "ok-init";
 }
 
 void SessionLockManager::unlock(QString pwd)
@@ -45,6 +47,7 @@ void SessionLockManager::unlock(QString pwd)
 
 void SessionLockManager::lock()
 {
+    qDebug() << "ok-lock";
     auto screens = QGuiApplication::screens();
     int i        = 0;
     for (auto screen : screens) {
@@ -63,7 +66,6 @@ void SessionLockManager::lock()
 void SessionLockManager::quitNow()
 {
     Command::instance()->unLockScreen();
-    qApp->quit();
 }
 
 int SessionLockManager::authenticate(QString username, QString ro_password)

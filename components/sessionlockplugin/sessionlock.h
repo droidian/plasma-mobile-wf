@@ -15,6 +15,8 @@
 class SessionLockManager : public QObject
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_ELEMENT
 
 public:
     SessionLockManager(QObject *parent = nullptr);

@@ -11,6 +11,7 @@ import org.kde.plasma.private.mobileshell as MobileShell
 import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 import org.kde.plasma.private.mobileshell.state as MobileShellState
 import org.kde.plasma.private.mobileshell.windowplugin as WindowPlugin
+import org.kde.plasma.private.mobileshell.sessionlockplugin as  SessionLockPlugin
 import org.kde.plasma.private.mobileshell.wlrdpmsplugin as DpmsPlugin
 
 /**
@@ -111,7 +112,7 @@ Item {
 
         function onPwrOnChanged() {
             if(!DpmsPlugin.WlrDpmsManagerV1.pwrOn)
-                MobileShell.ShellUtil.executeCommand("plamolock");
+                SessionLockPlugin.SessionLockManager.lock();
         }
     }
 
