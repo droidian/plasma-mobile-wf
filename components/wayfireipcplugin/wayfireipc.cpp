@@ -62,6 +62,22 @@ void WayfireIPC::toggleScale()
     sendMessage(jsonDoc);
 }
 
+void WayfireIPC::stipcBtn(int buttonCode, const QString& mode, bool modifier)
+{
+    QJsonObject msgObj;
+    QJsonObject dataObj;
+    
+    dataObj["button_code"] = buttonCode;
+    dataObj["mode"] = mode;
+    dataObj["modifier"] = modifier;
+
+    msgObj["method"] = "stipc/feed_button";
+    msgObj["data"] = dataObj;
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
+}
+
 bool WayfireIPC::isAnyAppFocused()
 {
     return anyAppFocused;

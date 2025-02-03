@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void toggleScale();
     Q_INVOKABLE void toggleShowDesktop();
     Q_INVOKABLE bool isAnyAppFocused();
+    Q_INVOKABLE void stipcBtn(int buttonCode, const QString& mode, bool modifier);
     
 Q_SIGNALS:
     void viewMapped(QString appId);
