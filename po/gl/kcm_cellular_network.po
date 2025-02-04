@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: plasma-mobile\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-07-02 17:44+0200\n"
+"PO-Revision-Date: 2024-12-17 22:20+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #: modem.cpp:130
 #, kde-format
@@ -69,6 +69,7 @@ msgstr "Desconectado"
 msgid "Preparing"
 msgstr "Preparando"
 
+# skip-rule: rag-gl-soporte-físico
 #: modem.cpp:532
 #, kde-format
 msgid "ConfiguringHardware"
@@ -997,12 +998,12 @@ msgstr "Nome do operador (módem)"
 #: ui/SimPage.qml:158
 #, kde-format
 msgid "Operator Code (provided by SIM)"
-msgstr "Código do operador (segundo a SIM)"
+msgstr "Código do operador (fornecido pola SIM)"
 
 #: ui/SimPage.qml:166
 #, kde-format
 msgid "Operator Name (provided by SIM)"
-msgstr "Nome do operador (segundo a SIM)"
+msgstr "Nome do operador (fornecido pola SIM)"
 
 #: ui/SimPage.qml:174
 #, kde-format
