@@ -19,8 +19,8 @@ bool WlrDpmsManagerV1::pwrOn()
 
 void WlrDpmsManagerV1::setPwrOn(bool state)
 {
-    m_pwrOn = state;
-    Q_EMIT pwrOnChanged();
+    if(m_wlrdpms != nullptr)
+        m_wlrdpms->set_mode((uint32_t) state);
 }
 
 void WlrDpmsManagerV1::handleExtensionActive()
@@ -30,6 +30,17 @@ void WlrDpmsManagerV1::handleExtensionActive()
                         get_output_power(static_cast<QtWaylandClient::QWaylandScreen *>(
                             qApp->screens().first()->handle())
                             ->output()));
+
+    connect(m_wlrdpms, &WlrDpmsV1::stateChanged, this,
+       &WlrDpmsManagerV1::stateChanged);
+}
+
+void WlrDpmsManagerV1::stateChanged(bool state)
+{
+    if(m_pwrOn != state){
+        m_pwrOn = state;
+        Q_EMIT pwrOnChanged();
+    }
 }
 
 WlrDpmsV1::WlrDpmsV1(WlrDpmsManagerV1 *manager,
@@ -42,10 +53,7 @@ WlrDpmsV1::WlrDpmsV1(WlrDpmsManagerV1 *manager,
 
 void WlrDpmsV1::zwlr_output_power_v1_mode(uint32_t mode)
 {
-    if(mode)
-        m_wpmsmanager->setPwrOn(true);
-    else
-        m_wpmsmanager->setPwrOn(false);
+    Q_EMIT stateChanged((bool) mode);
 }
 
 void WlrDpmsV1::zwlr_output_power_v1_failed()
