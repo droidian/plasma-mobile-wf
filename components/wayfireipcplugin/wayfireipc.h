@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Alexander Rutz <arpio@droidian.org>
+// SPDX-FileCopyrightText: 2024 Deepak Kumar <notwho53@gmail.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
@@ -19,7 +20,14 @@ class WayfireIPC : public QObject
 
 public:
     WayfireIPC(QObject *parent = nullptr);
+
+    bool anyAppFocused = false;
+
     void setFullscreen(int viewId, bool state);
+    Q_INVOKABLE void toggleScale();
+    Q_INVOKABLE void toggleShowDesktop();
+    Q_INVOKABLE bool isAnyAppFocused();
+    Q_INVOKABLE void stipcBtn(int buttonCode, const QString& mode, bool modifier);
     
 Q_SIGNALS:
     void viewMapped(QString appId);

@@ -17,6 +17,8 @@ import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 
 import org.kde.kirigami as Kirigami
 
+import org.kde.plasma.private.mobileshell.wayfireipcplugin as WayfireIpcPlugin
+
 MobileShell.NavigationPanel {
     id: root
     required property bool opaqueBar
@@ -63,7 +65,8 @@ MobileShell.NavigationPanel {
         iconSizeFactor: 0.75
 
         onTriggered: {
-            Plasmoid.triggerTaskSwitcher();
+            WayfireIpcPlugin.WayfireIPC.toggleScale();
+            //Plasmoid.triggerTaskSwitcher();
         }
     }
 
@@ -76,7 +79,11 @@ MobileShell.NavigationPanel {
         iconSizeFactor: 1
 
         onTriggered: {
-            MobileShellState.ShellDBusClient.openHomeScreen();
+            if (WayfireIpcPlugin.WayfireIPC.isAnyAppFocused()) {
+                WayfireIpcPlugin.WayfireIPC.toggleShowDesktop();
+            } else {
+                MobileShellState.ShellDBusClient.openHomeScreen();
+            }
         }
     }
 
@@ -84,21 +91,24 @@ MobileShell.NavigationPanel {
     rightAction: MobileShell.NavigationPanelAction {
         id: closeAppAction
 
-        enabled: Keyboards.KWinVirtualKeyboard.active || WindowPlugin.WindowUtil.hasCloseableActiveWindow
-        iconSource: Keyboards.KWinVirtualKeyboard.active ? "go-down-symbolic" : "mobile-close-app"
+        //enabled: Keyboards.KWinVirtualKeyboard.active || WindowPlugin.WindowUtil.hasCloseableActiveWindow
+        enabled: true
+        //iconSource: Keyboards.KWinVirtualKeyboard.active ? "go-down-symbolic" : "mobile-close-app"
+        iconSource: "go-previous"
         // mobile-close-app (from plasma-frameworks) seems to have fewer margins than icons from breeze-icons
         iconSizeFactor: Keyboards.KWinVirtualKeyboard.active ? 1 : 0.75
 
         onTriggered: {
-            if (Keyboards.KWinVirtualKeyboard.active) {
-                // close keyboard if it is open
-                Keyboards.KWinVirtualKeyboard.active = false;
-            } else if (WindowPlugin.WindowUtil.hasCloseableActiveWindow) {
-                // if task switcher is closed, but there is an active window
-                if (tasksModel.activeTask !== 0) {
-                    tasksModel.requestClose(tasksModel.activeTask);
-                }
-            }
+            WayfireIpcPlugin.WayfireIPC.stipcBtn(1, "press", false);
+//            if (Keyboards.KWinVirtualKeyboard.active) {
+//                // close keyboard if it is open
+//                Keyboards.KWinVirtualKeyboard.active = false;
+//            } else if (WindowPlugin.WindowUtil.hasCloseableActiveWindow) {
+//                // if task switcher is closed, but there is an active window
+//                if (tasksModel.activeTask !== 0) {
+//                    tasksModel.requestClose(tasksModel.activeTask);
+//                }
+//            }
         }
     }
 
