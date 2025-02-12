@@ -15,10 +15,12 @@
 class ScreenBrightnessUtil : public QObject
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_ELEMENT
+  
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged);
     Q_PROPERTY(int maxBrightness READ maxBrightness NOTIFY maxBrightnessChanged)
     Q_PROPERTY(bool brightnessAvailable READ brightnessAvailable NOTIFY brightnessAvailableChanged)
-    QML_ELEMENT
 
 public:
     ScreenBrightnessUtil(QObject *parent = nullptr);
