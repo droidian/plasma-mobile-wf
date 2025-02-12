@@ -3,11 +3,9 @@
 
 #pragma once
 
-#include <QDBusServiceWatcher>
 #include <QObject>
 #include <qqmlregistration.h>
-
-#include "brightnesscontrolinterface.h"
+#include <libdroid/leds.h>
 
 /**
  * Utility class that provides useful functions related to screen brightness.
@@ -24,6 +22,7 @@ class ScreenBrightnessUtil : public QObject
 
 public:
     ScreenBrightnessUtil(QObject *parent = nullptr);
+    ~ScreenBrightnessUtil();
 
     int brightness() const;
     void setBrightness(int brightness);
@@ -37,14 +36,8 @@ Q_SIGNALS:
     void maxBrightnessChanged();
     void brightnessAvailableChanged();
 
-private Q_SLOTS:
-    void fetchBrightness();
-    void fetchMaxBrightness();
-
 private:
+    DroidLeds *m_droidLeds;
     int m_brightness{0};
-    int m_maxBrightness{0};
-
-    org::kde::Solid::PowerManagement::Actions::BrightnessControl *m_brightnessInterface;
-    QDBusServiceWatcher *m_brightnessInterfaceWatcher;
+    int m_maxBrightness{255};
 };
