@@ -5,6 +5,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Window
 
 import org.kde.plasma.core as PlasmaCore
 import org.kde.notificationmanager as Notifications
@@ -12,18 +13,20 @@ import org.kde.plasma.components 3.0 as PC3
 
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.plasma.private.mobileshell.wallpaperimageplugin as WallpaperImagePlugin
-import org.kde.plasma.private.mobileshell.screenbrightnessplugin as ScreenBrightness
+import org.kde.plasma.private.mobileshell.sessionlockplugin as SessionLockPlugin
 
 /**
  * Lockscreen component that is loaded after the device is locked.
  *
  * Special attention must be paid to ensuring the GUI loads as fast as possible.
  */
-Item {
+Window {
     id: root
 
+    color: "transparent"
+
     readonly property var lockScreenState: LockScreenState {}
-    readonly property var notifModel: Notifications.WatchedNotificationsModel {}
+    property var notifModel
 
     // Only show widescreen mode for short height devices (ex. phone landscape)
     readonly property bool isWidescreen: root.height < 720 && (root.height < root.width * 0.75)
@@ -31,21 +34,35 @@ Item {
 
     property var passwordBar: flickableLoader.item ? flickableLoader.item.passwordBar : null
 
+    Rectangle {
+        id: bgRect
+        color: "black"
+        anchors.fill: parent
+
+        Behavior on opacity { PropertyAnimation {duration: 300} }
+
+        Kirigami.Icon {
+            anchors.centerIn: bgRect
+            width: Kirigami.Units.iconSizes.huge
+            height: width
+            source: "channel-secure-symbolic"
+            color: Kirigami.Theme.textColor
+        }
+    }
+
     Image {
         id: wallpaper
         anchors.fill: parent
+        opacity: bgRect.opacity
         fillMode: Image.PreserveAspectCrop
         source: "file:/" + WallpaperImagePlugin.WallpaperPlugin.lockscreenWallpaperPath
     }
 
     // Listen for keyboard events, and focus on input area
-    Keys.onPressed: (event) => {
-        if (flickableLoader.item) {
-            root.lockScreenState.isKeyboardMode = true;
-            flickableLoader.item.goToOpenPosition();
-            passwordBar.textField.forceActiveFocus();
-
-            passwordBar.keyPress(event.text);
+    Item {
+        focus: true
+        Keys.onPressed: (event)=> {
+            console.log("KEY PRESSED", event.text, event.key)
         }
     }
 
@@ -64,7 +81,7 @@ Item {
         }
 
         sourceComponent: WallpaperBlur {
-            source: wallpaper
+            source: wallpaper.status == Image.Ready ? wallpaper : bgRect
             opacity: flickableLoader.item ? flickableLoader.item.openFactor : 0
         }
     }
@@ -80,10 +97,18 @@ Item {
         }
     }
 
+    Connections {
+        target: SessionLockPlugin.SessionLockManager
+
+        function onSucceeded() {
+            bgRect.opacity = 0
+        }
+    }
 
     Item {
         id: lockscreenContainer
         anchors.fill: parent
+        opacity: bgRect.opacity
 
         // Header bar and action drawer
         HeaderComponent {

@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <QDebug>
-#include <QtGui/QGuiApplication>
 #include <QQmlContext>
 #include <QTimer>
 #include "sessionlock.h"
@@ -32,40 +31,48 @@ static int conversation(int num_msg, const struct pam_message **msg, struct pam_
 SessionLockManager::SessionLockManager(QObject *parent)
     : QObject{parent}
 {
-    ExtSessionLockV1Qt::Shell::useExtSessionLock();
-    qDebug() << "ok-init";
+    connect(qApp, &QGuiApplication::screenAdded, this,
+       &SessionLockManager::screenAdded);
 }
 
-void SessionLockManager::unlock(QString pwd)
+void SessionLockManager::requestUnlock(QString pwd)
 {
     if(authenticate("droidian", pwd)){
         Q_EMIT failed();
         return;
     }
     Q_EMIT succeeded();
+    QTimer::singleShot(300, this, &SessionLockManager::unlock);
 }
 
-void SessionLockManager::lock()
+void SessionLockManager::lock(QWindow *window)
 {
-    qDebug() << "ok-lock";
+    if(m_isLocked){
+        return;
+    }
+
     auto screens = QGuiApplication::screens();
     int i        = 0;
     for (auto screen : screens) {
-        QQuickView *view = new QQuickView;
-        view->setSource(QUrl(QStringLiteral("qrc:/Main.qml")));
-        view->setResizeMode(QQuickView::SizeRootObjectToView);
-        view->rootContext()->setContextProperty("PlamoLock", this);
-        view->setColor(QColor(Qt::transparent));
-        Window::registerWindowFromQtScreen(view, screen);
-        view->showFullScreen();
+        Window::get(window, screen);
+        window->showFullScreen();
         i += 1;
     }
     Command::instance()->LockScreen();
+    m_isLocked = true;
+    Q_EMIT lockedChanged();
 }
 
-void SessionLockManager::quitNow()
+bool SessionLockManager::locked()
+{
+    return m_isLocked;
+}
+
+void SessionLockManager::unlock()
 {
     Command::instance()->unLockScreen();
+    m_isLocked = false;
+    Q_EMIT lockedChanged();
 }
 
 int SessionLockManager::authenticate(QString username, QString ro_password)
@@ -95,4 +102,9 @@ int SessionLockManager::finish_pam_with(int value)
     if (pam_end(m_pamh, value) != PAM_SUCCESS)
         return 5;
     return value;
+}
+
+void SessionLockManager::screenAdded(QScreen *screen)
+{
+    qDebug()<<"SCREEN ADDED";
 }

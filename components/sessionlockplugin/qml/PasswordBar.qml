@@ -14,8 +14,6 @@ Rectangle {
     id: root
     required property var lockScreenState
 
-    property alias textField: textField
-
     required property bool isKeypadOpen
 
     // for displaying temporary number in pin dot display
@@ -89,15 +87,6 @@ Rectangle {
         }
     }
 
-    // HACK: we have to open the virtual keyboard after a certain amount of time or else it will close anyway
-    Timer {
-        id: openKeyboardTimer
-        interval: 10
-        running: false
-        repeat: false
-        onTriggered: Keyboards.KWinVirtualKeyboard.active = true
-    }
-
     // trigger turning letter into dot after 500 milliseconds
     Timer {
         id: letterTimer
@@ -109,63 +98,8 @@ Rectangle {
         }
     }
 
-    // hidden textfield so that the virtual keyboard shows up
-    TextField {
-        id: textField
-        visible: false
-        focus: root.isKeypadOpen && root.lockScreenState.isKeyboardMode
-        z: 1
-        inputMethodHints: Qt.ImhNoPredictiveText
-
-        onFocusChanged: {
-            if (focus) {
-                Keyboards.KWinVirtualKeyboard.active = true;
-            }
-        }
-
-        property bool externalEdit: false
-        property string prevText: ""
-
-        Connections {
-            target: root.lockScreenState
-
-            function onPasswordChanged() {
-                if (textField.text != root.lockScreenState.password) {
-                    textField.externalEdit = true;
-                    textField.text = root.lockScreenState.password;
-                }
-            }
-        }
-
-        onEditingFinished: {
-            if (textField.focus) {
-                root.enter();
-            }
-        }
-
-        onTextChanged: {
-            if (!externalEdit) {
-                if (prevText.length > text.length) { // backspace
-                    for (let i = 0; i < (prevText.length - text.length); i++) {
-                        root.backspace();
-                    }
-                } else if (text.length > 0) { // key enter
-                    root.keyPress(text.charAt(text.length - 1));
-                }
-            }
-            prevText = text;
-            externalEdit = false;
-        }
-    }
-
     MouseArea {
         anchors.fill: parent
-        onClicked: {
-            // clicking on rectangle opens keyboard if not already open
-            if (root.lockScreenState.isKeyboardMode) {
-                Keyboards.KWinVirtualKeyboard.active = true;
-            }
-        }
 
         // toggle between showing keypad and not
         ToolButton {

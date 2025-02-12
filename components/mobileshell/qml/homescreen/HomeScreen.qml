@@ -11,8 +11,6 @@ import org.kde.plasma.private.mobileshell as MobileShell
 import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
 import org.kde.plasma.private.mobileshell.state as MobileShellState
 import org.kde.plasma.private.mobileshell.windowplugin as WindowPlugin
-import org.kde.plasma.private.mobileshell.sessionlockplugin as  SessionLockPlugin
-import org.kde.plasma.private.mobileshell.wlrdpmsplugin as DpmsPlugin
 
 /**
  * The base homescreen component, implementing features that simplify
@@ -106,16 +104,6 @@ Item {
             }
         }
     }
-
-    Connections {
-        target: DpmsPlugin.WlrDpmsManagerV1
-
-        function onPwrOnChanged() {
-            if(!DpmsPlugin.WlrDpmsManagerV1.pwrOn)
-                SessionLockPlugin.SessionLockManager.lock();
-        }
-    }
-
 //END API implementation
 
     Component.onCompleted: {

@@ -34,32 +34,12 @@ Item {
 
         LayoutItemProxy {
             id: verticalHeaderProxy
+            anchors.top: keypadVerticalContainer.top
+            anchors.verticalCenterOffset: 0
             target: header
         }
-        LayoutItemProxy { target: keypadGrid }
 
-        states: [
-            State {
-                name: "keypad"
-                when: !lockScreenState.isKeyboardMode
-                AnchorChanges {
-                    target: verticalHeaderProxy; anchors.top: keypadVerticalContainer.top
-                }
-                PropertyChanges {
-                    target: verticalHeaderProxy; anchors.verticalCenterOffset: 0
-                }
-            },
-            State {
-                name: "keyboard"
-                when: lockScreenState.isKeyboardMode
-                AnchorChanges {
-                    target: verticalHeaderProxy; anchors.verticalCenter: keypadVerticalContainer.verticalCenter
-                }
-                PropertyChanges {
-                    target: verticalHeaderProxy; anchors.verticalCenterOffset: -Kirigami.Units.gridUnit * 3
-                }
-            }
-        ]
+        LayoutItemProxy { target: keypadGrid }
 
         transitions: Transition {
             AnchorAnimation {
@@ -79,26 +59,10 @@ Item {
 
         LayoutItemProxy {
             id: horizontalHeaderProxy
+            anchors.left: keypadHorizontalContainer.left
             target: header
         }
         LayoutItemProxy { target: keypadGrid }
-
-        states: [
-            State {
-                name: "keypad"
-                when: !lockScreenState.isKeyboardMode
-                AnchorChanges {
-                    target: horizontalHeaderProxy; anchors.left: keypadHorizontalContainer.left
-                }
-            },
-            State {
-                name: "keyboard"
-                when: lockScreenState.isKeyboardMode
-                AnchorChanges {
-                    target: horizontalHeaderProxy; anchors.horizontalCenter: keypadHorizontalContainer.horizontalCenter
-                }
-            }
-        ]
 
         transitions: Transition {
             AnchorAnimation {

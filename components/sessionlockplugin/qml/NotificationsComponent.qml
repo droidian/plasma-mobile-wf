@@ -69,7 +69,7 @@ Loader {
                 id: notificationsList
                 anchors.fill: parent
 
-                historyModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
+                historyModelType: MobileShell.NotificationsModelType.NotificationsModel
                 actionsRequireUnlock: true
                 historyModel: root.notificationsModel
                 notificationSettings: root.notificationSettings

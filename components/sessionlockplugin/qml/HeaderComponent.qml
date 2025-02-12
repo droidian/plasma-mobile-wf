@@ -98,7 +98,7 @@ Item {
 
         notificationSettings: NotificationManager.Settings {}
         notificationModel: root.notificationsModel
-        notificationModelType: MobileShell.NotificationsModelType.WatchedNotificationsModel
+        notificationModelType: MobileShell.NotificationsModelType.NotificationsModel
 
         property bool requestNotificationAction: false
 

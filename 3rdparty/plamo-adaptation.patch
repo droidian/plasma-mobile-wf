@@ -1,0 +1,134 @@
+diff --git a/src/interfaces/window.cpp b/src/interfaces/window.cpp
+index 8fc5477..a93e352 100644
+--- a/src/interfaces/window.cpp
++++ b/src/interfaces/window.cpp
+@@ -1,39 +1,53 @@
+ #include "window.h"
+ #include <QMap>
+ #include <QtWaylandClient/private/qwaylandscreen_p.h>
++#include <QtWaylandClient/private/qwaylandwindow_p.h>
++#include "../qwaylandextsessionlockmanagerintegration.h"
++#include <QtGui/QGuiApplication>
+ 
+ namespace ExtSessionLockV1Qt {
+ 
+ static QMap<QWindow *, Window *> s_map;
+ 
+-Window *
+-Window::get(QWindow *window)
++Window::Window(QWindow *window, QScreen *screen)
++    : QObject(window)
+ {
+-    if (!window) {
+-        return nullptr;
++    s_map.insert(window, this);
++
++    window->create();
++
++    auto waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow *>(window->handle());
++    if (!waylandWindow) {
++        qDebug() << window << "is not a wayland window. Not creating ext_session_lock_surface_v1";
++        return;
+     }
+-    return s_map.value(window);
+-}
+ 
+-Window *
+-Window::registerWindowFromWlOutput(QWindow *window, ::wl_output *output)
+-{
+-    Window *w   = new Window;
+-    w->m_output = output;
+-    w->m_window = window;
+-    s_map.insert(window, w);
+-    return w;
++    static QWaylandExtSessionLockManagerIntegration *shellIntegration = nullptr;
++    if (!shellIntegration) {
++        shellIntegration = new QWaylandExtSessionLockManagerIntegration();
++        if (!shellIntegration->initialize(waylandWindow->display())) {
++            delete shellIntegration;
++            shellIntegration = nullptr;
++            qDebug() << "Failed to initialize session-lock integration, possibly because compositor does not support the session-lock protocol";
++            return;
++        }
++    }
++
++    auto waylandScreen = dynamic_cast<QtWaylandClient::QWaylandScreen *>(screen->handle());
++    this->m_output = waylandScreen->output();
++    this->m_window = window;
++
++    waylandWindow->setShellIntegration(shellIntegration);
+ }
+ 
+ Window *
+-Window::registerWindowFromQtScreen(QWindow *window, QScreen *screen)
++Window::get(QWindow *window, QScreen *screen)
+ {
+-    auto waylandScreen = dynamic_cast<QtWaylandClient::QWaylandScreen *>(screen->handle());
+-    Window *w          = new Window;
+-    w->m_output        = waylandScreen->output();
+-    w->m_window        = window;
+-    s_map.insert(window, w);
+-    return w;
++    if (!window) {
++        return nullptr;
++    }
++
++    return new Window(window, screen);
+ }
+ 
+ void
+diff --git a/src/interfaces/window.h b/src/interfaces/window.h
+index 223c305..249da22 100644
+--- a/src/interfaces/window.h
++++ b/src/interfaces/window.h
+@@ -15,10 +15,7 @@ class SESSIONLOCKQTINTERFACE_EXPORT Window : public QObject
+ public:
+     ~Window() override;
+ 
+-    static Window *get(QWindow *Window);
+-
+-    static Window *registerWindowFromWlOutput(QWindow *window, ::wl_output *output);
+-    static Window *registerWindowFromQtScreen(QWindow *window, QScreen *screen);
++    static Window *get(QWindow *Window, QScreen *screen);
+ 
+     ::wl_output *get_wl_output() { return m_output; };
+ 
+@@ -27,6 +24,7 @@ signals:
+     void requestUnlock();
+ 
+ private:
++    Window(QWindow *window, QScreen *screen);
+     QWindow *m_window;
+     ::wl_output *m_output;
+ };
+diff --git a/src/qwaylandextsessionlockintegrationplugin.cpp b/src/qwaylandextsessionlockintegrationplugin.cpp
+index b17f512..e5314c1 100644
+--- a/src/qwaylandextsessionlockintegrationplugin.cpp
++++ b/src/qwaylandextsessionlockintegrationplugin.cpp
+@@ -10,3 +10,4 @@ QWaylandExtSessionLockIntegrationPlugin::create(const QString &key, const QStrin
+     Q_UNUSED(paramList);
+     return new QWaylandExtSessionLockManagerIntegration();
+ }
++
+diff --git a/src/qwaylandextsessionlocksurface.cpp b/src/qwaylandextsessionlocksurface.cpp
+index 257d459..33b8a65 100644
+--- a/src/qwaylandextsessionlocksurface.cpp
++++ b/src/qwaylandextsessionlocksurface.cpp
+@@ -12,7 +12,7 @@ QWaylandExtLockSurface::QWaylandExtLockSurface(QWaylandExtSessionLockManagerInte
+   : QtWaylandClient::QWaylandShellSurface(window)
+   , QtWayland::ext_session_lock_surface_v1()
+ {
+-    ExtSessionLockV1Qt::Window *inteface = Window::get(window->window());
++    ExtSessionLockV1Qt::Window *inteface = Window::get(window->window(), window->window()->screen());
+     window->waylandSurface()->commit(); // ensure surface is commited, then can be locked safely
+     Q_ASSERT(inteface);
+     connect(
+@@ -52,7 +52,7 @@ QWaylandExtLockSurface::ext_session_lock_surface_v1_configure(uint32_t serial,
+         window()->resizeFromApplyConfigure(m_peddingSize);
+         window()->sendRecursiveExposeEvent();
+     } else {
+-        window()->applyConfigureWhenPossible();
++        window()->resizeFromApplyConfigure(m_peddingSize);
+     }
+ }
+ 

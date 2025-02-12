@@ -9,7 +9,7 @@ endif ()
 
 find_package(Git REQUIRED)
 
-execute_process(COMMAND ${GIT_EXECUTABLE} apply ../fix_apply_configure.patch
+execute_process(COMMAND ${GIT_EXECUTABLE} apply ../plamo-adaptation.patch
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock
     COMMAND_ERROR_IS_FATAL ANY)
 
@@ -43,6 +43,14 @@ target_sources(SessionLockQtInterface PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/interfaces/shell.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/interfaces/command.h
     ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/interfaces/command.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-ext-session-lock-v1-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-ext-session-lock-v1-protocol.c
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-ext-session-lock-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-ext-session-lock-v1.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlocksurface.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlocksurface.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockmanagerintegration.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockmanagerintegration.cpp
 )
 
 generate_export_header(SessionLockQtInterface)
@@ -67,6 +75,7 @@ set_target_properties(SessionLockQtInterface PROPERTIES
 
 target_include_directories(SessionLockQtInterface PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/interfaces>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/SessionLockQt>
 )
 
@@ -89,6 +98,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SessionLockQtConfig.cmake
         DESTINATION ${CONFIG_CMAKE_INSTALL_DIR})
 
 add_library(ext-session-lock-v1 SHARED
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockintegrationplugin.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockintegrationplugin.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-ext-session-lock-v1-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-ext-session-lock-v1-protocol.c
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-ext-session-lock-v1.h
@@ -97,15 +108,13 @@ add_library(ext-session-lock-v1 SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlocksurface.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockmanagerintegration.h
     ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockmanagerintegration.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockintegrationplugin.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/qt-session-lock/src/qwaylandextsessionlockintegrationplugin.cpp
 )
 
 target_link_libraries(ext-session-lock-v1
+    SessionLockQtInterface
     Qt6::WaylandClient
     Qt6::WaylandClientPrivate
     Qt6::Core
-    SessionLockQtInterface
     PkgConfig::XKBCOMMON
 )
 

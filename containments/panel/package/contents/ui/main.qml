@@ -20,6 +20,9 @@ import org.kde.plasma.private.mobileshell.windowplugin as WindowPlugin
 import org.kde.taskmanager as TaskManager
 import org.kde.notificationmanager as NotificationManager
 
+import org.kde.plasma.private.mobileshell.sessionlockplugin as SessionLockPlugin
+import org.kde.plasma.private.mobileshell.wlrdpmsplugin as DpmsPlugin
+
 ContainmentItem {
     id: root
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
@@ -32,6 +35,7 @@ ContainmentItem {
     onPanelChanged: {
         if (panel) {
             panel.floating = false;
+            lockScreenLoader.active = true
         }
     }
 
@@ -80,6 +84,25 @@ ContainmentItem {
         }
     }
 
+    Connections {
+        target: DpmsPlugin.WlrDpmsManagerV1
+
+        function onPwrOnChanged() {
+            if(!DpmsPlugin.WlrDpmsManagerV1.pwrOn){
+                lockScreenLoader.active = true
+            }
+        }
+    }
+
+    Connections {
+        target: SessionLockPlugin.SessionLockManager
+
+        function onLockedChanged() {
+            if(!SessionLockPlugin.SessionLockManager.locked)
+                lockScreenLoader.active = false
+        }
+    }
+
     Binding {
         target: MobileShellState.ShellDBusClient
         property: "isActionDrawerOpen"
@@ -97,6 +120,8 @@ ContainmentItem {
         MobileShell.VolumeOSDProviderLoader.load();
         // initialize notification popups
         MobileShell.NotificationPopupProviderLoader.load();
+
+        //lockTimer.restart();
     }
 
     MobileShell.StartupFeedbackPanelFill {
@@ -145,6 +170,23 @@ ContainmentItem {
                 }
                 return urgencies;
             }
+        }
+    }
+
+    Loader {
+        id: lockScreenLoader
+        anchors.fill: parent
+        active: false
+        asynchronous: true
+        sourceComponent: SessionLockPlugin.LockScreen{
+            visible: false
+            notifModel: drawer.actionDrawer.notificationModel
+        }
+        visible: status == Loader.Ready
+
+        onStatusChanged: {
+            if(lockScreenLoader.status == Loader.Ready)
+                SessionLockPlugin.SessionLockManager.lock(lockScreenLoader.item);
         }
     }
 }

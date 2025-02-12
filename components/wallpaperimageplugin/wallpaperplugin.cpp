@@ -24,7 +24,7 @@ WallpaperPlugin::WallpaperPlugin(QObject *parent)
     , m_homescreenConfig{new QQmlPropertyMap{this}}
     , m_lockscreenConfig{new QQmlPropertyMap{this}}
     , m_homescreenConfigFile{KSharedConfig::openConfig("plasma-org.kde.plasma.mobileshell-appletsrc", KConfig::SimpleConfig)}
-    , m_lockscreenConfigFile{KSharedConfig::openConfig("plamolockrc", KConfig::SimpleConfig)}
+    , m_lockscreenConfigFile{KSharedConfig::openConfig("plasma-sessionlockrc", KConfig::SimpleConfig)}
 {
     m_lockscreenConfigWatcher = KConfigWatcher::create(m_lockscreenConfigFile);
 
@@ -179,14 +179,8 @@ QCoro::Task<void> WallpaperPlugin::setHomescreenWallpaper(const QString &path)
 
 void WallpaperPlugin::setLockscreenWallpaper(const QString &path)
 {
-    auto greeterGroup = m_lockscreenConfigFile->group(QStringLiteral("Greeter"))
-                            .group(QStringLiteral("Wallpaper"))
-                            .group(QStringLiteral("org.kde.image"))
-                            .group(QStringLiteral("General"));
+    auto greeterGroup = m_lockscreenConfigFile->group(QStringLiteral("Wallpaper"));
     greeterGroup.writeEntry("Image", path, KConfigGroup::Notify);
-
-    greeterGroup = m_lockscreenConfigFile->group(QStringLiteral("Greeter"));
-    greeterGroup.writeEntry("WallpaperPlugin", "org.kde.image", KConfigGroup::Notify);
 
     m_lockscreenConfigFile->sync();
 }
@@ -253,10 +247,8 @@ void WallpaperPlugin::loadLockscreenSettings()
 {
     auto greeterGroup = m_lockscreenConfigFile->group(QStringLiteral("Greeter"));
     m_lockscreenWallpaperPlugin = greeterGroup.readEntry(QStringLiteral("WallpaperPlugin"), QString());
-    m_lockscreenWallpaperPath = QString{};
-
-    if(m_lockscreenWallpaperPlugin.isEmpty())
-        setLockscreenWallpaperPlugin(QStringLiteral("org.kde.image"));
+    m_lockscreenWallpaperPath = m_lockscreenConfigFile->group(QStringLiteral("Wallpaper"))
+                            .readEntry("Image", QString());
 
     if(m_lockscreenWallpaperPath.isEmpty())
         setLockscreenWallpaper(QStringLiteral("/usr/share/wallpapers/DebianTheme/contents/images/1920x1080.svg"));

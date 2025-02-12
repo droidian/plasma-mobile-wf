@@ -3,6 +3,7 @@
 
 import QtQml
 import QtQuick
+import org.kde.plasma.private.mobileshell.sessionlockplugin as SessionLockPlugin
 
 QtObject {
     id: root
@@ -37,7 +38,7 @@ QtObject {
         if (root.password !== '') {
             root.waitingForAuth = true;
         }
-        PlamoLock.unlock(root.password);
+        SessionLockPlugin.SessionLockManager.requestUnlock(root.password);
     }
 
     function resetPassword() {
@@ -58,7 +59,7 @@ QtObject {
     }
 
     property var connections: Connections {
-        target: PlamoLock
+        target: SessionLockPlugin.SessionLockManager
 
         function onSucceeded() {
             console.log('login succeeded');
