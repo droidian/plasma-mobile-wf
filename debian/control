@@ -43,6 +43,7 @@ Build-Depends: debhelper-compat (= 13),
                libplasmaactivities-dev,
                libudev-dev,
                libwayland-dev,
+               libpam0g-dev,
                libxcb1-dev,
                milou,
                pkg-kde-tools,
@@ -60,6 +61,7 @@ Build-Depends: debhelper-compat (= 13),
                qt6-sensors-dev (>= 6.9.0~),
                qt6-wayland-dev (>= 6.9.0~),
                qt6-wayland-private-dev (>= 6.7.0~),
+               libdroid-dev,
 Standards-Version: 4.7.2
 Homepage: https://invent.kde.org/plasma/plasma-mobile
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile
