@@ -17,7 +17,7 @@ import org.kde.plasma.private.mobileshell.screenbrightnessplugin as ScreenBright
 Item {
     id: root
     implicitHeight: brightnessRow.implicitHeight
-    visible: screenBrightness.brightnessAvailable
+    visible: ScreenBrightness.ScreenBrightnessUtil.brightnessAvailable
 
     property double brightnessPressedValue: 1
     Behavior on brightnessPressedValue {
@@ -25,10 +25,6 @@ Item {
             duration: Kirigami.Units.longDuration
             easing.type: Easing.OutQuad
         }
-    }
-
-    ScreenBrightness.ScreenBrightnessUtil {
-        id: screenBrightness
     }
 
     Rectangle {
@@ -62,9 +58,9 @@ Item {
             id: brightnessSlider
             Layout.fillWidth: true
             from: 1
-            to: screenBrightness.maxBrightness
-            value: screenBrightness.brightness
-            onMoved: screenBrightness.brightness = value;
+            to: ScreenBrightness.ScreenBrightnessUtil.maxBrightness
+            value: ScreenBrightness.ScreenBrightnessUtil.brightness
+            onMoved: ScreenBrightness.ScreenBrightnessUtil.brightness = value;
 
             onPressedChanged: {
                 if (pressed) {
@@ -91,7 +87,7 @@ Item {
                 interval: 0
                 running: true
                 repeat: false
-                onTriggered: brightnessSlider.value = Qt.binding(() => screenBrightness.brightness)
+                onTriggered: brightnessSlider.value = Qt.binding(() => ScreenBrightness.ScreenBrightnessUtil.brightness)
             }
         }
 
