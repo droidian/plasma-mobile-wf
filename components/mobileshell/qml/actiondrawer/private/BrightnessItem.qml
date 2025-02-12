@@ -18,7 +18,7 @@ import org.kde.plasma.private.mobileshell as MobileShell
 Item {
     id: root
     implicitHeight: brightnessRow.implicitHeight
-    visible: screenBrightness.brightnessAvailable
+    visible: ScreenBrightness.ScreenBrightnessUtil.brightnessAvailable
 
     property double brightnessPressedValue: 1
     Behavior on brightnessPressedValue {
@@ -27,11 +27,7 @@ Item {
             easing.type: Easing.InOutQuad
         }
     }
-
-    ScreenBrightness.ScreenBrightnessUtil {
-        id: screenBrightness
-    }
-
+    
     MobileShell.PanelBackground {
         anchors.fill: parent
         anchors.leftMargin: -Kirigami.Units.smallSpacing
@@ -66,9 +62,9 @@ Item {
             id: brightnessSlider
             Layout.fillWidth: true
             from: 1
-            to: screenBrightness.maxBrightness
-            value: screenBrightness.brightness
-            onMoved: screenBrightness.brightness = value;
+            to: ScreenBrightness.ScreenBrightnessUtil.maxBrightness
+            value: ScreenBrightness.ScreenBrightnessUtil.brightness
+            onMoved: ScreenBrightness.ScreenBrightnessUtil.brightness = value;
 
             onPressedChanged: {
                 if (pressed) {
@@ -95,7 +91,7 @@ Item {
                 interval: 0
                 running: true
                 repeat: false
-                onTriggered: brightnessSlider.value = Qt.binding(() => screenBrightness.brightness)
+                onTriggered: brightnessSlider.value = Qt.binding(() => ScreenBrightness.ScreenBrightnessUtil.brightness)
             }
         }
 
