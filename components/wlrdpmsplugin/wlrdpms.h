@@ -23,7 +23,7 @@ class WlrDpmsManagerV1
     QML_SINGLETON
     QML_ELEMENT
 
-    Q_PROPERTY(bool pwrOn READ pwrOn NOTIFY pwrOnChanged)
+    Q_PROPERTY(bool pwrOn READ pwrOn WRITE setPwrOn NOTIFY pwrOnChanged)
 
 public:
     WlrDpmsManagerV1();
@@ -32,11 +32,12 @@ public:
 
 public slots:
     void handleExtensionActive();
-    
+
 Q_SIGNALS:
     void pwrOnChanged();
 
 private Q_SLOTS:
+    void stateChanged(bool state);
 
 private:
     WlrDpmsV1 *m_wlrdpms = nullptr;
@@ -50,6 +51,9 @@ class WlrDpmsV1
 public:
     WlrDpmsV1(WlrDpmsManagerV1 *manager,
               struct ::zwlr_output_power_v1 *wl_object);
+
+Q_SIGNALS:
+    void stateChanged(bool state);
 
 protected:
     virtual void zwlr_output_power_v1_mode(uint32_t mode) override;
