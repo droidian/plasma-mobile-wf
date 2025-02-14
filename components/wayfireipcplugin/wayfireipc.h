@@ -23,6 +23,8 @@ public:
     
 Q_SIGNALS:
     void viewMapped(QString appId);
+    void pwrKeyStateChanged(int state);
+    void idleTimout();
 
 private Q_SLOTS:
     void onReadData();
