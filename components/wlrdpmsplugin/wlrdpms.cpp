@@ -12,6 +12,11 @@ WlrDpmsManagerV1::WlrDpmsManagerV1()
        &WlrDpmsManagerV1::handleExtensionActive);
 }
 
+void WlrDpmsManagerV1::dpmsInit()
+{
+    qDebug()<<"WlrDpmsManagerV1 initializing";
+}
+
 bool WlrDpmsManagerV1::pwrOn()
 {
     return m_pwrOn;
@@ -33,6 +38,9 @@ void WlrDpmsManagerV1::handleExtensionActive()
 
     connect(m_wlrdpms, &WlrDpmsV1::stateChanged, this,
        &WlrDpmsManagerV1::stateChanged);
+
+    if(m_wlrdpms != nullptr)
+        m_wlrdpms->set_mode(1);
 }
 
 void WlrDpmsManagerV1::stateChanged(bool state)

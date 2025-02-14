@@ -27,6 +27,7 @@ class WlrDpmsManagerV1
 
 public:
     WlrDpmsManagerV1();
+    Q_INVOKABLE void dpmsInit();
     bool pwrOn();
     void setPwrOn(bool state);
 
