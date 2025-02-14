@@ -21,9 +21,17 @@ WayfireIPC::WayfireIPC(QObject *parent)
         m_wfsocket->connectToServer(socket_str);
     
     if (m_wfsocket->waitForConnected(1000)){
-        QJsonObject jsonObj { {"method", "window-rules/events/watch"}, };
-        QJsonDocument jsonDoc = QJsonDocument(jsonObj);
+        QJsonObject watchRules { {"method", "window-rules/events/watch"}, };
+        QJsonObject watchPlamo { {"method", "plamo/watch"}, };
+        QJsonObject watchIdle { {"method", "idle/watch"}, };
+        QJsonDocument jsonDoc = QJsonDocument(watchRules);
         sendMessage(jsonDoc);
+        jsonDoc = QJsonDocument(watchPlamo);
+        sendMessage(jsonDoc);
+        jsonDoc = QJsonDocument(watchIdle);
+        sendMessage(jsonDoc);
+
+        
     }
 }
 
@@ -56,7 +64,13 @@ void WayfireIPC::onReadData()
         QString appId = msg.object().value("view").toObject().value("app-id").toString();
         int viewId = msg.object().value("view").toObject().value("id").toInt();
 
-        if(event == "view-mapped" && appId != ""){
+        if(event == "power-key-pressed"){
+            Q_EMIT pwrKeyStateChanged(1);
+        } else if(event == "power-key-released"){
+            Q_EMIT pwrKeyStateChanged(0);
+        } else if(event == "idle-timeout"){
+            Q_EMIT idleTimout();
+        } else if(event == "view-mapped" && appId != ""){
             Q_EMIT viewMapped(appId);
         } else if(event == "view-focused" && appId == "org.kde.polkit-kde-authentication-agent-1"){
             setFullscreen(viewId, false);
