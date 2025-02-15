@@ -1,4 +1,7 @@
-plasma-mobile (6.2.5-2) UNRELEASED; urgency=medium
+plasma-mobile (6.3.0-1) UNRELEASED; urgency=medium
+
+  [ Marco Mattiolo ]
+  * New upstream release (6.3.0).
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 15 Feb 2025 11:16:37 +0100
 
