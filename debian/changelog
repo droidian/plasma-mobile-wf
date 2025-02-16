@@ -4,6 +4,9 @@ plasma-mobile (6.3.0-1) unstable; urgency=medium
   * d/watch: set pgpsigurlmangle option for uscan to check upstream signatures.
   * Update build-deps and deps with the info from cmake.
 
+  [ Aurélien COUDERC ]
+  * Review copyright information.
+
  -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Sat, 15 Feb 2025 23:02:06 +0100
 
 plasma-mobile (6.2.5-1) unstable; urgency=medium
