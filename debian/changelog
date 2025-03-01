@@ -1,11 +1,11 @@
-plasma-mobile (6.3.2-1) UNRELEASED; urgency=medium
+plasma-mobile (6.3.2-1) unstable; urgency=medium
 
   [ Aurélien COUDERC ]
   * Recommend iio-sensor-proxy. (Closes: #1098304)
   * New upstream release (6.3.2).
   * Update build-deps and deps with the info from cmake.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 01 Mar 2025 21:49:43 +0100
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 01 Mar 2025 21:50:50 +0100
 
 plasma-mobile (6.3.0-1) unstable; urgency=medium
 
