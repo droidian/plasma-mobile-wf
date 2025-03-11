@@ -1,0 +1,111 @@
+Source: plasma-mobile
+Section: kde
+Priority: optional
+Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>,
+           Arnaud Ferraris <aferraris@debian.org>,
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               dh-sequence-sodeps,
+               cmake (>= 3.16~),
+               extra-cmake-modules (>= 6.10.0~),
+               kirigami-addons-dev (>= 0.6~),
+               kwayland-dev,
+               kwin-dev (>= 4:6.3.2~),
+               libepoxy-dev,
+               libglib2.0-dev,
+               libkf6bluezqt-dev,
+               libkf6config-dev (>= 6.10.0~),
+               libkf6coreaddons-dev (>= 6.5.0~),
+               libkf6dbusaddons-dev (>= 6.10.0~),
+               libkf6declarative-dev,
+               libkf6globalaccel-dev (>= 6.10.0~),
+               libkf6i18n-dev (>= 6.10.0~),
+               libkf6itemmodels-dev (>= 6.10.0~),
+               libkf6jobwidgets-dev (>= 6.10.0~),
+               libkf6kcmutils-dev (>= 6.10.0~),
+               libkf6kio-dev (>= 6.10.0~),
+               libkf6modemmanagerqt-dev (>= 6.10.0~),
+               libkf6networkmanagerqt-dev (>= 6.10.0~),
+               libkf6notifications-dev (>= 6.10.0~),
+               libkf6package-dev (>= 6.10.0~),
+               libkf6service-dev (>= 6.10.0~),
+               libkscreen-dev,
+               liblayershellqtinterface-dev,
+               libplasma-dev,
+               libplasma5support-dev,
+               libplasmaactivities-dev,
+               libudev-dev,
+               libxcb1-dev,
+               milou,
+               pkg-kde-tools,
+               pkgconf,
+               plasma-nano,
+               plasma-nm,
+               plasma-pa,
+               plasma-workspace-dev (>= 4:6.1.0~),
+               qcoro-qt6-dev,
+               qml6-module-org-kde-pipewire,
+               qt6-base-dev (>= 6.7.0~),
+               qt6-declarative-dev (>= 6.7.0~),
+               qt6-declarative-private-dev,
+               qt6-sensors-dev (>= 6.7.0~),
+               qt6-wayland-dev (>= 6.7.0~),
+               qt6-wayland-private-dev (>= 6.7.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/plasma-mobile
+Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile
+Vcs-Git: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile.git
+Rules-Requires-Root: no
+
+Package: plasma-mobile
+Architecture: any
+Multi-Arch: foreign
+Depends: kde-style-breeze (>= 4:6.0.0~),
+         kf6-breeze-icon-theme,
+         layer-shell-qt (>= 6.0.0~),
+         maliit-keyboard,
+         milou,
+         plasma-nano (>= 6.0.0~),
+         plasma-nm (>= 4:6.0.0~),
+         plasma-pa (>= 4:6.0.0~),
+         plasma-settings (>= 24.02.0~),
+         plasma-workspace (>= 6.0.0~),
+         powerdevil (>= 6.0.0~),
+         xdg-desktop-portal-kde (>= 6.0.0~),
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Recommends: bluedevil (>= 6.0.0~),
+            hfd-service,
+            iio-sensor-proxy,
+            plasma-mobile-tweaks,
+            plasma-workspace-wallpapers,
+Replaces: plasma-settings (<< 24.02.0~),
+Breaks: kde-config-mobile-networking (<< 4:6.0.0~),
+        plasma-settings (<< 24.02.0~),
+Description: User interface for phones, based on Plasma technologies
+ Plasma Mobile is a graphical user interface and ecosystem targeted at mobile
+ devices, built on the KDE Plasma stack.
+ .
+ A pragmatic approach is taken that is inclusive to software regardless of
+ toolkit, giving users the power to choose whichever software they want to
+ use on their device.
+ .
+ Plasma Mobile aims to contribute to and implement open standards, and is
+ developed in a transparent process that is open for anyone to participate in.
+
+Package: plasma-mobile-tweaks
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: Components to improve the Plasma mobile UX on touch devices
+ plasma-mobile-tweaks package contains recommended configurations for
+ distributions shipping Plasma Mobile by default.
+ .
+ Some important changes include:
+  - Setting the default look-and-feel package
+  - Set the default keyboard to maliit-keyboard
+  - Prevent some unneeded applications from showing in the app list
