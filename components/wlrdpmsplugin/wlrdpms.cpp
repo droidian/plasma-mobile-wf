@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <QDebug>
+#include <QDBusInterface>
+#include <QDBusConnection>
 
 #include "wlrdpms.h"
 
@@ -61,6 +63,12 @@ WlrDpmsV1::WlrDpmsV1(WlrDpmsManagerV1 *manager,
 
 void WlrDpmsV1::zwlr_output_power_v1_mode(uint32_t mode)
 {
+    QDBusInterface("org.freedesktop.login1",
+               "/org/freedesktop/login1/session/self",
+               "org.freedesktop.login1.Session",
+               QDBusConnection::systemBus())
+        .call("SetIdleHint", (bool) !mode);
+
     Q_EMIT stateChanged((bool) mode);
 }
 
