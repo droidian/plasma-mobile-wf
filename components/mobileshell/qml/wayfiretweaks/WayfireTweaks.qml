@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2025 Alexander Rutz <arpio@droidian.org>
+// SPDX-FileCopyrightText: 2025 Deepak Kumar <notwho53@gmail.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 import QtQuick
@@ -19,6 +20,7 @@ Item {
 
     onCallActiveChanged: {
          if(callActive && SessionLockPlugin.SessionLock.locked){
+             DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
              notifArrived.stop();
              dimOut.stop();
              dimIn.start();
@@ -30,7 +32,28 @@ Item {
         DpmsPlugin.WlrDpmsManagerV1.dpmsInit();
 
         // lock the screen
+        lockSplash.lockText = "Locking..."
+        lockSplash.visible = true
         SessionLockPlugin.SessionLock.requestLock();
+    }
+
+    Connections {
+        target: SessionLockPlugin.SessionLock
+
+        function onLockedChanged(){
+            if(!SessionLockPlugin.SessionLock.locked){
+                lockSplash.lockText = "Locked"
+                lockSplash.visible = false
+            }
+        }
+
+        function onUnlockRequested(){
+            lockSplash.lockText = "Unlocking..."
+        }
+
+        function onFailed(){
+            lockSplash.lockText = "Locked"
+        }
     }
 
     Connections {
@@ -39,12 +62,16 @@ Item {
         function onPwrKeyStateChanged(state: var) {
             if (!state) {
                 if(DpmsPlugin.WlrDpmsManagerV1.pwrOn){
+                    lockSplash.lockText = "Locking..."
+                    lockSplash.visible = true
                     if(ScreenBrightness.ScreenBrightnessUtil.brightness > 0)
                         lastBrightness = ScreenBrightness.ScreenBrightnessUtil.brightness
                     SessionLockPlugin.SessionLock.requestLock();
                     dimIn.stop();
                     dimOut.start();
-                } else if(!DpmsPlugin.WlrDpmsManagerV1.pwrOn){
+                } else {
+                    notifArrived.stop();
+                    DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
                     dimOut.stop();
                     dimIn.start();
                 }
@@ -53,25 +80,13 @@ Item {
 
         function onIdleTimout() {
             if(DpmsPlugin.WlrDpmsManagerV1.pwrOn){
+                lockSplash.lockText = "Locking..."
+                lockSplash.visible = true
                 if(ScreenBrightness.ScreenBrightnessUtil.brightness > 0)
                         lastBrightness = ScreenBrightness.ScreenBrightnessUtil.brightness
                 SessionLockPlugin.SessionLock.requestLock();
                 dimIn.stop();
                 dimOut.start();
-            }
-        }
-    }
-
-    Connections {
-        target: ScreenBrightness.ScreenBrightnessUtil
-
-        function onBrightnessChanged() {
-            if(ScreenBrightness.ScreenBrightnessUtil.brightness == 0){
-                console.log("SHUT OFF SCREEN")
-                DpmsPlugin.WlrDpmsManagerV1.pwrOn = false
-            } else {
-                console.log("TURN ON SCREEN")
-                DpmsPlugin.WlrDpmsManagerV1.pwrOn = true
             }
         }
     }
@@ -93,6 +108,8 @@ Item {
         property: "brightness";
         to: 0;
         duration: 200
+
+        onFinished: DpmsPlugin.WlrDpmsManagerV1.pwrOn = false;
     }
 
     PropertyAnimation { id: dimIn;
@@ -116,15 +133,26 @@ Item {
         }
 
         onActiveNotificationsCountChanged: {
-             if(SessionLockPlugin.SessionLock.locked && !callActive){
+             if(SessionLockPlugin.SessionLock.locked && !callActive
+                    && !DpmsPlugin.WlrDpmsManagerV1.pwrOn){
                  if(activeNotificationsCount > 0){
+                     DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
                      notifArrived.stop();
                      dimOut.stop();
                      dimIn.start();
-                 } else {
                      notifArrived.restart();
+                     return;
                  }
              }
+
+             if(SessionLockPlugin.SessionLock.locked && !callActive
+                    && DpmsPlugin.WlrDpmsManagerV1.pwrOn)
+                notifArrived.stop();
         }
+    }
+
+    LockScreenSplash {
+        id: lockSplash
+        visible: false
     }
 }
