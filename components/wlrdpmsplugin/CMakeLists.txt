@@ -9,6 +9,7 @@ target_sources(wlrdpmsplugin PRIVATE
 target_link_libraries(wlrdpmsplugin PRIVATE
     Qt::Qml
     Qt::Network
+    Qt::DBus
     Qt::WaylandClient
     Qt::WaylandClientPrivate
 )
