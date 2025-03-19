@@ -202,4 +202,7 @@ Item {
         anchors.fill: parent
         visible: false
     }
+
+    // Wayfire realated tweaks
+    MobileShell.WayfireTweaks {}
 }

@@ -126,6 +126,9 @@ set_package_properties(KF6::AuthCore PROPERTIES
     PURPOSE "Allows Plasma Mobile to configure Waydroid"
 )
 
+find_package(KSysGuard REQUIRED)
+find_package(KF6Solid NO_MODULE)
+
 include(CheckIncludeFiles)
 
 ecm_find_qmlmodule(org.kde.pipewire 0.1)
