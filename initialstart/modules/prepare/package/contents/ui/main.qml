@@ -20,10 +20,6 @@ InitialStartModule {
 
         readonly property real cardWidth: Math.min(Kirigami.Units.gridUnit * 30, root.width - Kirigami.Units.gridUnit * 2)
 
-        ScreenBrightness.ScreenBrightnessUtil {
-            id: screenBrightness
-        }
-
         ScrollView {
             anchors {
                 fill: parent
@@ -43,7 +39,7 @@ InitialStartModule {
                     Layout.alignment: Qt.AlignTop
                     Layout.fillWidth: true
 
-                    visible: screenBrightness.brightnessAvailable
+                    visible: ScreenBrightness.ScreenBrightnessUtil.brightnessAvailable
                     wrapMode: Text.Wrap
                     horizontalAlignment: Text.AlignHCenter
                     text: i18n("Adjust the screen brightness to be comfortable for the installation process.")
@@ -51,7 +47,7 @@ InitialStartModule {
 
                 FormCard.FormCard {
                     id: brightnessCard
-                    visible: screenBrightness.brightnessAvailable
+                    visible: ScreenBrightness.ScreenBrightnessUtil.brightnessAvailable
                     maximumWidth: root.cardWidth
 
                     Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
@@ -72,16 +68,16 @@ InitialStartModule {
                                 id: brightnessSlider
                                 Layout.fillWidth: true
                                 from: 1
-                                to: screenBrightness.maxBrightness
-                                value: screenBrightness.brightness
-                                onMoved: screenBrightness.brightness = value;
+                                to: ScreenBrightness.ScreenBrightnessUtil.maxBrightness
+                                value: ScreenBrightness.ScreenBrightnessUtil.brightness
+                                onMoved: ScreenBrightness.ScreenBrightnessUtil.brightness = value;
 
                                 // HACK: for some reason, the slider initial value doesn't set without being done after the component completes loading
                                 Timer {
                                     interval: 0
                                     running: true
                                     repeat: false
-                                    onTriggered: brightnessSlider.value = Qt.binding(() => screenBrightness.brightness)
+                                    onTriggered: brightnessSlider.value = Qt.binding(() => ScreenBrightness.ScreenBrightnessUtil.brightness)
                                 }
                             }
 
