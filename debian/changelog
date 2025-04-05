@@ -6,6 +6,7 @@ plasma-mobile (6.3.4-1) UNRELEASED; urgency=medium
   * Bump Standards-Version to 4.7.2 (No changes needed).
   * Add kde-config-mobile-networking to Replaces. (Closes: #1100380)
   * Add/update Jonathan Esk-Riddell’s key in upstream keyring.
+  * Update d/plasma-mobile.install after upstream changes.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 05 Apr 2025 19:06:39 +0200
 
