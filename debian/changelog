@@ -3,6 +3,7 @@ plasma-mobile (6.3.4-1) UNRELEASED; urgency=medium
   [ Marco Mattiolo ]
   * New upstream release (6.3.4).
   * Update build-deps and deps with the info from cmake.
+  * Bump Standards-Version to 4.7.2 (No changes needed).
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 05 Apr 2025 19:06:39 +0200
 
