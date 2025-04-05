@@ -1,6 +1,5 @@
-plasma-mobile (6.3.4-1) UNRELEASED; urgency=medium
+plasma-mobile (6.3.4-1) unstable; urgency=medium
 
-  [ Marco Mattiolo ]
   * New upstream release (6.3.4).
   * Update build-deps and deps with the info from cmake.
   * Bump Standards-Version to 4.7.2 (No changes needed).
@@ -9,7 +8,7 @@ plasma-mobile (6.3.4-1) UNRELEASED; urgency=medium
   * Update d/plasma-mobile.install after upstream changes.
   * Fix d/copyright after lintian warnings.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 05 Apr 2025 19:06:39 +0200
+ -- Marco Mattiolo <marco.mattiolo@hotmail.it>  Sat, 05 Apr 2025 20:54:41 +0200
 
 plasma-mobile (6.3.2-1) unstable; urgency=medium
 
