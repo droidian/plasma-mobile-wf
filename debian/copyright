@@ -298,7 +298,6 @@ Files: components/mobileshell/components/swipearea.h
        kcms/wifi/ui/NetworkSettings.qml
        kcms/wifi/wifisettings.cpp
        kcms/wifi/wifisettings.h
-       kwin/mobiletaskswitcher/qml/FlickContainer.qml
        layout-templates/org.kde.plasma.mobile.defaultNavigationPanel/contents/layout.js
        layout-templates/org.kde.plasma.mobile.defaultStatusBar/contents/layout.js
        lookandfeel/contents/logout/ActionButton.qml
@@ -491,10 +490,7 @@ License: GPL-2.0-only
  General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- 02110-1301, USA. Also add information on how to contact you by
- electronic and paper mail.
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU General Public
  License version 2 can be found in
@@ -512,10 +508,7 @@ License: GPL-2.0-or-later
  General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- 02110-1301, USA. Also add information on how to contact you by
- electronic and paper mail.
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU General Public
  License version 2 can be found in
@@ -532,7 +525,7 @@ License: GPL-3.0-only
  General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program. If not, see <http://www.gnu.org/licenses/>.
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU General Public
  License version 3 can be found in
@@ -550,8 +543,7 @@ License: GPL-3.0-or-later
  General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see
- <http://www.gnu.org/licenses/>.
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU General Public
  License version 3 can be found in
@@ -569,9 +561,8 @@ License: LGPL-2.0-or-later
  Library General Public License for more details.
  .
  You should have received a copy of the GNU Library General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- 02110-1301, USA.
+ License along with this library. If not, see
+ <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU Library General
  Public License version 2 can be found in
@@ -588,10 +579,8 @@ License: LGPL-2.1-only
  Lesser General Public License for more details.
  .
  You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- 02110-1301  USA Also add information on how to contact you by
- electronic and paper mail.
+ License along with this library. If not, see
+ <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU Lesser General
  Public License version 2.1 can be found in
@@ -609,10 +598,8 @@ License: LGPL-2.1-or-later
  Lesser General Public License for more details.
  .
  You should have received a copy of the GNU Lesser General Public
- License along with this library; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- 02110-1301  USA Also add information on how to contact you by
- electronic and paper mail.
+ License along with this library. If not, see
+ <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU Lesser General
  Public License version 2.1 can be found in
@@ -630,7 +617,7 @@ License: LGPL-3.0-only
  .
  You should have received a copy of the GNU Lesser General Public
  License along with this library.  If not, see
- <http://www.gnu.org/licenses/>.
+ <https://www.gnu.org/licenses/>.
  .
  On Debian systems, the complete text of the GNU Lesser General
  Public License version 3 can be found in
