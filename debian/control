@@ -54,7 +54,7 @@ Build-Depends: debhelper-compat (= 13),
                qt6-sensors-dev (>= 6.7.0~),
                qt6-wayland-dev (>= 6.7.0~),
                qt6-wayland-private-dev (>= 6.7.0~),
-Standards-Version: 4.7.0
+Standards-Version: 4.7.2
 Homepage: https://invent.kde.org/plasma/plasma-mobile
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile
 Vcs-Git: https://salsa.debian.org/qt-kde-team/kde/plasma-mobile.git
