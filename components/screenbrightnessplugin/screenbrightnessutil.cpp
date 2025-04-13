@@ -8,22 +8,22 @@
 ScreenBrightnessUtil::ScreenBrightnessUtil(QObject *parent)
     : QObject{parent}
 {
-    m_droidLeds = droid_leds_new();
+    GError *err = nullptr;
+    m_droidLeds = droid_leds_new(&err);
     
-    if (droid_leds_is_kind_supported(m_droidLeds, DROID_LEDS_KIND_BACKLIGHT)) {
+    if (!err && droid_leds_is_kind_supported(m_droidLeds, DROID_LEDS_KIND_BACKLIGHT)) {
 		setBrightness(200);
         Q_EMIT brightnessAvailableChanged();
     } else {
         qWarning() << "Backlight not supported by libdroid";
-        m_droidLeds = nullptr;
+        g_clear_error (&err);
+        g_clear_object (&m_droidLeds);
     }
 }
 
 ScreenBrightnessUtil::~ScreenBrightnessUtil()
 {
-    if (m_droidLeds) {
-        g_object_unref(m_droidLeds);
-    }
+    g_clear_object (&m_droidLeds);
 }
 
 int ScreenBrightnessUtil::brightness() const
