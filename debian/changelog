@@ -1,3 +1,12 @@
+plasma-mobile (6.3.5-1) UNRELEASED; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.5).
+    - Wallpaperselector: Fix delegate dimensions and icon color.
+    - Taskpanel: Fix rotate button showing with autorotate.
+
+ -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Fri, 16 May 2025 18:52:18 +0200
+
 plasma-mobile (6.3.4-1) unstable; urgency=medium
 
   * New upstream release (6.3.4).
