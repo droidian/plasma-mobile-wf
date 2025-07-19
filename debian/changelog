@@ -32,6 +32,8 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
     - folio: Fix recurring AppDelegate null errors in the logs. [c5f0d15b]
     - notification list: fix notification scrolling within action drawer and
     lockscreen. [e4323f4e]
+    - statusbar: Don't show internet icon and network loading indicator at
+    same time. [23797660]
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 
