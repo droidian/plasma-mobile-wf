@@ -19,6 +19,9 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
     - Notifications: Fix do-not-disturb.
     - Notifications: Don't factor action drawer state in expiry.
     - Notifications: do not expire notificationa after invoking action.
+  * Backport upstream commits:
+    - bin: Don't force QT_QPA_PLATFORM=wayland so apps that prefer x11 can use
+    it similar to what the desktop session does. [8b8c9585]
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 
