@@ -30,6 +30,8 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
     - GestureNavigation: Fix Action Drawer State being out of Sync on First
     Start. [9707f503] 
     - folio: Fix recurring AppDelegate null errors in the logs. [c5f0d15b]
+    - notification list: fix notification scrolling within action drawer and
+    lockscreen. [e4323f4e]
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 

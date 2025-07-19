@@ -3,3 +3,4 @@ upstream_7d9054f7_applicationlistmodel-Space-out-application-list-refreshes.patc
 upstream_013d0345_Gesture-Navigation-Disable-Gestures-When-Action-Drawer-Notification-Popup-Drawer-or-VolumeOSD-are-Visible.patch
 upstream_9707f503_GestureNavigation-Fix-Action-Drawer-State-being-out-of-Sync-on-First-Start.patch
 upstream_c5f0d15b_folio-Fix-AppDelegate-null-errors.patch
+upstream_e4323f4e_notification-list-fix-notification-scrolling-within-action-drawer-and-lockscreen.patch
