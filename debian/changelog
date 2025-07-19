@@ -24,6 +24,9 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
     it similar to what the desktop session does. [8b8c9585]
     - applicationlistmodel: Space out application list refreshes to avoid log
     spam and freezes. [7d9054f7]
+  * Backport upstream commit: [013d0345] Gesture Navigation: Disable
+    Gestures When Action Drawer, Notification Popup Drawer, or VolumeOSD
+    are Visible
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 
