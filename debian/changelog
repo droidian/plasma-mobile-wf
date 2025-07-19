@@ -34,6 +34,8 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
     lockscreen. [e4323f4e]
     - statusbar: Don't show internet icon and network loading indicator at
     same time. [23797660]
+    - modem manager plugin: Make calls nonblocking to not freeze UI when
+    called. [6e0dca97]
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 
