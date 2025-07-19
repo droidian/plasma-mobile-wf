@@ -1,0 +1,54 @@
+From 9707f503a217cb0d2b289e13576f99038dac0a62 Mon Sep 17 00:00:00 2001
+From: Micah Stanley <stanleymicah@proton.me>
+Date: Thu, 10 Apr 2025 14:30:51 +0000
+Subject: [PATCH] GestureNavigation: Fix Action Drawer State being out of Sync
+ on First Start
+
+---
+ components/mobileshellstate/shelldbusclient.cpp |  1 -
+ containments/panel/package/contents/ui/main.qml | 10 +---------
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/components/mobileshellstate/shelldbusclient.cpp b/components/mobileshellstate/shelldbusclient.cpp
+index 1281b3963..c933ae020 100644
+--- a/components/mobileshellstate/shelldbusclient.cpp
++++ b/components/mobileshellstate/shelldbusclient.cpp
+@@ -51,7 +51,6 @@ void ShellDBusClient::connectSignals()
+     connect(m_interface, &OrgKdePlasmashellInterface::resetHomeScreenPositionRequested, this, &ShellDBusClient::resetHomeScreenPositionRequested);
+     connect(m_interface, &OrgKdePlasmashellInterface::showVolumeOSDRequested, this, &ShellDBusClient::showVolumeOSDRequested);
+ 
+-    updateIsActionDrawerOpen();
+     updateDoNotDisturb();
+     updateIsTaskSwitcherVisible();
+ }
+diff --git a/containments/panel/package/contents/ui/main.qml b/containments/panel/package/contents/ui/main.qml
+index 0be24b595..ae1d60af4 100644
+--- a/containments/panel/package/contents/ui/main.qml
++++ b/containments/panel/package/contents/ui/main.qml
+@@ -67,14 +67,6 @@ ContainmentItem {
+         }
+     }
+ 
+-
+-    Binding {
+-        target: MobileShellState.ShellDBusClient
+-        property: "isActionDrawerOpen"
+-        value: drawer.visible
+-    }
+-
+-
+     // only opaque if there are no maximized windows on this screen
+     readonly property bool showingStartupFeedback: MobileShellState.ShellDBusObject.startupFeedbackModel.activeWindowIsStartupFeedback && windowMaximizedTracker.windowCount === 1
+     readonly property bool showingApp: windowMaximizedTracker.showingWindow && !showingStartupFeedback
+@@ -119,7 +111,7 @@ ContainmentItem {
+     Binding {
+         target: MobileShellState.ShellDBusClient
+         property: "isActionDrawerOpen"
+-        value: drawer.intendedToBeVisible
++        value: drawer.visible
+     }
+ 
+ //END API implementation
+-- 
+GitLab
+
