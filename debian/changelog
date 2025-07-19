@@ -1,3 +1,27 @@
+plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.6).
+    - Envmanager: Use BorderlessMaximizedWindows option.
+    - Shell: Fix Compact applet display popup when fullRepresentation is null.
+    - Homescreens/folio: Block propagation if edit mode is active to avoid
+    widget to trigger event.
+    - Load minimized Quicksettings as Async.
+    - Paginatemodel: Avoid to disconnect if model is the same because it's not
+    reconnected after.
+    - Fix mistake on paginatemodel.
+    - Quicksettings: Use synchrone component loading instead of asynchrone to
+    avoid concurrent bug.
+    - Envmanager: Write options as immutable, and add kdeglobals.
+    - Envmanager: Add overlay configs through XDG_CONFIG_DIRS.
+    - Taskswitcher: Fix task close icon colour in light mode.
+    - Folio: Ensure y anim signals don't get emitted if value didn't change.
+    - Notifications: Fix do-not-disturb.
+    - Notifications: Don't factor action drawer state in expiry.
+    - Notifications: do not expire notificationa after invoking action.
+
+ -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
+
 plasma-mobile (6.3.5-1) unstable; urgency=medium
 
   * Team upload.
