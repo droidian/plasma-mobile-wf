@@ -1,0 +1,27 @@
+From 8b8c9585587638dd3af90482255c6c6a8ac47c35 Mon Sep 17 00:00:00 2001
+From: Devin Lin <espidev@gmail.com>
+Date: Sun, 9 Mar 2025 11:44:23 -0400
+Subject: [PATCH] bin: Don't force QT_QPA_PLATFORM=wayland
+
+Qt apps for the most part should already default to wayland, since we are in a wayland
+session. Don't force apps that default to x11 to be wayland (same
+behaviour as desktop).
+---
+ bin/startplasmamobile.in | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/bin/startplasmamobile.in b/bin/startplasmamobile.in
+index 12af661af..3f9489bbf 100755
+--- a/bin/startplasmamobile.in
++++ b/bin/startplasmamobile.in
+@@ -7,7 +7,6 @@
+ 
+ [ -f /etc/profile ] && . /etc/profile
+ 
+-export QT_QPA_PLATFORM=wayland
+ export QT_QPA_PLATFORMTHEME=KDE
+ export EGL_PLATFORM=wayland
+ 
+-- 
+GitLab
+
