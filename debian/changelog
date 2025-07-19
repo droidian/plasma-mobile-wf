@@ -22,6 +22,8 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
   * Backport upstream commits:
     - bin: Don't force QT_QPA_PLATFORM=wayland so apps that prefer x11 can use
     it similar to what the desktop session does. [8b8c9585]
+    - applicationlistmodel: Space out application list refreshes to avoid log
+    spam and freezes. [7d9054f7]
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 
