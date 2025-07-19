@@ -1,0 +1,46 @@
+From 23797660ac98872dc4e7aca6b0ad7236c149699d Mon Sep 17 00:00:00 2001
+From: Devin Lin <espidev@gmail.com>
+Date: Sun, 6 Apr 2025 00:36:54 -0400
+Subject: [PATCH] statusbar: Don't show internet icon and loading indicator at
+ same time
+
+Ensure that the internet icon and the loading indicator do not show at the same time.
+---
+ .../qml/statusbar/indicators/InternetIndicator.qml  | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/components/mobileshell/qml/statusbar/indicators/InternetIndicator.qml b/components/mobileshell/qml/statusbar/indicators/InternetIndicator.qml
+index 3efa39b92..1f7e3ff22 100644
+--- a/components/mobileshell/qml/statusbar/indicators/InternetIndicator.qml
++++ b/components/mobileshell/qml/statusbar/indicators/InternetIndicator.qml
+@@ -12,7 +12,7 @@ import QtQuick.Controls as QQC2
+ import org.kde.plasma.networkmanagement as PlasmaNM
+ import org.kde.kirigami as Kirigami
+ 
+-Kirigami.Icon {
++Item {
+     id: connectionIcon
+ 
+     // data
+@@ -40,9 +40,16 @@ Kirigami.Icon {
+         id: connectionIconProvider
+     }
+ 
+-    // implementation
+-    source: icon
++    // Internet icon, only show while visible
++    Kirigami.Icon {
++        id: internetIcon
+ 
++        anchors.fill: parent
++        visible: !connectingIndicator.visible
++        source: connectionIcon.icon
++    }
++
++    // Connecting indicator
+     QQC2.BusyIndicator {
+         id: connectingIndicator
+ 
+-- 
+GitLab
+
