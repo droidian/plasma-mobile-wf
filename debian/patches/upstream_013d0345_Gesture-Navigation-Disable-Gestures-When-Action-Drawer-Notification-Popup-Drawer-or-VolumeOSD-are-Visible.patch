@@ -1,0 +1,323 @@
+From 013d034516fa1164a39ae607096603a3890e86f0 Mon Sep 17 00:00:00 2001
+From: Micah Stanley <stanleymicah@proton.me>
+Date: Wed, 19 Mar 2025 01:21:46 +0000
+Subject: [PATCH] Gesture Navigation: Disable Gestures When Action Drawer,
+ Notification Popup Drawer, or VolumeOSD are Visible
+
+Disables gesture navigation when Action Drawer, Notification Popup Drawer, or VolumeOSD are visible as activating the task switcher in these situation can feel a bit weird.
+
+Note:
+~~Draft for in till I can get side loading working again so I can test it on device.~~
+
+Still can't seem to get side loading working quite yet. Though, I did run the test I could from my laptop and it does seems to be working fine, so I will be removing this from draft.
+---
+ .../NotificationPopupManager.qml              |  6 ++
+ .../mobileshell/qml/volumeosd/VolumeOSD.qml   |  8 ++-
+ .../mobileshellstate/shelldbusclient.cpp      | 70 ++++++++++++++++---
+ components/mobileshellstate/shelldbusclient.h | 14 ++++
+ .../mobileshellstate/shelldbusobject.cpp      | 26 +++++++
+ components/mobileshellstate/shelldbusobject.h | 10 +++
+ .../package/contents/ui/main.qml              |  3 +-
+ 7 files changed, 126 insertions(+), 11 deletions(-)
+
+diff --git a/components/mobileshell/qml/notificationpopup/NotificationPopupManager.qml b/components/mobileshell/qml/notificationpopup/NotificationPopupManager.qml
+index 3ade5132a..7eb4cb2a5 100644
+--- a/components/mobileshell/qml/notificationpopup/NotificationPopupManager.qml
++++ b/components/mobileshell/qml/notificationpopup/NotificationPopupManager.qml
+@@ -68,6 +68,12 @@ Window {
+ 
+     Component.onCompleted: ShellUtil.setInputTransparent(notificationPopupManager, true)
+ 
++    Binding {
++        target: MobileShellState.ShellDBusClient
++        property: "isNotificationPopupDrawerOpen"
++        value: popupDrawerOpened
++    }
++
+     // Update the window touch region to encapsulate the notification area or the whole screen depending on the 'popupDrawerOpened' state
+     function updateTouchArea() {
+         ShellUtil.setInputTransparent(notificationPopupManager, false);
+diff --git a/components/mobileshell/qml/volumeosd/VolumeOSD.qml b/components/mobileshell/qml/volumeosd/VolumeOSD.qml
+index c4294f172..31c766d5c 100644
+--- a/components/mobileshell/qml/volumeosd/VolumeOSD.qml
++++ b/components/mobileshell/qml/volumeosd/VolumeOSD.qml
+@@ -31,7 +31,7 @@ Window {
+ 
+     LayerShell.Window.scope: "overlay"
+     LayerShell.Window.anchors: LayerShell.Window.AnchorTop
+-    LayerShell.Window.layer: LayerShell.Window.LayerTop
++    LayerShell.Window.layer: LayerShell.Window.LayerOverlay
+     LayerShell.Window.exclusionZone: -1
+ 
+     readonly property color backgroundColor: Qt.darker(Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g, Kirigami.Theme.backgroundColor.b, 0.95), 1.05)
+@@ -65,6 +65,12 @@ Window {
+         visible = false;
+     }
+ 
++    Binding {
++        target: MobileShellState.ShellDBusClient
++        property: "isVolumeOSDOpen"
++        value: window.visible
++    }
++
+     Flickable {
+         id: flickable
+         anchors.fill: parent
+diff --git a/components/mobileshellstate/shelldbusclient.cpp b/components/mobileshellstate/shelldbusclient.cpp
+index 2f33f5d84..1281b3963 100644
+--- a/components/mobileshellstate/shelldbusclient.cpp
++++ b/components/mobileshellstate/shelldbusclient.cpp
+@@ -8,22 +8,28 @@
+ ShellDBusClient::ShellDBusClient(QObject *parent)
+     : QObject{parent}
+     , m_interface{new OrgKdePlasmashellInterface{QStringLiteral("org.kde.plasmashell"), QStringLiteral("/Mobile"), QDBusConnection::sessionBus(), this}}
+-    , m_watcher{new QDBusServiceWatcher(QStringLiteral("org.kde.plasmashell"), QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForOwnerChange, this)}
+     , m_connected{false}
+ {
+-    if (m_interface->isValid()) {
+-        connectSignals();
+-    }
+-
+-    connect(m_watcher, &QDBusServiceWatcher::serviceRegistered, this, [this]() -> void {
++    // Check if the service is already running
++    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.plasmashell"))) {
+         m_connected = true;
+         if (m_interface->isValid()) {
+             connectSignals();
+         }
+-    });
++    }
+ 
+-    connect(m_watcher, &QDBusServiceWatcher::serviceUnregistered, this, [this]() -> void {
+-        m_connected = false;
++    connect(QDBusConnection::sessionBus().interface(), &QDBusConnectionInterface::serviceOwnerChanged, this, [this](const QString &service, const QString &oldOwner, const QString &newOwner) {
++        Q_UNUSED(oldOwner);
++        if (service == QStringLiteral("org.kde.plasmashell")) {
++            if (!newOwner.isEmpty() && !m_connected) {
++                m_connected = true;
++                if (m_interface->isValid()) {
++                    connectSignals();
++                }
++            } else if (newOwner.isEmpty() && m_connected) {
++                m_connected = false;
++            }
++        }
+     });
+ }
+ 
+@@ -31,6 +37,8 @@ void ShellDBusClient::connectSignals()
+ {
+     connect(m_interface, &OrgKdePlasmashellInterface::panelStateChanged, this, &ShellDBusClient::updatePanelState);
+     connect(m_interface, &OrgKdePlasmashellInterface::isActionDrawerOpenChanged, this, &ShellDBusClient::updateIsActionDrawerOpen);
++    connect(m_interface, &OrgKdePlasmashellInterface::isVolumeOSDOpenChanged, this, &ShellDBusClient::updateIsVolumeOSDOpen);
++    connect(m_interface, &OrgKdePlasmashellInterface::isNotificationPopupDrawerOpenChanged, this, &ShellDBusClient::updateIsNotificationPopupDrawerOpen);
+     connect(m_interface, &OrgKdePlasmashellInterface::doNotDisturbChanged, this, &ShellDBusClient::updateDoNotDisturb);
+     connect(m_interface, &OrgKdePlasmashellInterface::isTaskSwitcherVisibleChanged, this, &ShellDBusClient::updateIsTaskSwitcherVisible);
+     connect(m_interface, &OrgKdePlasmashellInterface::openActionDrawerRequested, this, &ShellDBusClient::openActionDrawerRequested);
+@@ -78,6 +86,26 @@ void ShellDBusClient::setIsActionDrawerOpen(bool value)
+     m_interface->setIsActionDrawerOpen(value);
+ }
+ 
++bool ShellDBusClient::isVolumeOSDOpen() const
++{
++    return m_isVolumeOSDOpen;
++}
++
++void ShellDBusClient::setIsVolumeOSDOpen(bool value)
++{
++    m_interface->setIsVolumeOSDOpen(value);
++}
++
++bool ShellDBusClient::isNotificationPopupDrawerOpen() const
++{
++    return m_isNotificationPopupDrawerOpen;
++}
++
++void ShellDBusClient::setIsNotificationPopupDrawerOpen(bool value)
++{
++    m_interface->setIsNotificationPopupDrawerOpen(value);
++}
++
+ void ShellDBusClient::openActionDrawer()
+ {
+     m_interface->openActionDrawer();
+@@ -160,6 +188,30 @@ void ShellDBusClient::updateIsActionDrawerOpen()
+     });
+ }
+ 
++void ShellDBusClient::updateIsVolumeOSDOpen()
++{
++    auto reply = m_interface->isVolumeOSDOpen();
++    auto watcher = new QDBusPendingCallWatcher(reply, this);
++
++    QObject::connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](auto watcher) {
++        QDBusPendingReply<bool> reply = *watcher;
++        m_isVolumeOSDOpen = reply.argumentAt<0>();
++        Q_EMIT isVolumeOSDOpenChanged();
++    });
++}
++
++void ShellDBusClient::updateIsNotificationPopupDrawerOpen()
++{
++    auto reply = m_interface->isNotificationPopupDrawerOpen();
++    auto watcher = new QDBusPendingCallWatcher(reply, this);
++
++    QObject::connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](auto watcher) {
++        QDBusPendingReply<bool> reply = *watcher;
++        m_isNotificationPopupDrawerOpen = reply.argumentAt<0>();
++        Q_EMIT isNotificationPopupDrawerOpenChanged();
++    });
++}
++
+ void ShellDBusClient::updateIsTaskSwitcherVisible()
+ {
+     auto reply = m_interface->isTaskSwitcherVisible();
+diff --git a/components/mobileshellstate/shelldbusclient.h b/components/mobileshellstate/shelldbusclient.h
+index 329061418..e3818aab9 100644
+--- a/components/mobileshellstate/shelldbusclient.h
++++ b/components/mobileshellstate/shelldbusclient.h
+@@ -18,6 +18,8 @@ class ShellDBusClient : public QObject
+ 
+     Q_PROPERTY(bool doNotDisturb READ doNotDisturb WRITE setDoNotDisturb NOTIFY doNotDisturbChanged)
+     Q_PROPERTY(bool isActionDrawerOpen READ isActionDrawerOpen WRITE setIsActionDrawerOpen NOTIFY isActionDrawerOpenChanged)
++    Q_PROPERTY(bool isVolumeOSDOpen READ isVolumeOSDOpen WRITE setIsVolumeOSDOpen NOTIFY isVolumeOSDOpenChanged)
++    Q_PROPERTY(bool isNotificationPopupDrawerOpen READ isNotificationPopupDrawerOpen WRITE setIsNotificationPopupDrawerOpen NOTIFY isNotificationPopupDrawerOpenChanged)
+     Q_PROPERTY(bool isTaskSwitcherVisible READ isTaskSwitcherVisible NOTIFY isTaskSwitcherVisibleChanged)
+     Q_PROPERTY(QString panelState READ panelState WRITE setPanelState NOTIFY panelStateChanged)
+ 
+@@ -30,6 +32,12 @@ public:
+     bool isActionDrawerOpen() const;
+     void setIsActionDrawerOpen(bool value);
+ 
++    bool isVolumeOSDOpen() const;
++    void setIsVolumeOSDOpen(bool value);
++
++    bool isNotificationPopupDrawerOpen() const;
++    void setIsNotificationPopupDrawerOpen(bool value);
++
+     bool isTaskSwitcherVisible() const;
+ 
+     QString panelState() const;
+@@ -50,6 +58,8 @@ public:
+ Q_SIGNALS:
+     void panelStateChanged();
+     void isActionDrawerOpenChanged();
++    void isVolumeOSDOpenChanged();
++    void isNotificationPopupDrawerOpenChanged();
+     void doNotDisturbChanged();
+     void isTaskSwitcherVisibleChanged();
+     void openActionDrawerRequested();
+@@ -62,6 +72,8 @@ Q_SIGNALS:
+ private Q_SLOTS:
+     void updateDoNotDisturb();
+     void updateIsActionDrawerOpen();
++    void updateIsVolumeOSDOpen();
++    void updateIsNotificationPopupDrawerOpen();
+     void updateIsTaskSwitcherVisible();
+     void updatePanelState();
+ 
+@@ -75,6 +87,8 @@ private:
+ 
+     bool m_doNotDisturb = false;
+     bool m_isActionDrawerOpen = false;
++    bool m_isVolumeOSDOpen = false;
++    bool m_isNotificationPopupDrawerOpen = false;
+     bool m_isTaskSwitcherVisible = false;
+ 
+     bool m_connected = false;
+diff --git a/components/mobileshellstate/shelldbusobject.cpp b/components/mobileshellstate/shelldbusobject.cpp
+index 8df038db3..3697cb0fb 100644
+--- a/components/mobileshellstate/shelldbusobject.cpp
++++ b/components/mobileshellstate/shelldbusobject.cpp
+@@ -66,6 +66,32 @@ void ShellDBusObject::setIsActionDrawerOpen(bool value)
+     }
+ }
+ 
++bool ShellDBusObject::isVolumeOSDOpen()
++{
++    return m_isVolumeOSDOpen;
++}
++
++void ShellDBusObject::setIsVolumeOSDOpen(bool value)
++{
++    if (value != m_isVolumeOSDOpen) {
++        m_isVolumeOSDOpen = value;
++        Q_EMIT isVolumeOSDOpenChanged();
++    }
++}
++
++bool ShellDBusObject::isNotificationPopupDrawerOpen()
++{
++    return m_isNotificationPopupDrawerOpen;
++}
++
++void ShellDBusObject::setIsNotificationPopupDrawerOpen(bool value)
++{
++    if (value != m_isNotificationPopupDrawerOpen) {
++        m_isNotificationPopupDrawerOpen = value;
++        Q_EMIT isNotificationPopupDrawerOpenChanged();
++    }
++}
++
+ bool ShellDBusObject::isTaskSwitcherVisible()
+ {
+     return m_isTaskSwitcherVisible;
+diff --git a/components/mobileshellstate/shelldbusobject.h b/components/mobileshellstate/shelldbusobject.h
+index 7f8cf7e03..5d0055ce8 100644
+--- a/components/mobileshellstate/shelldbusobject.h
++++ b/components/mobileshellstate/shelldbusobject.h
+@@ -28,6 +28,8 @@ public:
+ Q_SIGNALS:
+     Q_SCRIPTABLE void doNotDisturbChanged();
+     Q_SCRIPTABLE void isActionDrawerOpenChanged();
++    Q_SCRIPTABLE void isVolumeOSDOpenChanged();
++    Q_SCRIPTABLE void isNotificationPopupDrawerOpenChanged();
+     Q_SCRIPTABLE void panelStateChanged();
+     Q_SCRIPTABLE void isTaskSwitcherVisibleChanged();
+     Q_SCRIPTABLE void openActionDrawerRequested();
+@@ -45,6 +47,12 @@ public Q_SLOTS:
+     Q_SCRIPTABLE bool isActionDrawerOpen();
+     Q_SCRIPTABLE void setIsActionDrawerOpen(bool value);
+ 
++    Q_SCRIPTABLE bool isVolumeOSDOpen();
++    Q_SCRIPTABLE void setIsVolumeOSDOpen(bool value);
++
++    Q_SCRIPTABLE bool isNotificationPopupDrawerOpen();
++    Q_SCRIPTABLE void setIsNotificationPopupDrawerOpen(bool value);
++
+     Q_SCRIPTABLE QString panelState();
+     Q_SCRIPTABLE void setPanelState(QString state);
+ 
+@@ -68,6 +76,8 @@ private:
+ 
+     bool m_doNotDisturb{false};
+     bool m_isActionDrawerOpen{false};
++    bool m_isVolumeOSDOpen{false};
++    bool m_isNotificationPopupDrawerOpen{false};
+     bool m_isTaskSwitcherVisible{false};
+ 
+     QString m_panelState{};
+diff --git a/kwin/mobiletaskswitcher/package/contents/ui/main.qml b/kwin/mobiletaskswitcher/package/contents/ui/main.qml
+index 98fa1fa7e..7015b58a0 100644
+--- a/kwin/mobiletaskswitcher/package/contents/ui/main.qml
++++ b/kwin/mobiletaskswitcher/package/contents/ui/main.qml
+@@ -7,6 +7,7 @@ import org.kde.kwin
+ 
+ import org.kde.plasma.private.mobileshell.taskswitcherplugin as TaskSwitcherPlugin
+ import org.kde.plasma.private.mobileshell.shellsettingsplugin as ShellSettings
++import org.kde.plasma.private.mobileshell.state as MobileShellState
+ 
+ SceneEffect {
+     id: root
+@@ -28,7 +29,7 @@ SceneEffect {
+     TaskSwitcherPlugin.MobileTaskSwitcherState {
+         id: taskSwitcherState
+ 
+-        gestureEnabled: !ShellSettings.Settings.navigationPanelEnabled
++        gestureEnabled: !ShellSettings.Settings.navigationPanelEnabled && !MobileShellState.ShellDBusClient.isActionDrawerOpen && !MobileShellState.ShellDBusClient.isVolumeOSDOpen && !MobileShellState.ShellDBusClient.isNotificationPopupDrawerOpen
+ 
+         Component.onCompleted: {
+             // Initialize with effect
+-- 
+GitLab
+
