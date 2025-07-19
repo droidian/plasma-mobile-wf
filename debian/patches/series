@@ -6,3 +6,4 @@ upstream_c5f0d15b_folio-Fix-AppDelegate-null-errors.patch
 upstream_e4323f4e_notification-list-fix-notification-scrolling-within-action-drawer-and-lockscreen.patch
 upstream_23797660_statusbar-Don-t-show-internet-icon-and-loading-indicator-at-same-time.patch
 upstream_6e0dca97_mmplugin-Make-calls-nonblocking-to-not-freeze-UI-when-called.patch
+upstream_a452bc30_Folio-Settings-Component-Bugfix.patch
