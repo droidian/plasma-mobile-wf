@@ -38,6 +38,8 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
     called. [6e0dca97]
     - Folio: Fix Settings Component drawer bug where it can end up displayed
     at the same time as the application drawer. [a452bc30]
+  * Relax inter-plasma versioned dependency constraint so we can upload
+    only 6.3.6 packages that have actual code changes.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
 

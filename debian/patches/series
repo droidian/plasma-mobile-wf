@@ -1,3 +1,4 @@
+relax-interplasma-versioned-deps.patch
 upstream_8b8c9585_bin-Don-t-force-QT-QPA-PLATFORM-wayland.patch
 upstream_7d9054f7_applicationlistmodel-Space-out-application-list-refreshes.patch
 upstream_013d0345_Gesture-Navigation-Disable-Gestures-When-Action-Drawer-Notification-Popup-Drawer-or-VolumeOSD-are-Visible.patch
