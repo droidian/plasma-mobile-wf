@@ -1,4 +1,6 @@
-plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
+plasma-mobile (6.3.6-1) unstable; urgency=medium
+
+  * Team upload.
 
   [ Aurélien COUDERC ]
   * New upstream release (6.3.6).
@@ -41,7 +43,7 @@ plasma-mobile (6.3.6-1) UNRELEASED; urgency=medium
   * Relax inter-plasma versioned dependency constraint so we can upload
     only 6.3.6 packages that have actual code changes.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 19 Jul 2025 17:16:22 +0200
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 22 Jul 2025 17:56:43 +0200
 
 plasma-mobile (6.3.5-1) unstable; urgency=medium
 
