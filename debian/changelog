@@ -1,5 +1,10 @@
 plasma-mobile (6.3.6-3) UNRELEASED; urgency=medium
 
+  [ Aurélien COUDERC ]
+  * More fix incorrect backport of:
+    - notification list: fix notification scrolling within action drawer and
+    lockscreen. [e4323f4e]
+
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Tue, 29 Jul 2025 20:23:24 +0200
 
 plasma-mobile (6.3.6-2) unstable; urgency=medium
