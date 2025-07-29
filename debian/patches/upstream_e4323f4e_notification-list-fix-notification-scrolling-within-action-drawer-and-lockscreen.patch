@@ -1321,7 +1321,7 @@ index 94346d5e8..314e8c71e 100644
                      }
                  }
  
-@@ -199,50 +259,14 @@ Item {
+@@ -199,50 +259,23 @@ Item {
                          }
                      ]
  
@@ -1351,6 +1351,15 @@ index 94346d5e8..314e8c71e 100644
 -                }
 +                    scrollLock: headerBar.actionDrawerVisible || (flickableLoader.item ? flickableLoader.item.flickable.openFactor > 0.2 : false)
 +                    z: scrollLock ? -1 : 0
++
++                    anchors {
++                        //topMargin: headerBar.statusBarHeight
++                        top: item.top
++                        bottom: item.bottom
++                        left: item.left
++                        right: item.right
++                    }
++                }
  
 -                Rectangle {
 -                    id: keypadScrim
