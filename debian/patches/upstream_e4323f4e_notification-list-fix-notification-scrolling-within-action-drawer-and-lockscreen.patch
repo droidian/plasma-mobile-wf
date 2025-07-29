@@ -1189,7 +1189,7 @@ index 94346d5e8..314e8c71e 100644
              notificationsModel: root.notifModel
              onPasswordRequested: root.askPassword()
          }
-@@ -145,43 +145,103 @@ Item {
+@@ -145,43 +145,79 @@ Item {
              }
  
              // Container for lockscreen contents
@@ -1265,18 +1265,6 @@ index 94346d5e8..314e8c71e 100644
 +                        }
 +                    }
 +
-+                    QuickActionButton {
-+                        id: leftButton
-+                        buttonAction: ShellSettings.Settings.lockscreenLeftButtonAction
-+                        opacity: Math.max(0, 1 - flickable.openFactor * 2)
-+                        anchors {
-+                            bottom: parent.bottom
-+                            left: parent.left
-+                            bottomMargin: Kirigami.Units.largeSpacing * 3
-+                            leftMargin: Kirigami.Units.largeSpacing * 3
-+                        }
-+                    }
-+
 +                    // scroll up icon
 +                    BottomIconIndicator {
 +                        id: scrollUpIconLoader
@@ -1286,18 +1274,6 @@ index 94346d5e8..314e8c71e 100644
 +                        anchors.bottom: parent.bottom
 +                        anchors.bottomMargin: Kirigami.Units.gridUnit + flickable.position * 0.1
 +                        anchors.horizontalCenter: parent.horizontalCenter
-+                    }
-+
-+                    QuickActionButton {
-+                        id: rightButton
-+                        buttonAction: ShellSettings.Settings.lockscreenRightButtonAction
-+                        opacity: Math.max(0, 1 - flickable.openFactor * 2)
-+                        anchors {
-+                            bottom: parent.bottom
-+                            right: parent.right
-+                            bottomMargin: Kirigami.Units.largeSpacing * 3
-+                            rightMargin: Kirigami.Units.largeSpacing * 3
-+                        }
 +                    }
 +
 +                    Rectangle {
@@ -1321,7 +1297,7 @@ index 94346d5e8..314e8c71e 100644
                      }
                  }
  
-@@ -199,50 +259,23 @@ Item {
+@@ -199,50 +212,23 @@ Item {
                          }
                      ]
  
