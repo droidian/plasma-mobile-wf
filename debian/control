@@ -2,8 +2,9 @@ Source: plasma-mobile
 Section: kde
 Priority: optional
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
-Uploaders: Marco Mattiolo <marco.mattiolo@hotmail.it>,
-           Arnaud Ferraris <aferraris@debian.org>,
+Uploaders: Arnaud Ferraris <aferraris@debian.org>,
+           Aurélien COUDERC <coucouf@debian.org>,
+           Marco Mattiolo <marco.mattiolo@hotmail.it>,
 Build-Depends: debhelper-compat (= 13),
                dh-sequence-kf6,
                dh-sequence-pkgkde-symbolshelper,
