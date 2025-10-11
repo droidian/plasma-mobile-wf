@@ -5,6 +5,7 @@ plasma-mobile (6.4.91-1) UNRELEASED; urgency=medium
   * Update build-deps and deps with the info from cmake.
   * Add myself to the uploaders.
   * Drop backported commits now part of the upstream release.
+  * Update the list of installed files.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 11 Oct 2025 22:46:36 +0200
 
