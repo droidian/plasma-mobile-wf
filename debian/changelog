@@ -1,4 +1,4 @@
-plasma-mobile (6.4.91-1) UNRELEASED; urgency=medium
+plasma-mobile (6.4.91-1) experimental; urgency=medium
 
   [ Aurélien COUDERC ]
   * New upstream release (6.4.91).
@@ -8,7 +8,7 @@ plasma-mobile (6.4.91-1) UNRELEASED; urgency=medium
   * Update the list of installed files.
   * Drop Rules-Requires-Root: no, not needed anymore since trixie.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 11 Oct 2025 22:46:36 +0200
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 11 Oct 2025 22:48:34 +0200
 
 plasma-mobile (6.3.6-3) unstable; urgency=medium
 
