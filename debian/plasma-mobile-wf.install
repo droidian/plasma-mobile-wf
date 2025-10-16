@@ -6,7 +6,6 @@ usr/share/applications/*
 usr/share/dbus-1/interfaces/org.kde.plasmashell.Mobile.xml
 usr/share/knotifications6/*
 usr/share/locale/*
-usr/share/metainfo/*
 usr/share/plasma/*
 usr/share/plasma-mobile-apn-info/*
 usr/share/wayland-sessions/plasma-mobile.desktop
