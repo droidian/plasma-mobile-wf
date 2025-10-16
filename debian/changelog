@@ -1,4 +1,6 @@
-plasma-mobile (6.3.6-4) UNRELEASED; urgency=medium
+plasma-mobile (6.3.6-4) unstable; urgency=medium
+
+  * Team upload.
 
   [ Aurélien COUDERC ]
   * Drop Rules-Requires-Root: no, not needed anymore since trixie.
@@ -9,7 +11,7 @@ plasma-mobile (6.3.6-4) UNRELEASED; urgency=medium
   * Trim trailing whitespace.
   * Re-export upstream signing key without extra signatures.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 16 Oct 2025 20:19:19 +0200
+ -- Pino Toscano <pino@debian.org>  Thu, 16 Oct 2025 21:05:18 +0200
 
 plasma-mobile (6.3.6-3) unstable; urgency=medium
 
