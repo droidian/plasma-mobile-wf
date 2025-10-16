@@ -1,4 +1,4 @@
-plasma-mobile (6.5.0-1) UNRELEASED; urgency=medium
+plasma-mobile (6.5.0-1) unstable; urgency=medium
 
   [ Pino Toscano ]
   * Merge changes from 6.3.6-4.
@@ -7,8 +7,9 @@ plasma-mobile (6.5.0-1) UNRELEASED; urgency=medium
   * New upstream release (6.5.0).
   * Update build-deps and deps with the info from cmake.
   * Refresh copyright information.
+  * Release to unstable.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 16 Oct 2025 21:40:30 +0200
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 16 Oct 2025 22:09:51 +0200
 
 plasma-mobile (6.4.91-1) experimental; urgency=medium
 
