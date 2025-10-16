@@ -6,6 +6,7 @@ plasma-mobile (6.3.6-4) UNRELEASED; urgency=medium
   [ Pino Toscano ]
   * Update plasma-mobile.install according to the newer kpackage, which does not
     generate appstream metainfo files for packages anymore. (Closes: #1117364)
+  * Trim trailing whitespace.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 16 Oct 2025 20:19:19 +0200
 
@@ -63,7 +64,7 @@ plasma-mobile (6.3.6-1) unstable; urgency=medium
     Action Drawer, Notification Popup Drawer, or VolumeOSD are visible
     [013d0345]
     - GestureNavigation: Fix Action Drawer State being out of Sync on First
-    Start. [9707f503] 
+    Start. [9707f503]
     - folio: Fix recurring AppDelegate null errors in the logs. [c5f0d15b]
     - notification list: fix notification scrolling within action drawer and
     lockscreen. [e4323f4e]
