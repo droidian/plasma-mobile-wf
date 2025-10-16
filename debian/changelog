@@ -5,6 +5,7 @@ plasma-mobile (6.5.0-1) UNRELEASED; urgency=medium
 
   [ Aurélien COUDERC ]
   * New upstream release (6.5.0).
+  * Update build-deps and deps with the info from cmake.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 16 Oct 2025 21:40:30 +0200
 
