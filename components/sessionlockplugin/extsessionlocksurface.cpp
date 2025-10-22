@@ -34,7 +34,7 @@ void ExtSessionLockSurface::ext_session_lock_surface_v1_configure(uint32_t seria
     if (!m_configured) {
         m_configured = true;
         applyConfigure();
-        window()->sendRecursiveExposeEvent();
+        window()->updateExposure();
     } else {
         window()->resizeFromApplyConfigure(m_pendingSize);
     }
