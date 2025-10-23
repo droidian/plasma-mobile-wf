@@ -12,9 +12,12 @@ import org.kde.plasma.private.mobileshell as MobileShell
 import org.kde.plasma.workspace.components 2.0 as PW
 import org.kde.ksysguard.sensors 1.0 as Sensors
 import org.kde.plasma.private.mobileshell.wlrdpmsplugin as DpmsPlugin
+import org.kde.plasma.private.mobileshell.screenbrightnessplugin as ScreenBrightness
 
 Item {
     id: root
+
+    property var lastBrightness: 150
 
     property var notificationsModel: NotificationManager.Notifications {
                                         showExpired: true
@@ -47,6 +50,20 @@ Item {
                                                         && DpmsPlugin.WlrDpmsManagerV1.pwrOn) {
                                                 dtItem.getNewPosition();
                                             }
+
+                                            if(!call.callActive && !DpmsPlugin.WlrDpmsManagerV1.pwrOn){
+                                                 if(activeNotificationsCount > 0){
+                                                     DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
+                                                     screenTimeOut.stop();
+                                                     dimOut.stop();
+                                                     dimIn.start();
+                                                     screenTimeOut.restart();
+                                                     return;
+                                                 }
+                                             } else if(!call.callActive
+                                                        && DpmsPlugin.WlrDpmsManagerV1.pwrOn){
+                                                screenTimeOut.restart();
+                                             }
                                         }
                                     }
 
@@ -54,6 +71,14 @@ Item {
     height: Screen.height
 
     visible: true
+
+    function trunOnScreen(){
+        if(!call.callActive){
+            DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
+            dimIn.start();
+            screenTimeOut.restart();
+        }
+    }
 
     Connections {
         target: DpmsPlugin.WlrDpmsManagerV1
@@ -67,6 +92,8 @@ Item {
                         && notificationsModel.count == 0
                         && notificationsModel.activeNotificationsCount == 0){
                 dtItem.getNewPosition();
+                if(!call.callActive)
+                    screenTimeOut.restart();
             }
         }
     }
@@ -88,6 +115,32 @@ Item {
             implicitHeight: 160
             source: "file:/usr/share/icons/vendor/scalable/emblems/emblem-vendor.svg"
         }
+    }
+
+    Timer {
+        id: screenTimeOut
+        running: false
+        interval: 15000
+        onTriggered: {
+            dimIn.stop();
+            dimOut.start();
+        }
+    }
+
+    PropertyAnimation { id: dimOut;
+        target: ScreenBrightness.ScreenBrightnessUtil;
+        property: "brightness";
+        to: 0;
+        duration: 200
+
+        onFinished: DpmsPlugin.WlrDpmsManagerV1.pwrOn = false;
+    }
+
+    PropertyAnimation { id: dimIn;
+        target: ScreenBrightness.ScreenBrightnessUtil;
+        property: "brightness";
+        to: lastBrightness;
+        duration: 200
     }
 
     Image {
@@ -363,6 +416,10 @@ Item {
             if(call.callActive){
                 qsDrawer.close()
                 unlockDrawer.close()
+                DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
+                screenTimeOut.stop();
+                dimOut.stop();
+                dimIn.start();
             }
         }
     }
@@ -397,5 +454,13 @@ Item {
                 dtItem.getNewPosition();
             }
         }
+    }
+
+    MultiPointTouchArea {
+        anchors.fill: parent
+
+        onPressed: screenTimeOut.restart();
+        onUpdated: screenTimeOut.restart();
+        onReleased: screenTimeOut.restart();
     }
 }
