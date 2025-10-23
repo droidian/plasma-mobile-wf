@@ -25,6 +25,8 @@ Item {
             if (SolidBattery.primary.chargeState === 1){
                 animateCharging.start()
             }
+
+            trunOnScreen();
         }
     }
 
