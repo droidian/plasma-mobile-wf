@@ -94,9 +94,6 @@ Item {
                 width: radius * 2
                 height: width
 
-                layer.enabled: true
-                layer.samples: 8
-
                 ShapePath {
                     id: path_b
                     fillColor: "transparent"
