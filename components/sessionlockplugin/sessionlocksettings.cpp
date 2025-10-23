@@ -15,9 +15,9 @@ QString SessionLockSettings::wallpaperFile()
 {
 	auto group = KConfigGroup{m_config, m_confGrpGeneral};
 	if(!group.hasKey("wallpaperFile"))
-		setWallpaperFile("/usr/share/wallpapers/DebianTheme/contents/images/2560x1440.svg");
+		setWallpaperFile("/usr/share/wallpapers/DebianTheme/contents/images/1920x1080.svg");
 
-    return group.readEntry("wallpaperFile", "/usr/share/wallpapers/DebianTheme/contents/images/2560x1440.svg");
+    return group.readEntry("wallpaperFile", "/usr/share/wallpapers/DebianTheme/contents/images/1920x1080.svg");
 }
 
 void SessionLockSettings::setWallpaperFile(QString file)
