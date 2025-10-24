@@ -17,4 +17,4 @@ export KDE_NO_KWIN=1
 
 check_wayfire_config
 
-exec dbus-run-session wayfire -c /home/$USER/.config/plasma-mobile-wf/wayfire.ini
+dbus-run-session -- bash -c '/usr/libexec/flashlightd & exec wayfire -c ~/.config/plasma-mobile-wf/wayfire.ini'
