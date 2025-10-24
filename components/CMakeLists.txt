@@ -18,3 +18,5 @@ add_subdirectory(raiselockscreenplugin)
 add_subdirectory(wayfireipcplugin)
 add_subdirectory(wlrdpmsplugin)
 add_subdirectory(sessionlockplugin)
+add_subdirectory(sensorsplugin)
+
