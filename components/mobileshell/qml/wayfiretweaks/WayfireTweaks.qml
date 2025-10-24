@@ -3,8 +3,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 import QtQuick
+import QtSensors
 
 import org.kde.plasma.private.mobileshell.sessionlockplugin as SessionLockPlugin
+import org.kde.plasma.private.mobileshell.sensorsplugin as SensorsPlugin
 import org.kde.plasma.private.mobileshell.wlrdpmsplugin as DpmsPlugin
 import org.kde.plasma.private.mobileshell.wayfireipcplugin as WayfireIpcPlugin
 import org.kde.plasma.private.mobileshell.screenbrightnessplugin as ScreenBrightness
@@ -15,6 +17,7 @@ Item {
 
     property var wasLocked: false
     property var lastBrightness: 150
+    property bool callActive: ActiveCallModel.active
 
     Component.onCompleted: {
         // initialize dpms plugin
@@ -42,6 +45,20 @@ Item {
 
         function onFailed(){
             lockSplash.lockText = "Locked"
+        }
+    }
+
+    Connections {
+        target: SensorsPlugin.Sensors
+
+        function onProximityChanged(value) {
+            console.log("Proximity sensor value:", value)
+            if(callActive){
+                if(value)
+                    DpmsPlugin.WlrDpmsManagerV1.pwrOn = false;
+                else
+                    DpmsPlugin.WlrDpmsManagerV1.pwrOn = true;
+            }
         }
     }
 
