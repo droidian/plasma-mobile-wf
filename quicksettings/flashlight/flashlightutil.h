@@ -7,7 +7,7 @@
 #pragma once
 
 #include <QObject>
-#include <libudev.h>
+#include <QDBusInterface>
 
 #include <qqmlregistration.h>
 
@@ -31,10 +31,7 @@ Q_SIGNALS:
     void torchChanged(bool value);
 
 private:
-    struct udev_device *m_device{nullptr};
-    const char *m_maxBrightness{nullptr};
     bool m_isAvailable{false};
     bool m_torchEnabled{false};
-
-    void findTorchDevice();
+    QDBusInterface *m_iface;
 };
