@@ -7,41 +7,73 @@
 
 #include "flashlightutil.h"
 
-#include <cstring>
-#include <fcntl.h>
-#include <libudev.h>
-#include <unistd.h>
-
+#include <QDBusReply>
+#include <QDBusVariant>
 #include <QDebug>
-#include <QFileInfo>
-
-#define TORCH_SUBSYSTEM "leds"
 
 FlashlightUtil::FlashlightUtil(QObject *parent)
-    : QObject{parent}
-    , m_device{nullptr}
-    , m_isAvailable{false}
+    : QObject(parent)
+    , m_isAvailable(false)
+    , m_torchEnabled(false)
 {
-    findTorchDevice();
-}
-
-FlashlightUtil::~FlashlightUtil()
-{
-    if (m_device != nullptr) {
-        udev_device_unref(m_device);
-    }
-}
-
-void FlashlightUtil::toggleTorch()
-{
-    if (!isAvailable()) {
-        qWarning() << "Flashlight not available";
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected()) {
+        qWarning() << "No session bus available";
         return;
     }
 
-    int ret = udev_device_set_sysattr_value(m_device, "brightness", const_cast<char *>(m_torchEnabled ? "0" : m_maxBrightness));
-    if (ret < 0) {
-        qWarning() << "Flashlight can't be toggled";
+    m_iface = new QDBusInterface(
+        "org.droidian.Flashlightd",
+        "/org/droidian/Flashlightd",
+        "org.droidian.Flashlightd",
+        bus,
+        this
+    );
+
+    if (!m_iface->isValid()) {
+        qWarning() << "Cannot create interface:"
+                   << bus.lastError().message();
+        return;
+    }
+
+    QDBusInterface propsIface(
+        "org.droidian.Flashlightd",
+        "/org/droidian/Flashlightd",
+        "org.freedesktop.DBus.Properties",
+        bus
+    );
+
+    QDBusReply<QVariant> reply = propsIface.call(
+        "Get",
+        "org.droidian.Flashlightd",
+        "Brightness"
+    );
+
+    if (reply.isValid()) {
+        int brightness = reply.value().toInt();
+        m_torchEnabled = brightness != 0;
+        m_isAvailable = true;
+    } else {
+        qWarning() << "Failed to read Brightness from flashlightd"
+                   << reply.error().message();
+    }
+}
+
+FlashlightUtil::~FlashlightUtil() = default;
+
+void FlashlightUtil::toggleTorch()
+{
+    if (!m_iface || !m_iface->isValid()) {
+        qWarning() << "Flashlight D-Bus interface invalid";
+        return;
+    }
+
+    int newValue = m_torchEnabled ? 0 : 1;
+
+    QDBusReply<void> reply = m_iface->call("SetBrightness", static_cast<uint>(newValue));
+    if (!reply.isValid()) {
+        qWarning() << "Failed to call SetBrightness:"
+                   << reply.error().message();
         return;
     }
 
@@ -57,90 +89,4 @@ bool FlashlightUtil::torchEnabled() const
 bool FlashlightUtil::isAvailable() const
 {
     return m_isAvailable;
-}
-
-void FlashlightUtil::findTorchDevice()
-{
-    if (m_device != nullptr) {
-        udev_device_unref(m_device);
-    }
-    m_device = nullptr;
-    m_isAvailable = false;
-
-    struct udev *udev = udev_new();
-    struct udev_enumerate *enumerate = udev_enumerate_new(udev);
-
-    udev_enumerate_add_match_subsystem(enumerate, TORCH_SUBSYSTEM);
-    udev_enumerate_add_match_sysname(enumerate, "*:torch");
-    udev_enumerate_add_match_sysname(enumerate, "*:flash");
-    udev_enumerate_scan_devices(enumerate);
-
-    struct udev_list_entry *devices = udev_enumerate_get_list_entry(enumerate);
-    struct udev_list_entry *entry = nullptr;
-
-    struct udev_device *device = nullptr;
-
-    udev_list_entry_foreach(entry, devices)
-    {
-        const char *path = udev_list_entry_get_name(entry);
-
-        if (path == nullptr) {
-            continue;
-        }
-
-        if (device != nullptr) {
-            udev_device_unref(device); // Use to free memory from previous loop iteration
-        }
-
-        device = udev_device_new_from_syspath(udev, path);
-
-        if (device == nullptr) {
-            continue;
-        }
-
-        qInfo() << "Found flashlight device : " << path;
-
-        const char *color = udev_device_get_sysattr_value(device, "color");
-
-        if (color == nullptr) {
-            continue;
-        }
-
-        qInfo() << "Flash color : " << color;
-
-        if (std::strcmp(color, "white") == 0) {
-            break;
-        }
-    }
-
-    if (device == nullptr) {
-        qWarning() << "No flashlight device found";
-        return;
-    }
-
-    const char *maxBrightness = udev_device_get_sysattr_value(device, "max_brightness");
-
-    if (maxBrightness == nullptr) {
-        qWarning() << "Failed to read max_brightness from udev device";
-        return;
-    }
-
-    qInfo() << "Flash maxBrightness : " << maxBrightness;
-
-    const char *brightness = udev_device_get_sysattr_value(device, "brightness");
-
-    if (brightness == nullptr) {
-        qWarning() << "Failed to read brightness from udev device";
-        return;
-    }
-
-    qInfo() << "Flash brightness : " << brightness;
-
-    m_maxBrightness = maxBrightness;
-    m_device = device;
-    m_isAvailable = true;
-    m_torchEnabled = std::strcmp(brightness, "0") != 0;
-
-    udev_enumerate_unref(enumerate);
-    udev_unref(udev);
 }
