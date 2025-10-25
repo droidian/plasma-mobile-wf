@@ -456,11 +456,14 @@ Item {
         }
     }
 
-    MultiPointTouchArea {
+    MouseArea {
         anchors.fill: parent
+        acceptedButtons: Qt.AllButtons
+        propagateComposedEvents: true
 
-        onPressed: screenTimeOut.restart();
-        onUpdated: screenTimeOut.restart();
-        onReleased: screenTimeOut.restart();
+        onPressed: {
+            screenTimeOut.restart();
+            mouse.accepted = false;
+        }
     }
 }
