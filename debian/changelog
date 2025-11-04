@@ -1,8 +1,9 @@
-plasma-mobile (6.5.1-2) UNRELEASED; urgency=medium
+plasma-mobile (6.5.2-1) UNRELEASED; urgency=medium
 
   [ Aurélien COUDERC ]
   * Migrate to debian/watch version 5 syntax.
   * Add/update David Edmundson’s key in upstream keyring.
+  * New upstream release (6.5.2).
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Tue, 04 Nov 2025 21:17:52 +0100
 
