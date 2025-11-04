@@ -4,6 +4,7 @@ plasma-mobile (6.5.2-1) UNRELEASED; urgency=medium
   * Migrate to debian/watch version 5 syntax.
   * Add/update David Edmundson’s key in upstream keyring.
   * New upstream release (6.5.2).
+  * Update build-deps and deps with the info from cmake.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Tue, 04 Nov 2025 21:17:52 +0100
 
