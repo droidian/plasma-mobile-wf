@@ -1,4 +1,4 @@
-plasma-mobile (6.5.2-1) UNRELEASED; urgency=medium
+plasma-mobile (6.5.2-1) unstable; urgency=medium
 
   [ Aurélien COUDERC ]
   * Migrate to debian/watch version 5 syntax.
@@ -6,7 +6,7 @@ plasma-mobile (6.5.2-1) UNRELEASED; urgency=medium
   * New upstream release (6.5.2).
   * Update build-deps and deps with the info from cmake.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Tue, 04 Nov 2025 21:17:52 +0100
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 04 Nov 2025 21:38:02 +0100
 
 plasma-mobile (6.5.1-1) unstable; urgency=medium
 
