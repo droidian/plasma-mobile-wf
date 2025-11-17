@@ -123,6 +123,8 @@ ecm_target_qml_sources(mobileshellplugin SOURCES
     qml/widgets/notifications/NotificationsWidget.qml
     qml/widgets/notifications/NotificationTimeText.qml
     qml/widgets/notifications/ThumbnailStrip.qml
+    qml/wayfiretweaks/LockScreenSplash.qml
+    qml/wayfiretweaks/WayfireTweaks.qml
 )
 
 # Other supporting QML files

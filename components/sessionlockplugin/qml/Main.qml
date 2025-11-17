@@ -186,7 +186,6 @@ Item {
             actionsRequireUnlock: true
             historyModel: root.notificationsModel
             notificationSettings: root.notificationSettings
-            inLockscreen: true
 
             onUnlockRequested: {
                 requestNotificationAction = true;
