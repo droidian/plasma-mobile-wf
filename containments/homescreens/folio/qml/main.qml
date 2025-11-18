@@ -25,6 +25,14 @@ ContainmentItem {
     id: root
     property Folio.HomeScreen folio: root.plasmoid
 
+    Connections {
+        target: MobileShellState.ShellDBusClient
+
+        function onOpenAppDrawerRequested() {
+            folio.HomeScreenState.openAppDrawer()
+        }
+    }
+
     Component.onCompleted: {
         folio.FolioSettings.load();
         folio.FavouritesModel.load();
