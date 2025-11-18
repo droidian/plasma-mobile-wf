@@ -115,6 +115,11 @@ void ShellDBusObject::closeActionDrawer()
     Q_EMIT closeActionDrawerRequested();
 }
 
+void ShellDBusObject::openAppDrawer()
+{
+    Q_EMIT openAppDrawerRequested();
+}
+
 void ShellDBusObject::openAppLaunchAnimationWithPosition(int screen,
                                                          QString splashIcon,
                                                          QString title,

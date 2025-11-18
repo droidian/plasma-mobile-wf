@@ -34,6 +34,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void isTaskSwitcherVisibleChanged();
     Q_SCRIPTABLE void openActionDrawerRequested();
     Q_SCRIPTABLE void closeActionDrawerRequested();
+    Q_SCRIPTABLE void openAppDrawerRequested();
     Q_SCRIPTABLE void appLaunchMaximizePanelAnimationTriggered(int screen, QString color);
     Q_SCRIPTABLE void openHomeScreenRequested();
     Q_SCRIPTABLE void resetHomeScreenPositionRequested();
@@ -63,6 +64,8 @@ public Q_SLOTS:
 
     Q_SCRIPTABLE void openActionDrawer();
     Q_SCRIPTABLE void closeActionDrawer();
+
+    Q_SCRIPTABLE void openAppDrawer();
 
     Q_SCRIPTABLE void
     openAppLaunchAnimationWithPosition(int screen, QString splashIcon, QString title, QString storageId, qreal x, qreal y, qreal sourceIconSize);

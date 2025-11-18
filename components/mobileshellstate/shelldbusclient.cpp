@@ -43,6 +43,7 @@ void ShellDBusClient::connectSignals()
     connect(m_interface, &OrgKdePlasmashellInterface::isTaskSwitcherVisibleChanged, this, &ShellDBusClient::updateIsTaskSwitcherVisible);
     connect(m_interface, &OrgKdePlasmashellInterface::openActionDrawerRequested, this, &ShellDBusClient::openActionDrawerRequested);
     connect(m_interface, &OrgKdePlasmashellInterface::closeActionDrawerRequested, this, &ShellDBusClient::closeActionDrawerRequested);
+    connect(m_interface, &OrgKdePlasmashellInterface::openAppDrawerRequested, this, &ShellDBusClient::openAppDrawerRequested);
     connect(m_interface,
             &OrgKdePlasmashellInterface::appLaunchMaximizePanelAnimationTriggered,
             this,

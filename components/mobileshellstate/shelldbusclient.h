@@ -65,6 +65,7 @@ Q_SIGNALS:
     void isTaskSwitcherVisibleChanged();
     void openActionDrawerRequested();
     void closeActionDrawerRequested();
+    void openAppDrawerRequested();
     void appLaunchMaximizePanelAnimationTriggered(int screen, QString color);
     void openHomeScreenRequested();
     void resetHomeScreenPositionRequested();
