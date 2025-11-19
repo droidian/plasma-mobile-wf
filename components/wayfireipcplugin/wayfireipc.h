@@ -18,27 +18,33 @@ class WayfireIPC : public QObject
     QML_SINGLETON
     QML_ELEMENT
 
+    Q_PROPERTY(bool hasViewFocused READ hasViewFocused NOTIFY hasViewFocusedChanged)
+
 public:
     WayfireIPC(QObject *parent = nullptr);
-
-    bool anyAppFocused = false;
 
     void setFullscreen(int viewId, bool state);
     Q_INVOKABLE void toggleScale();
     Q_INVOKABLE void toggleShowDesktop();
     Q_INVOKABLE void minimizeAllApps();
-    Q_INVOKABLE bool isAnyAppFocused();
+    Q_INVOKABLE void requestCloseApp();
+    bool hasViewFocused();
     
 Q_SIGNALS:
     void viewMapped(QString appId);
     void pwrKeyStateChanged(int state);
     void idleTimout();
+    void hasViewFocusedChanged();
 
 private Q_SLOTS:
     void onReadData();
 
 private:
     void sendMessage(QJsonDocument jsonDoc);
+    void requestFocusedView();
+
+    bool m_hasViewFocused = false;
+    int m_focusedViewId;
 
     QLocalSocket *m_wfsocket = nullptr;
     QDataStream m_in;

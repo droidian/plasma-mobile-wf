@@ -31,8 +31,6 @@ WayfireIPC::WayfireIPC(QObject *parent)
         sendMessage(jsonDoc);
         jsonDoc = QJsonDocument(watchIdle);
         sendMessage(jsonDoc);
-
-        
     }
 }
 
@@ -58,7 +56,6 @@ void WayfireIPC::toggleShowDesktop()
 
     QJsonDocument jsonDoc = QJsonDocument(msgObj);
     sendMessage(jsonDoc);
-    anyAppFocused = false;
 }
 
 void WayfireIPC::minimizeAllApps()
@@ -68,7 +65,23 @@ void WayfireIPC::minimizeAllApps()
 
     QJsonDocument jsonDoc = QJsonDocument(msgObj);
     sendMessage(jsonDoc);
-    anyAppFocused = false;
+}
+
+void WayfireIPC::requestCloseApp()
+{
+    if(!m_hasViewFocused)
+        return;
+    QJsonObject msgObj;
+    QJsonObject dataObj;
+    
+    dataObj["view_id"] = m_focusedViewId;
+    dataObj["state"] = true;
+
+    msgObj["method"] = "wm-actions/request_close";
+    msgObj["data"] = dataObj;
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
 }
 
 void WayfireIPC::toggleScale()
@@ -80,9 +93,9 @@ void WayfireIPC::toggleScale()
     sendMessage(jsonDoc);
 }
 
-bool WayfireIPC::isAnyAppFocused()
+bool WayfireIPC::hasViewFocused()
 {
-    return anyAppFocused;
+    return m_hasViewFocused;
 }
 
 void WayfireIPC::onReadData()
@@ -99,6 +112,21 @@ void WayfireIPC::onReadData()
         QString appId = msg.object().value("view").toObject().value("app-id").toString();
         int viewId = msg.object().value("view").toObject().value("id").toInt();
 
+
+        if(msg.object().contains("info")){
+            if(msg.object().value("info").toObject().value("activated").toBool() == true){
+                m_hasViewFocused = true;
+                m_focusedViewId = msg.object().value("info").toObject().value("id").toInt();
+                Q_EMIT hasViewFocusedChanged();
+            } else {
+                m_hasViewFocused = false;
+                m_focusedViewId = -1;
+                Q_EMIT hasViewFocusedChanged();
+            }
+        } else {
+            requestFocusedView();
+        }
+
         if(event == "power-key-pressed"){
             Q_EMIT pwrKeyStateChanged(1);
         } else if(event == "power-key-released"){
@@ -108,7 +136,6 @@ void WayfireIPC::onReadData()
         } else if(event == "view-mapped" && appId != ""){
             Q_EMIT viewMapped(appId);
         } else if(event == "view-focused" && appId != ""){
-            anyAppFocused = true;
             if (appId == "org.kde.polkit-kde-authentication-agent-1") {
                 setFullscreen(viewId, false);
             }
@@ -129,4 +156,13 @@ void WayfireIPC::sendMessage(QJsonDocument jsonDoc)
     out.setVersion(QDataStream::Qt_6_7);
     out.setByteOrder(QDataStream::LittleEndian);
     out.writeBytes(msgString.c_str(), msgString.size());
+}
+
+void WayfireIPC::requestFocusedView()
+{
+    QJsonObject msgObj;
+    msgObj["method"] = "window-rules/get-focused-view";
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
 }

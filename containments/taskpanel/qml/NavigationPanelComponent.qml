@@ -80,8 +80,8 @@ MobileShell.NavigationPanel {
         iconSizeFactor: 1
 
         onTriggered: {
-            if (WayfireIpcPlugin.WayfireIPC.isAnyAppFocused()) {
-                WayfireIpcPlugin.WayfireIPC.toggleShowDesktop();
+            if (WayfireIpcPlugin.WayfireIPC.hasViewFocused) {
+                WayfireIpcPlugin.WayfireIPC.minimizeAllApps();
             } else {
                 MobileShellState.ShellDBusClient.openHomeScreen();
             }
@@ -92,20 +92,14 @@ MobileShell.NavigationPanel {
     rightAction: MobileShell.NavigationPanelAction {
         id: closeAppAction
 
-        enabled: Keyboards.KWinVirtualKeyboard.visible || WindowPlugin.WindowUtil.hasCloseableActiveWindow
-        iconSource: Keyboards.KWinVirtualKeyboard.visible ? "go-down-symbolic" : "mobile-close-app"
+        enabled: WayfireIpcPlugin.WayfireIPC.hasViewFocused
+        iconSource: "mobile-close-app"
         // mobile-close-app (from plasma-frameworks) seems to have fewer margins than icons from breeze-icons
         iconSizeFactor: Keyboards.KWinVirtualKeyboard.visible ? 1 : 0.75
 
         onTriggered: {
-            if (Keyboards.KWinVirtualKeyboard.visible) {
-                // close keyboard if it is open
-                Keyboards.KWinVirtualKeyboard.active = false;
-            } else if (WindowPlugin.WindowUtil.hasCloseableActiveWindow) {
-                // if task switcher is closed, but there is an active window
-                if (tasksModel.activeTask !== 0) {
-                    tasksModel.requestClose(tasksModel.activeTask);
-                }
+            if (WayfireIpcPlugin.WayfireIPC.hasViewFocused) {
+                WayfireIpcPlugin.WayfireIPC.requestCloseApp();
             }
         }
     }
