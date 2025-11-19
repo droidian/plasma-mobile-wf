@@ -54,7 +54,17 @@ void WayfireIPC::setFullscreen(int viewId, bool state)
 void WayfireIPC::toggleShowDesktop()
 {
     QJsonObject msgObj;
-    msgObj["method"] = "wm-actions/plamo_showdesktop";
+    msgObj["method"] = "wm-actions/toggle_showdesktop";
+
+    QJsonDocument jsonDoc = QJsonDocument(msgObj);
+    sendMessage(jsonDoc);
+    anyAppFocused = false;
+}
+
+void WayfireIPC::minimizeAllApps()
+{
+    QJsonObject msgObj;
+    msgObj["method"] = "wm-actions/minimize_all";
 
     QJsonDocument jsonDoc = QJsonDocument(msgObj);
     sendMessage(jsonDoc);

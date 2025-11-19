@@ -26,6 +26,7 @@ public:
     void setFullscreen(int viewId, bool state);
     Q_INVOKABLE void toggleScale();
     Q_INVOKABLE void toggleShowDesktop();
+    Q_INVOKABLE void minimizeAllApps();
     Q_INVOKABLE bool isAnyAppFocused();
     
 Q_SIGNALS:
