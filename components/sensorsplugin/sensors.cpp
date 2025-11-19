@@ -13,10 +13,8 @@ Sensors::Sensors(QObject *parent)
     QProximitySensor *proxSensor = new QProximitySensor(this);
     connect(proxSensor, &QProximitySensor::readingChanged, this, [=]() {
         QProximityReading *reading = proxSensor->reading();
-        if (reading) {
-            qDebug()<<"sensors: "<<reading->close();
+        if (reading)
             emit proximityChanged(reading->close());
-        }
     });
     proxSensor->start();
 }

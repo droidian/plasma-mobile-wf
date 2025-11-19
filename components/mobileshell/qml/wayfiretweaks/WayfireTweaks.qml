@@ -52,7 +52,6 @@ Item {
         target: SensorsPlugin.Sensors
 
         function onProximityChanged(value) {
-            console.log("Proximity sensor value:", value)
             if(callActive){
                 if(value)
                     DpmsPlugin.WlrDpmsManagerV1.pwrOn = false;
