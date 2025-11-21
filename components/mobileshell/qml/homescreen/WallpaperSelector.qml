@@ -138,7 +138,7 @@ Controls.Drawer {
                     visible: model.preview != null
                     asynchronous: true
                     cache: false
-                    source: model.preview
+                    source: model.path
                     fillMode: Image.PreserveAspectCrop
                 }
             }
