@@ -22,8 +22,17 @@ ContainmentItem {
         Plasmoid.settings.load();
         Plasmoid.pinnedModel.load();
 
-        Halcyon.ApplicationListModel.loadApplications();
-        forceActiveFocus();
+        delayedTimer.start();
+    }
+
+    Timer {
+        id: delayedTimer
+        interval: 500
+        repeat: false
+        onTriggered: {
+            forceActiveFocus();
+            Halcyon.ApplicationListModel.loadApplications();
+        }
     }
 
     Plasmoid.onActivated: {
