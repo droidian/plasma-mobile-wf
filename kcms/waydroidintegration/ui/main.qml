@@ -36,9 +36,9 @@ KCM.SimpleKCM {
         }
 
         PC3.Button {
-            text: i18n("Check installation")
+            text: i18n("Install waydroid")
             Layout.alignment: Qt.AlignHCenter
-            onClicked: AIP.WaydroidDBusClient.refreshSupportsInfo()
+            onClicked: AIP.WaydroidDBusClient.installWaydroid()
         }
     }
 
@@ -49,10 +49,14 @@ KCM.SimpleKCM {
     WaydroidDownloadStatus {
         id: downloadStatus
         visible: AIP.WaydroidDBusClient.status === AIP.WaydroidDBusClient.Initializing
-        text: i18n("Downloading Android and vendor images.\nIt can take a few minutes.")
+        text: i18n("Installing Waydroid.\nIt can take a few minutes.")
 
         Connections {
             target: AIP.WaydroidDBusClient
+
+            function onLastAptLineChanged() {
+                downloadStatus.aptLine = AIP.WaydroidDBusClient.lastAptLine
+            }
 
             function onDownloadStatusChanged(downloaded, total, speed) {
                 downloadStatus.downloaded = downloaded

@@ -13,6 +13,7 @@ import org.kde.plasma.components 3.0 as PC3
 ColumnLayout {
     id: root
     property string text
+    property string aptLine
     property real downloaded: 0.0
     property real total: 0.0
     property real speed: 0.0
@@ -32,6 +33,15 @@ ColumnLayout {
         to: total
         indeterminate: total <= 0.0
 
+        Layout.alignment: Qt.AlignHCenter
+    }
+
+    QQC2.Label {
+        text: root.aptLine
+        wrapMode: Text.WrapAnywhere
+        elide: Text.ElideNone
+        Layout.preferredWidth: Screen.width * 0.9
+        horizontalAlignment: Text.AlignHCenter
         Layout.alignment: Qt.AlignHCenter
     }
 

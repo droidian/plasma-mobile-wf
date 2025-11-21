@@ -199,6 +199,56 @@ QCoro::QmlTask WaydroidDBusClient::refreshApplications()
     return refreshApplicationsTask();
 }
 
+QCoro::Task<void> WaydroidDBusClient::installWaydroidTask()
+{
+    m_status = Initializing;
+    emit statusChanged();
+
+    m_lastAptLine.clear();
+    emit lastAptLineChanged();
+
+    QProcess *process = new QProcess(this);
+    process->setProcessChannelMode(QProcess::MergedChannels);
+
+    connect(process, &QProcess::readyReadStandardOutput, this, [this, process]() {
+        parseAptOutput(QString::fromLocal8Bit(process->readAllStandardOutput()));
+    });
+
+    process->start("pkexec", { "bash", "-c", "DEBIAN_FRONTEND=noninteractive apt-get install -y waydroid" });
+
+    bool finished = co_await qCoro(*process).waitForFinished(-1);
+
+    if (!finished || process->exitCode() != 0) {
+        m_status = NotSupported;
+        emit statusChanged();
+        co_return;
+    }
+
+    m_status = Initialized;
+    emit statusChanged();
+}
+
+QCoro::QmlTask WaydroidDBusClient::installWaydroid()
+{
+    return installWaydroidTask();
+}
+
+void WaydroidDBusClient::parseAptOutput(const QString &output)
+{
+    if (output.isEmpty())
+        return;
+
+    QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+    if (lines.isEmpty())
+        return;
+
+    QString lastLine = lines.last().trimmed();
+    if (lastLine != m_lastAptLine) {
+        m_lastAptLine = lastLine;
+        emit lastAptLineChanged();
+    }
+}
+
 bool WaydroidDBusClient::uevent() const
 {
     return m_uevent;

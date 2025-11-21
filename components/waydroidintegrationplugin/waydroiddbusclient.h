@@ -33,6 +33,7 @@ class WaydroidDBusClient : public QObject
     Q_PROPERTY(bool suspend READ suspend WRITE setSuspend NOTIFY suspendChanged)
     Q_PROPERTY(bool uevent READ uevent WRITE setUevent NOTIFY ueventChanged)
     Q_PROPERTY(WaydroidApplicationListModel *applicationListModel READ applicationListModel CONSTANT)
+    Q_PROPERTY(QString lastAptLine READ lastAptLine NOTIFY lastAptLineChanged)
 
 public:
     explicit WaydroidDBusClient(QObject *parent = nullptr);
@@ -85,6 +86,8 @@ public:
     };
     Q_ENUM(RomType)
 
+    QString lastAptLine() const { return m_lastAptLine; }
+
     [[nodiscard]] Status status() const;
     [[nodiscard]] SessionStatus sessionStatus() const;
     [[nodiscard]] SystemType systemType() const;
@@ -109,6 +112,8 @@ public:
     Q_INVOKABLE QCoro::QmlTask refreshAndroidId();
     Q_INVOKABLE QCoro::QmlTask refreshApplications();
 
+    Q_INVOKABLE QCoro::QmlTask installWaydroid();
+
     Q_INVOKABLE void copyToClipboard(const QString text);
 
 Q_SIGNALS:
@@ -126,6 +131,8 @@ Q_SIGNALS:
     void actionFinished(const QString message);
     void actionFailed(const QString message);
     void errorOccurred(const QString title, const QString message);
+
+    void lastAptLineChanged();
 
 private Q_SLOTS:
     void updateStatus();
@@ -155,8 +162,12 @@ private:
 
     bool m_connected{false};
 
+    QString m_lastAptLine;
+
     void connectSignals();
     void initializeApplicationListModel();
+
+    void parseAptOutput(const QString &output);
 
     QCoro::Task<void> initializeTask(const SystemType systemType, const RomType romType, const bool forced = false);
     QCoro::Task<void> startSessionTask();
@@ -170,4 +181,5 @@ private:
     QCoro::Task<void> refreshSessionInfoTask();
     QCoro::Task<void> refreshAndroidIdTask();
     QCoro::Task<void> refreshApplicationsTask();
+    QCoro::Task<void> installWaydroidTask();
 };
